@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Qujat</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --bg: var(--tg-theme-bg-color,#f2f3f7);
+    --card: var(--tg-theme-bg-color,#ffffff);
+    --text: var(--tg-theme-text-color,#16181d);
+    --hint: var(--tg-theme-hint-color,#9296a3);
+    --accent:#6c5ce7; --line: rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);
+    color:var(--text);padding:14px 14px 96px}
+  .top{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 14px}
+  .top h1{font-size:26px;font-weight:800}
+  .topbtns{display:flex;gap:8px}
+  .ib{height:42px;min-width:42px;padding:0 12px;border-radius:12px;background:var(--card);border:none;
+    display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--text);
+    box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  .balance{background:#23262f;color:#fff;border-radius:20px;padding:18px;margin-bottom:14px}
+  .balance .lbl{font-size:12px;letter-spacing:.5px;color:#a9adbb;text-transform:uppercase}
+  .balance .row{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+  .balance .sum{font-size:28px;font-weight:800}
+  .balance .sub{font-size:13px;color:#a9adbb;margin-top:8px}
+  .topup{background:var(--accent);color:#fff;border:none;border-radius:14px;padding:12px 16px;
+    font-size:15px;font-weight:700}
+  .mydocs{width:100%;background:var(--card);border:none;border-radius:16px;padding:16px;
+    font-size:16px;font-weight:700;color:var(--text);box-shadow:0 2px 12px rgba(0,0,0,.05);
+    display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:18px}
+  .sect{color:var(--hint);font-size:14px;margin:2px 4px 10px}
+  .card{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:18px;
+    padding:14px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+  .ic{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    font-size:24px;flex:0 0 auto}
+  .card .t{font-size:17px;font-weight:700}
+  .card .d{font-size:13px;color:var(--hint);margin-top:2px}
+  .chev{margin-left:auto;color:var(--hint);font-size:20px}
+  .nav{position:fixed;left:0;right:0;bottom:0;height:74px;background:var(--card);
+    border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-around;padding-bottom:14px}
+  .nav button{background:none;border:none;font-size:22px;color:var(--hint);display:flex;
+    flex-direction:column;align-items:center;gap:2px}
+  .nav button.active{color:var(--accent)}
+  .nav .navlbl{font-size:10px}
+</style>
+</head>
+<body>
+  <div class="top">
+    <h1>Qujat</h1>
+    <div class="topbtns">
+      <button class="ib" id="langbtn" onclick="toggleLang()">🌐 KZ</button>
+      <button class="ib" onclick="buy()">🔔</button>
+    </div>
+  </div>
+
+  <div class="balance">
+    <div class="lbl" id="b-lbl"></div>
+    <div class="row">
+      <div class="sum" id="plan"></div>
+      <button class="topup" id="b-topup" onclick="buy()"></button>
+    </div>
+    <div class="sub" id="plansub"></div>
+  </div>
+
+  <button class="mydocs" id="mydocs" onclick="send({open:'history'})"></button>
+  <div class="sect" id="sect"></div>
+  <div id="cats"></div>
+
+  <div class="nav" id="nav"></div>
+
+<script>
+  const tg = window.Telegram.WebApp; tg.expand(); tg.ready();
+  const q=new URLSearchParams(location.search);
+  const BOT = q.get('bot') || 'Qujatkz_bot';
+  const KB = q.get('kb') === '1';     // reply-пернетақтадан ашылса — sendData істейді
+  function send(o){
+    try{ tg.HapticFeedback && tg.HapticFeedback.impactOccurred && tg.HapticFeedback.impactOccurred("light"); }catch(e){}
+    // 1) пернетақта режимі → тікелей sendData (ең сенімді)
+    if (KB && tg.sendData){
+      try{ tg.sendData(JSON.stringify(o)); return; }catch(e){}
+    }
+    // 2) мәзір/сілтеме режимі → deep-link арқылы ботқа команда
+    var p = o.cat ? ('cat_'+o.cat) : (o.open ? ('open_'+o.open) : (o.buy ? ('buy_'+o.buy) : 'menu'));
+    var link = 'https://t.me/'+BOT+'?start='+p;
+    try{
+      if (tg.openTelegramLink) { tg.openTelegramLink(link); }
+      else { window.location.href = 'tg://resolve?domain='+BOT+'&start='+p; }
+    }catch(e){
+      try{ tg.sendData(JSON.stringify(o)); }catch(_){}
+    }
+    setTimeout(function(){ try{ tg.close(); }catch(e){} }, 250);
+  }
+  const buy=()=>send({open:'premium'});
+
+  const STR={
+    kz:{plan:"Менің жоспарым", free:"Тегін", topup:"+ Premium", freesub:"Алғашқы құжаттар тегін",
+      prem:"💎 Premium", until:(d)=>"Белсенді: "+d+" дейін", active:"Белсенді ✓",
+      left:(n)=>"Тегін қалды: "+n+" құжат", mydocs:"📁 Менің құжаттарым",
+      sect:"Құжат түрін таңдаңыз 📋",
+      nav:["Құжаттар","Тарих","Premium","Көмек","Профиль"],
+      cats:{sales:["Сату / сатып алу","Счёт, акт, накладная, СФ"],
+        cash:["Касса / банк","КО-1/КО-2, платёжка, аванс"],
+        hr:["Қызметкер / жалақы","Зарплата, приказы, табель"],
+        tax:["Салық есептері","Форма 910/200/300/100"],
+        contract:["Шарттар","Услуг, поставки, аренды"],
+        warehouse:["Қойма","Списание, путевой, опись"],
+        calc:["Калькуляторлар","Отпускные, пеня, увольнение"]}},
+    ru:{plan:"Мой план", free:"Бесплатно", topup:"+ Premium", freesub:"Первые документы бесплатно",
+      prem:"💎 Premium", until:(d)=>"Активна до: "+d, active:"Активна ✓",
+      left:(n)=>"Осталось бесплатно: "+n, mydocs:"📁 Мои документы",
+      sect:"Выберите тип документа 📋",
+      nav:["Документы","История","Premium","Помощь","Профиль"],
+      cats:{sales:["Продажи / покупки","Счёт, акт, накладная, СФ"],
+        cash:["Касса / банк","КО-1/КО-2, платёжка, аванс"],
+        hr:["Сотрудники / зарплата","Зарплата, приказы, табель"],
+        tax:["Налоговые отчёты","Форма 910/200/300/100"],
+        contract:["Договоры","Услуги, поставки, аренда"],
+        warehouse:["Склад","Списание, путевой, опись"],
+        calc:["Калькуляторы","Отпускные, пеня, увольнение"]}}
+  };
+  const ICONS={sales:["💵","#fdecef"],cash:["💰","#eaf7ef"],hr:["👥","#eef0fe"],
+    tax:["📊","#fff4e6"],contract:["📑","#e9f6fb"],warehouse:["📦","#f3eefe"],calc:["🧮","#fdeef7"]};
+  const ORDER=["sales","cash","hr","tax","contract","warehouse","calc"];
+
+  function detectLang(){
+    if(q.get('lang')) return q.get('lang')==='ru'?'ru':'kz';
+    const saved=localStorage.getItem('qujat_lang'); if(saved) return saved;
+    const c=(tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code||'').toLowerCase();
+    return c.startsWith('ru')?'ru':'kz';
+  }
+  let lang=detectLang();
+
+  function toggleLang(){ lang=lang==='kz'?'ru':'kz'; localStorage.setItem('qujat_lang',lang); render(); }
+
+  function render(){
+    const s=STR[lang];
+    document.getElementById('langbtn').textContent='🌐 '+(lang==='kz'?'KZ':'RU');
+    document.getElementById('b-lbl').textContent=s.plan;
+    document.getElementById('b-topup').textContent=s.topup;
+    document.getElementById('mydocs').textContent=s.mydocs;
+    document.getElementById('sect').textContent=s.sect;
+    // статус
+    if(q.get('prem')==='1'){
+      document.getElementById('plan').textContent=s.prem;
+      document.getElementById('plansub').textContent=s.until(q.get('until')||'');
+      document.getElementById('b-topup').textContent=s.active;
+    }else{
+      document.getElementById('plan').textContent=s.free;
+      document.getElementById('plansub').textContent=q.get('left')!==null?s.left(q.get('left')):s.freesub;
+    }
+    // категориялар
+    const box=document.getElementById('cats'); box.innerHTML='';
+    ORDER.forEach(k=>{
+      const [e,c]=ICONS[k]; const [t,d]=s.cats[k];
+      const el=document.createElement('div'); el.className='card';
+      el.innerHTML='<div class="ic" style="background:'+c+'">'+e+'</div>'+
+        '<div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>send({cat:k}); box.appendChild(el);
+    });
+    // навигация
+    const nav=document.getElementById('nav'); nav.innerHTML='';
+    const acts=[null,{open:'history'},{open:'premium'},{open:'help'},{open:'profile'}];
+    const ico=["📄","🕘","💎","❓","👤"];
+    s.nav.forEach((label,i)=>{
+      const b=document.createElement('button'); if(i===0)b.className='active';
+      b.innerHTML='<span>'+ico[i]+'</span><span class="navlbl">'+label+'</span>';
+      if(acts[i])b.onclick=()=>send(acts[i]); nav.appendChild(b);
+    });
+  }
+  render();
+</script>
+</body>
+</html>
