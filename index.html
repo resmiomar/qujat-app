@@ -177,12 +177,25 @@
     </div>
     <div id="acc-user" class="hidden">
       <div class="sec" style="text-align:center">
-        <div style="font-size:50px">🙂</div>
-        <p class="sub" id="acc-welcome" style="margin:8px 0 2px"></p>
+        <div style="font-size:46px">🙂</div>
+        <p class="sub" id="acc-welcome" style="margin:6px 0 2px"></p>
         <h3 id="acc-name" style="margin:0 0 2px"></h3>
-        <p class="sub" id="acc-email" style="margin-bottom:16px"></p>
+        <p class="sub" id="acc-email" style="margin-bottom:14px"></p>
         <button class="btn ghost" onclick="doLogout()" id="a-logout"></button>
       </div>
+      <div class="sec">
+        <h3>📁 <span id="acc-hist-t"></span></h3>
+        <div id="acc-history"></div>
+      </div>
+      <details class="sec">
+        <summary id="acc-chpass-t" style="color:var(--accent);font-weight:700"></summary>
+        <div style="margin-top:12px">
+          <div class="field"><label id="la-old"></label><input type="password" id="cp_old"></div>
+          <div class="field"><label id="la-new"></label><input type="password" id="cp_new"></div>
+          <button class="btn" id="a-chpass" onclick="doChangePass()"></button>
+        </div>
+      </details>
+      <button class="btn ghost" style="color:var(--danger);border-color:#f3c0c0" onclick="doDelete()" id="a-delete"></button>
     </div>
   </div>
 </div>
@@ -220,6 +233,9 @@
       accreg:"Регистрация",acclogin:"Вход",accname:"Имя",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Создать аккаунт",accloginbtn:"Войти",acctoreg:"Нет аккаунта? Регистрация",
       acctologin:"Уже есть аккаунт? Войти",acclogout:"Выйти",accwelcome:"Вы вошли как",
+      acchist:"История документов",accnohist:"Пока пусто — создайте документ",accrepeat:"Повторить",
+      accchpass:"🔑 Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
+      accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
     kz:{nav:["Құжаттар","Калькулятор","AI","Профиль"],
@@ -242,6 +258,9 @@
       accreg:"Тіркелу",acclogin:"Кіру",accname:"Аты",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Аккаунт жасау",accloginbtn:"Кіру",acctoreg:"Аккаунт жоқ па? Тіркелу",
       acctologin:"Аккаунт бар ма? Кіру",acclogout:"Шығу",accwelcome:"Сіз кірдіңіз:",
+      acchist:"Құжат тарихы",accnohist:"Әзірге бос — құжат жасаңыз",accrepeat:"Қайталау",
+      accchpass:"🔑 Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
+      accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
       e_email:"Дұрыс email жазыңыз",e_pass:"Пароль кемінде 6 таңба",e_name:"Аты кемінде 2 таңба",
       e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль"}
   };
@@ -312,14 +331,24 @@
     const q=parseFloat((r.querySelector('[data-k=qty]').value||'0').replace(',','.'))||0;
     const p=parseFloat((r.querySelector('[data-k=price]').value||'0').replace(',','.'))||0;sum+=q*p;});
     $('total').textContent=sum.toLocaleString('ru-RU')+' ₸';}
+  function fillSeller(o){o=o||{};['name','bin','fio','bank_name','iik','bik','kaspi_link'].forEach(k=>{if($('s_'+k))$('s_'+k).value=o[k]||'';});}
   function openForm(key){
     curDoc=key;const c=CATS.find(x=>x.key===key);
     $('f-title').textContent=c[lang][0];$('f-sub').textContent=c[lang][1];
-    const saved=JSON.parse(localStorage.getItem('qujat_seller')||'{}');
-    ['name','bin','fio','bank_name','iik','bik','kaspi_link'].forEach(k=>{if($('s_'+k))$('s_'+k).value=saved[k]||'';});
+    fillSeller(JSON.parse(localStorage.getItem('qujat_seller')||'{}'));
     $('b_name').value='';$('b_bin').value='';$('d_number').value='1';$('d_date').valueAsDate=new Date();
     $('items').innerHTML='';addItem();$('d_vat').checked=false;
     $('home').classList.add('hidden');$('result').classList.add('hidden');$('form').classList.remove('hidden');window.scrollTo(0,0);
+    if(meUser)fetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{if(d.profile&&Object.keys(d.profile).length)fillSeller(d.profile);}).catch(()=>{});
+  }
+  function openFormWith(p){
+    openForm(p.doc);
+    fillSeller(p.seller||{});
+    $('b_name').value=(p.buyer||{}).name||'';$('b_bin').value=(p.buyer||{}).bin||'';
+    $('d_number').value=p.number||'1';$('d_vat').checked=!!p.vat;
+    if(p.date){const a=p.date.split('.');if(a.length===3)$('d_date').value=a[2]+'-'+a[1]+'-'+a[0];}
+    $('items').innerHTML='';(p.items||[]).forEach(it=>addItem(it.name,it.qty||'1',it.price));if(!(p.items||[]).length)addItem();
+    calcTotal();
   }
   function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
   const val=id=>($(id).value||'').trim();
@@ -336,7 +365,7 @@
     const payload={doc:curDoc,number:val('d_number'),date:fmtDate(),vat:$('d_vat').checked,seller,buyer:{name:val('b_name'),bin:val('b_bin')},items};
     const btn=$('genbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
     try{
-      const res=await fetch(API+'/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const res=await fetch(API+'/api/generate',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
       const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
@@ -411,13 +440,42 @@
     $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
     $('a-to-login').textContent=s.acctologin;$('a-to-reg').textContent=s.acctoreg;
     $('a-logout').textContent=s.acclogout;$('acc-welcome').textContent=s.accwelcome;
+    $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
+    $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
+    $('a-delete').textContent=s.accdelete;
   }
   function acctab(w){$('acc-reg').classList.toggle('hidden',w!=='reg');$('acc-login').classList.toggle('hidden',w!=='login');}
   function renderAccount(){
     accLabels();
     if(meUser){$('acc-user').classList.remove('hidden');$('acc-auth').classList.add('hidden');
-      $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';}
+      $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';loadHistory();}
     else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');}
+  }
+  async function loadHistory(){
+    const box=$('acc-history');if(!box)return;
+    try{const r=await fetch(API+'/api/history',{credentials:'include'});const docs=(await r.json()).docs||[];
+      if(!docs.length){box.innerHTML='<p class="sub" style="margin:0">'+S().accnohist+'</p>';return;}
+      box.innerHTML=docs.map(d=>'<div class="rline"><span>'+d.title+'<br><span style="color:var(--muted);font-size:12px">'+d.created+' · '+(d.total||0).toLocaleString('ru-RU')+' ₸</span></span>'+
+        '<a style="cursor:pointer;color:var(--accent);font-weight:700;white-space:nowrap" onclick="repeatDoc('+d.id+')">'+S().accrepeat+'</a></div>').join('');
+    }catch(e){box.innerHTML='';}
+  }
+  async function repeatDoc(id){
+    try{const r=await fetch(API+'/api/history-item?id='+id,{credentials:'include'});const p=(await r.json()).payload;
+      if(p&&p.doc){showTab('docs');openFormWith(p);}}catch(e){}
+  }
+  async function doChangePass(){
+    const s=S(),old=$('cp_old').value,nw=$('cp_new').value;
+    if(nw.length<6)return alert(s.e_pass);
+    const b=$('a-chpass');b.disabled=true;
+    try{const r=await fetch(API+'/auth/change-password',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_password:old,new_password:nw})});
+      if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
+      $('cp_old').value='';$('cp_new').value='';alert(s.accpassok);
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doDelete(){
+    if(!confirm(S().accdelconfirm))return;
+    try{await fetch(API+'/auth/delete',{method:'POST',credentials:'include'});}catch(e){}
+    meUser=null;renderAccount();
   }
   async function loadMe(){
     try{const r=await fetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
