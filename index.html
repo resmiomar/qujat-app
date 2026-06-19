@@ -29,11 +29,11 @@
   .sec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:14px}
   .sec h3{font-size:15px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:7px}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .itemrow{display:grid;grid-template-columns:1fr 56px 70px 34px;gap:7px;margin-bottom:8px;align-items:center}
+  .itemrow{display:grid;grid-template-columns:1fr 50px 82px 30px;gap:7px;margin-bottom:8px;align-items:center}
   .itemrow input{height:42px;padding:0 9px;font-size:14px}
   .del{height:42px;border:none;background:#fdecef;color:var(--danger);border-radius:10px;font-size:18px;cursor:pointer}
   .additem{width:100%;height:44px;border:1px dashed var(--accent);background:#f5f3ff;color:var(--accent);border-radius:12px;font-weight:700;cursor:pointer;font-size:14.5px}
-  .ihead{display:grid;grid-template-columns:1fr 56px 70px 34px;gap:7px;font-size:11px;color:var(--muted);margin-bottom:5px;padding:0 3px}
+  .ihead{display:grid;grid-template-columns:1fr 50px 82px 30px;gap:7px;font-size:11px;color:var(--muted);margin-bottom:5px;padding:0 3px}
   details summary{cursor:pointer;font-size:14px;color:var(--accent);font-weight:600;margin-top:4px;list-style:none}
   details summary::-webkit-details-marker{display:none}
   .total{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:800;padding:10px 3px}
@@ -146,7 +146,7 @@
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
       sname:"Название (ИП/ТОО) *",sbin:"БИН/ИИН",sfio:"ФИО руководителя",bank:"Банковские реквизиты (необязательно)",
       bankname:"Банк",kaspi:"Ссылка Kaspi (для QR)",bname:"Название клиента",bbin:"БИН/ИИН клиента",
-      num:"№ документа",date:"Дата",ihname:"Наименование",ihunit:"ед.",ihqty:"кол-во × цена",
+      num:"№ документа",date:"Дата",ihname:"Наименование",ihunit:"Кол-во",ihqty:"Цена",
       additem:"+ Добавить позицию",vat:"С НДС 16%",total:"Итого:",gen:"📄 Создать PDF",genwait:"Создаю…",
       fnote:"Данные поставщика сохранятся в этом браузере для следующего раза.",
       itemname:"Наименование",unit:"шт.",
@@ -159,7 +159,7 @@
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
       sname:"Атауы (ЖК/ТОО) *",sbin:"БИН/ЖСН",sfio:"Басшының аты-жөні",bank:"Банк деректемелері (міндетті емес)",
       bankname:"Банк",kaspi:"Kaspi сілтемесі (QR үшін)",bname:"Клиент атауы",bbin:"Клиент БИН/ЖСН",
-      num:"Құжат №",date:"Күні",ihname:"Атауы",ihunit:"бірл.",ihqty:"саны × баға",
+      num:"Құжат №",date:"Күні",ihname:"Атауы",ihunit:"Саны",ihqty:"Баға",
       additem:"+ Атау қосу",vat:"ҚҚС 16%-бен",total:"Барлығы:",gen:"📄 PDF жасау",genwait:"Жасалуда…",
       fnote:"Жеткізуші деректері келесі жолға осы браузерде сақталады.",
       itemname:"Атауы",unit:"дана",
@@ -209,16 +209,17 @@
   }
   function renderAll(){ renderHome(); labels(); }
 
-  function addItem(name='',unit='',qty='1',price=''){
+  function defUnit(){ return curDoc==='act' ? 'усл.' : 'шт.'; }
+  function addItem(name='',qty='1',price=''){
     const s=STR[lang];
     const row=document.createElement('div'); row.className='itemrow';
     row.innerHTML='<input type="text" placeholder="'+s.itemname+'" value="'+name+'">'+
-      '<input type="text" value="'+(unit||s.unit)+'">'+
+      '<input type="number" inputmode="decimal" value="'+qty+'">'+
       '<input type="number" inputmode="decimal" placeholder="0" value="'+price+'">'+
       '<button class="del">×</button>';
     const ins=row.querySelectorAll('input');
-    ins[0].dataset.k='name'; ins[1].dataset.k='unit'; ins[2].dataset.k='price';
-    // qty жасырын — әдепкі 1 (қарапайымдылық үшін цена×1; керек болса кейін кеңейтеміз)
+    ins[0].dataset.k='name'; ins[1].dataset.k='qty'; ins[2].dataset.k='price';
+    ins[1].addEventListener('input',calcTotal);
     ins[2].addEventListener('input',calcTotal);
     row.querySelector('.del').onclick=()=>{row.remove();calcTotal();};
     $('items').appendChild(row); calcTotal();
@@ -226,8 +227,9 @@
   function calcTotal(){
     let sum=0;
     document.querySelectorAll('#items .itemrow').forEach(r=>{
+      const q=parseFloat((r.querySelector('[data-k=qty]').value||'0').replace(',','.'))||0;
       const price=parseFloat((r.querySelector('[data-k=price]').value||'0').replace(',','.'))||0;
-      sum+=price;
+      sum+=q*price;
     });
     $('total').textContent=sum.toLocaleString('ru-RU')+' ₸';
   }
@@ -255,9 +257,9 @@
     const items=[];
     document.querySelectorAll('#items .itemrow').forEach(r=>{
       const name=r.querySelector('[data-k=name]').value.trim();
-      const unit=r.querySelector('[data-k=unit]').value.trim();
+      const qty=r.querySelector('[data-k=qty]').value||'1';
       const price=r.querySelector('[data-k=price]').value;
-      if(name) items.push({name,unit,qty:1,price});
+      if(name) items.push({name,unit:defUnit(),qty,price});
     });
     if(!items.length){ alert(s.erritems); return; }
     const seller={name:val('s_name'),bin:val('s_bin'),fio:val('s_fio'),
