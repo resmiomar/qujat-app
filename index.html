@@ -154,6 +154,37 @@
     <div class="chips" id="a-chips"></div>
     <div class="chat" id="chat"></div>
   </div>
+
+  <!-- ===== TAB: ACCOUNT ===== -->
+  <div id="tab-account" class="hidden">
+    <h2 id="acc-h">👤</h2><p class="sub" id="acc-intro"></p>
+    <div id="acc-auth" class="hidden">
+      <div class="sec">
+        <div id="acc-reg">
+          <div class="field"><label id="la-name"></label><input type="text" id="a_name"></div>
+          <div class="field"><label id="la-email-r"></label><input type="email" id="ar_email" inputmode="email"></div>
+          <div class="field"><label id="la-pass-r"></label><input type="password" id="ar_pass"></div>
+          <button class="btn" id="a-regbtn" onclick="doRegister()"></button>
+          <p class="note"><a id="a-to-login" style="cursor:pointer" onclick="acctab('login')"></a></p>
+        </div>
+        <div id="acc-login" class="hidden">
+          <div class="field"><label id="la-email-l"></label><input type="email" id="al_email" inputmode="email"></div>
+          <div class="field"><label id="la-pass-l"></label><input type="password" id="al_pass"></div>
+          <button class="btn" id="a-loginbtn" onclick="doLogin()"></button>
+          <p class="note"><a id="a-to-reg" style="cursor:pointer" onclick="acctab('reg')"></a></p>
+        </div>
+      </div>
+    </div>
+    <div id="acc-user" class="hidden">
+      <div class="sec" style="text-align:center">
+        <div style="font-size:50px">🙂</div>
+        <p class="sub" id="acc-welcome" style="margin:8px 0 2px"></p>
+        <h3 id="acc-name" style="margin:0 0 2px"></h3>
+        <p class="sub" id="acc-email" style="margin-bottom:16px"></p>
+        <button class="btn ghost" onclick="doLogout()" id="a-logout"></button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="airow hidden" id="airow"><div class="wrap">
@@ -169,7 +200,7 @@
   const $=id=>document.getElementById(id);
 
   const STR={
-    ru:{nav:["Документы","Калькуляторы","ИИ-помощник"],
+    ru:{nav:["Документы","Калькуляторы","ИИ","Профиль"],
       htitle:"Создайте документ",hsub:"Бесплатно, в браузере. Без регистрации.",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -184,8 +215,14 @@
       atitle:"ИИ-помощник",asub:"Спросите про налоги, документы, бухгалтерию РК 2026.",
       aplaceholder:"Ваш вопрос…",agreet:"Здравствуйте! Я помощник Qujat. Спросите про налоги 2026, документы или бухгалтерию РК.",
       achips:["Какой налог у ИП?","Когда сдавать 910?","ИП или ТОО?","Ставка НДС 2026?"],
-      ainote:"⚠️ ИИ может ошибаться. Точные данные — на kgd.gov.kz."},
-    kz:{nav:["Құжаттар","Калькулятор","AI-көмекші"],
+      ainote:"⚠️ ИИ может ошибаться. Точные данные — на kgd.gov.kz.",
+      accintro:"Войдите — сессия будет работать на любом устройстве (без SMS).",
+      accreg:"Регистрация",acclogin:"Вход",accname:"Имя",accemail:"Email",accpass:"Пароль (мин. 6)",
+      accregbtn:"Создать аккаунт",accloginbtn:"Войти",acctoreg:"Нет аккаунта? Регистрация",
+      acctologin:"Уже есть аккаунт? Войти",acclogout:"Выйти",accwelcome:"Вы вошли как",
+      e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
+      e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
+    kz:{nav:["Құжаттар","Калькулятор","AI","Профиль"],
       htitle:"Құжат жасаңыз",hsub:"Тегін, браузерде. Тіркелусіз.",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -200,7 +237,13 @@
       atitle:"AI-көмекші",asub:"2026 салық, құжат, бухгалтерия туралы сұраңыз.",
       aplaceholder:"Сұрағыңыз…",agreet:"Сәлеметсіз бе! Мен Qujat көмекшісімін. 2026 салық, құжат немесе бухгалтерия туралы сұраңыз.",
       achips:["ИП қандай салық төлейді?","910 қашан тапсырылады?","ИП па, ТОО ма?","2026 ҚҚС ставкасы?"],
-      ainote:"⚠️ AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз."}
+      ainote:"⚠️ AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз.",
+      accintro:"Кіріңіз — сессия кез келген құрылғыда жұмыс істейді (SMS-сіз).",
+      accreg:"Тіркелу",acclogin:"Кіру",accname:"Аты",accemail:"Email",accpass:"Пароль (мин. 6)",
+      accregbtn:"Аккаунт жасау",accloginbtn:"Кіру",acctoreg:"Аккаунт жоқ па? Тіркелу",
+      acctologin:"Аккаунт бар ма? Кіру",acclogout:"Шығу",accwelcome:"Сіз кірдіңіз:",
+      e_email:"Дұрыс email жазыңыз",e_pass:"Пароль кемінде 6 таңба",e_name:"Аты кемінде 2 таңба",
+      e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль"}
   };
   const CATS=[
     {key:"invoice",icon:"💵",ru:["Счёт на оплату","Реквизиты, сумма, Kaspi QR"],kz:["Шот (төлеуге)","Деректеме, сома, QR"]},
@@ -215,7 +258,7 @@
   function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
 
   function renderNav(){
-    const s=S(),icons=["📄","🧮","💬"],ids=["docs","calc","ai"];
+    const s=S(),icons=["📄","🧮","💬","👤"],ids=["docs","calc","ai","account"];
     $('nav').innerHTML='';
     s.nav.forEach((label,i)=>{
       const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
@@ -225,10 +268,11 @@
   }
   function showTab(t){
     curTab=t;
-    ['docs','calc','ai'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
+    ['docs','calc','ai','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
     $('airow').classList.toggle('hidden',t!=='ai');
     if(t==='calc'&&!calcList.length) loadCalc();
     if(t==='ai'&&!aiHist.length) aiGreet();
+    if(t==='account') loadMe();
     renderNav(); window.scrollTo(0,0);
   }
 
@@ -356,7 +400,48 @@
   }
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===$('ai-input'))sendAI();});
 
-  function renderAll(){renderHome();docLabels();renderNav();
+  /* ---------- ACCOUNT (email+пароль) ---------- */
+  let meUser=null;
+  const reEmail=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  function accLabels(){
+    const s=S();
+    $('acc-intro').textContent=s.accintro;
+    $('la-name').textContent=s.accname;$('la-email-r').textContent=s.accemail;$('la-pass-r').textContent=s.accpass;
+    $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
+    $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
+    $('a-to-login').textContent=s.acctologin;$('a-to-reg').textContent=s.acctoreg;
+    $('a-logout').textContent=s.acclogout;$('acc-welcome').textContent=s.accwelcome;
+  }
+  function acctab(w){$('acc-reg').classList.toggle('hidden',w!=='reg');$('acc-login').classList.toggle('hidden',w!=='login');}
+  function renderAccount(){
+    accLabels();
+    if(meUser){$('acc-user').classList.remove('hidden');$('acc-auth').classList.add('hidden');
+      $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';}
+    else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');}
+  }
+  async function loadMe(){
+    try{const r=await fetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
+    renderAccount();
+  }
+  async function doRegister(){
+    const s=S(),name=$('a_name').value.trim(),email=$('ar_email').value.trim().toLowerCase(),pass=$('ar_pass').value;
+    if(name.length<2)return alert(s.e_name);if(!reEmail.test(email))return alert(s.e_email);if(pass.length<6)return alert(s.e_pass);
+    const b=$('a-regbtn');b.disabled=true;
+    try{const r=await fetch(API+'/auth/register-email',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name})});
+      if(r.status===409){alert(s.e_taken);return;}if(!r.ok){alert(s.errnet);return;}await loadMe();
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doLogin(){
+    const s=S(),email=$('al_email').value.trim().toLowerCase(),pass=$('al_pass').value;
+    if(!reEmail.test(email))return alert(s.e_email);if(!pass)return alert(s.e_pass);
+    const b=$('a-loginbtn');b.disabled=true;
+    try{const r=await fetch(API+'/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+      if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}await loadMe();
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doLogout(){try{await fetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}meUser=null;renderAccount();}
+
+  function renderAll(){renderHome();docLabels();renderNav();renderAccount();
     if(curTab==='calc'&&calcList.length)renderCalcHome();
     if(curTab==='ai')aiGreet();}
   renderAll();showTab('docs');
