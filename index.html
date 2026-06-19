@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Qujat — создать документ онлайн</title>
-<meta name="description" content="Создавайте бухгалтерские документы Казахстана онлайн: счёт, акт, накладная, счёт-фактура. Бесплатно, прямо в браузере, без регистрации.">
+<title>Qujat — документы, налоги, ИИ онлайн</title>
+<meta name="description" content="Бухгалтерия Казахстана онлайн: создавайте счёт, акт, накладную, считайте налоги 2026 и спрашивайте ИИ-помощника — прямо в браузере, бесплатно.">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root{--bg:#f4f5fa;--card:#fff;--text:#14161d;--muted:#8a8f9c;--accent:#6c5ce7;--accent2:#00b894;--line:#eceef3;--danger:#e74c3c}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:40px}
+  body{font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:78px}
   .wrap{max-width:580px;margin:0 auto;padding:0 16px}
-  header{position:sticky;top:0;background:rgba(244,245,250,.9);backdrop-filter:blur(10px);z-index:30;border-bottom:1px solid var(--line)}
-  header .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+  header{position:sticky;top:0;background:rgba(244,245,250,.92);backdrop-filter:blur(10px);z-index:30;border-bottom:1px solid var(--line)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
   .logo{font-size:21px;font-weight:800;display:flex;gap:7px;align-items:center}
   .ib{height:38px;padding:0 12px;border-radius:11px;background:var(--card);border:1px solid var(--line);font-weight:700;font-size:14px;color:var(--text);cursor:pointer}
-  h2{font-size:23px;font-weight:800;margin:22px 0 4px}
-  .sub{color:var(--muted);font-size:14.5px;margin-bottom:18px}
-  .card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:11px;cursor:pointer;transition:.15s}
+  h2{font-size:22px;font-weight:800;margin:20px 0 4px}
+  .sub{color:var(--muted);font-size:14.5px;margin-bottom:16px}
+  .card{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;transition:.15s}
   .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 22px rgba(108,92,231,.12)}
-  .ic{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;background:#f0eefe;flex:0 0 auto}
-  .card .t{font-size:16.5px;font-weight:700}.card .d{font-size:13px;color:var(--muted)}
+  .ic{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;background:#f0eefe;flex:0 0 auto}
+  .card .t{font-size:16px;font-weight:700}.card .d{font-size:12.5px;color:var(--muted)}
   .chev{margin-left:auto;color:var(--muted);font-size:22px}
   .field{margin-bottom:12px}
   label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 5px 3px}
@@ -37,21 +37,39 @@
   details summary{cursor:pointer;font-size:14px;color:var(--accent);font-weight:600;margin-top:4px;list-style:none}
   details summary::-webkit-details-marker{display:none}
   .total{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:800;padding:10px 3px}
-  .chk{display:flex;align-items:center;gap:9px;font-size:14.5px;color:var(--text);font-weight:600;cursor:pointer;padding:4px 3px}
+  .chk{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;cursor:pointer;padding:4px 3px}
   .chk input{width:20px;height:20px;accent-color:var(--accent)}
-  .btn{width:100%;height:52px;background:var(--accent);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.15s}
-  .btn:hover{box-shadow:0 10px 26px rgba(108,92,231,.35)}
-  .btn:disabled{opacity:.6}
+  .btn{width:100%;height:50px;background:var(--accent);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:.15s}
+  .btn:hover{box-shadow:0 10px 26px rgba(108,92,231,.35)}.btn:disabled{opacity:.6}
   .btn.ghost{background:var(--card);color:var(--accent);border:1px solid var(--line)}
   .back{background:none;border:none;color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;padding:14px 0 4px}
   .hidden{display:none}
-  .note{font-size:12.5px;color:var(--muted);text-align:center;margin:18px 0}
+  .note{font-size:12.5px;color:var(--muted);text-align:center;margin:16px 0}
   .note a{color:var(--accent);font-weight:600}
-  .ok{text-align:center;padding:40px 10px}
-  .ok .em{font-size:60px}.ok h2{margin:14px 0 6px}
+  .ok{text-align:center;padding:36px 10px}
+  .ok .em{font-size:58px}.ok h2{margin:12px 0 6px}
   .spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-3px;margin-right:8px}
   @keyframes sp{to{transform:rotate(360deg)}}
   .banner{background:#eaf6f0;border:1px solid #b6e6cd;color:#0a7a4e;border-radius:12px;padding:10px 13px;font-size:13px;margin-bottom:16px}
+  /* result lines */
+  .rline{display:flex;justify-content:space-between;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line);font-size:15px}
+  .rline:last-child{border:none}.rline b{font-weight:800}
+  /* AI chat */
+  .chat{display:flex;flex-direction:column;gap:10px;padding:8px 0 12px;min-height:50vh}
+  .msg{max-width:86%;padding:11px 14px;border-radius:16px;font-size:14.5px;line-height:1.5;white-space:pre-wrap}
+  .msg.u{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+  .msg.a{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:5px}
+  .airow{position:fixed;bottom:78px;left:0;right:0;background:var(--bg);border-top:1px solid var(--line);padding:9px 0}
+  .airow .wrap{display:flex;gap:8px}
+  .airow input{flex:1}
+  .aisend{width:48px;height:46px;border:none;background:var(--accent);color:#fff;border-radius:12px;font-size:19px;cursor:pointer;flex:0 0 auto}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:7px 12px;font-size:13px;cursor:pointer;color:var(--accent)}
+  /* bottom nav */
+  .nav{position:fixed;left:0;right:0;bottom:0;height:64px;background:var(--card);border-top:1px solid var(--line);display:flex;z-index:40}
+  .nav button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:21px;cursor:pointer}
+  .nav button.active{color:var(--accent)}
+  .nav .nl{font-size:10.5px;font-weight:600}
 </style>
 </head>
 <body>
@@ -61,228 +79,287 @@
 </div></header>
 
 <div class="wrap">
-  <!-- HOME -->
-  <div id="home">
-    <h2 id="h-title"></h2>
-    <p class="sub" id="h-sub"></p>
-    <div class="banner" id="h-banner"></div>
-    <div id="cats"></div>
-    <p class="note" id="h-note"></p>
-  </div>
-
-  <!-- FORM -->
-  <div id="form" class="hidden">
-    <button class="back" onclick="goHome()">‹ <span id="f-back"></span></button>
-    <h2 id="f-title"></h2>
-    <p class="sub" id="f-sub"></p>
-
-    <div class="sec">
-      <h3>🏢 <span id="s-seller"></span></h3>
-      <div class="field"><label id="l-sname"></label><input type="text" id="s_name"></div>
-      <div class="row2">
-        <div class="field"><label id="l-sbin"></label><input type="text" id="s_bin" inputmode="numeric"></div>
-        <div class="field"><label id="l-sfio"></label><input type="text" id="s_fio"></div>
-      </div>
-      <details>
-        <summary id="s-bank"></summary>
-        <div style="margin-top:10px">
+  <!-- ===== TAB: DOCUMENTS ===== -->
+  <div id="tab-docs">
+    <div id="home">
+      <h2 id="h-title"></h2><p class="sub" id="h-sub"></p>
+      <div class="banner" id="h-banner"></div>
+      <div id="cats"></div>
+    </div>
+    <div id="form" class="hidden">
+      <button class="back" onclick="goDocsHome()">‹ <span id="f-back"></span></button>
+      <h2 id="f-title"></h2><p class="sub" id="f-sub"></p>
+      <div class="sec">
+        <h3>🏢 <span id="s-seller"></span></h3>
+        <div class="field"><label id="l-sname"></label><input type="text" id="s_name"></div>
+        <div class="row2">
+          <div class="field"><label id="l-sbin"></label><input type="text" id="s_bin" inputmode="numeric"></div>
+          <div class="field"><label id="l-sfio"></label><input type="text" id="s_fio"></div>
+        </div>
+        <details><summary id="s-bank"></summary><div style="margin-top:10px">
           <div class="field"><label id="l-bank"></label><input type="text" id="s_bank_name"></div>
           <div class="row2">
             <div class="field"><label>ИИК (IBAN)</label><input type="text" id="s_iik"></div>
             <div class="field"><label>БИК</label><input type="text" id="s_bik"></div>
           </div>
           <div class="field"><label id="l-kaspi"></label><input type="text" id="s_kaspi_link" placeholder="https://pay.kaspi.kz/pay/..."></div>
-        </div>
-      </details>
-    </div>
-
-    <div class="sec">
-      <h3>👤 <span id="s-buyer"></span></h3>
-      <div class="field"><label id="l-bname"></label><input type="text" id="b_name"></div>
-      <div class="field"><label id="l-bbin"></label><input type="text" id="b_bin" inputmode="numeric"></div>
-    </div>
-
-    <div class="sec">
-      <div class="row2">
+        </div></details>
+      </div>
+      <div class="sec">
+        <h3>👤 <span id="s-buyer"></span></h3>
+        <div class="field"><label id="l-bname"></label><input type="text" id="b_name"></div>
+        <div class="field"><label id="l-bbin"></label><input type="text" id="b_bin" inputmode="numeric"></div>
+      </div>
+      <div class="sec"><div class="row2">
         <div class="field"><label id="l-num"></label><input type="text" id="d_number" value="1"></div>
         <div class="field"><label id="l-date"></label><input type="date" id="d_date"></div>
+      </div></div>
+      <div class="sec">
+        <h3>📋 <span id="s-items"></span></h3>
+        <div class="ihead"><span id="ih-name"></span><span id="ih-unit"></span><span id="ih-qty"></span><span></span></div>
+        <div id="items"></div>
+        <button class="additem" onclick="addItem()" id="b-additem"></button>
+        <label class="chk" style="margin-top:10px"><input type="checkbox" id="d_vat"><span id="l-vat"></span></label>
+        <div class="total"><span id="l-total"></span><span id="total">0 ₸</span></div>
       </div>
+      <button class="btn" id="genbtn" onclick="generate()"></button>
+      <p class="note" id="f-note"></p>
     </div>
-
-    <div class="sec">
-      <h3>📋 <span id="s-items"></span></h3>
-      <div class="ihead"><span id="ih-name"></span><span id="ih-unit"></span><span id="ih-qty"></span><span></span></div>
-      <div id="items"></div>
-      <button class="additem" onclick="addItem()" id="b-additem"></button>
-      <label class="chk" style="margin-top:10px"><input type="checkbox" id="d_vat"><span id="l-vat"></span></label>
-      <div class="total"><span id="l-total"></span><span id="total">0 ₸</span></div>
-    </div>
-
-    <button class="btn" id="genbtn" onclick="generate()"></button>
-    <p class="note" id="f-note"></p>
+    <div id="result" class="hidden"><div class="ok">
+      <div class="em">✅</div><h2 id="r-title"></h2><p class="sub" id="r-sub"></p>
+      <a class="btn" id="r-open" target="_blank" style="display:block;text-decoration:none;line-height:50px;margin-bottom:10px"></a>
+      <a class="btn ghost" id="r-download" style="display:block;text-decoration:none;line-height:48px;margin-bottom:10px"></a>
+      <button class="btn ghost" onclick="goDocsHome()" id="r-new"></button>
+    </div></div>
   </div>
 
-  <!-- RESULT -->
-  <div id="result" class="hidden">
-    <div class="ok">
-      <div class="em">✅</div>
-      <h2 id="r-title"></h2>
-      <p class="sub" id="r-sub"></p>
-      <a class="btn" id="r-open" target="_blank" style="display:block;text-decoration:none;line-height:52px;margin-bottom:10px"></a>
-      <a class="btn ghost" id="r-download" style="display:block;text-decoration:none;line-height:50px;margin-bottom:10px"></a>
-      <button class="btn ghost" onclick="goHome()" id="r-new"></button>
+  <!-- ===== TAB: CALCULATORS ===== -->
+  <div id="tab-calc" class="hidden">
+    <div id="calc-home">
+      <h2 id="c-title"></h2><p class="sub" id="c-sub"></p>
+      <div id="calc-list"></div>
     </div>
+    <div id="calc-form" class="hidden">
+      <button class="back" onclick="goCalcHome()">‹ <span id="c-back"></span></button>
+      <h2 id="cf-title"></h2>
+      <div class="sec" id="cf-fields"></div>
+      <button class="btn" id="c-run" onclick="runCalc()"></button>
+      <div class="sec hidden" id="cf-result" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: AI ===== -->
+  <div id="tab-ai" class="hidden">
+    <h2 id="a-title" style="margin-bottom:2px"></h2><p class="sub" id="a-sub"></p>
+    <div class="chips" id="a-chips"></div>
+    <div class="chat" id="chat"></div>
   </div>
 </div>
 
+<div class="airow hidden" id="airow"><div class="wrap">
+  <input type="text" id="ai-input" autocomplete="off">
+  <button class="aisend" onclick="sendAI()">➤</button>
+</div></div>
+
+<div class="nav" id="nav"></div>
+
 <script>
-  const API = 'https://qujat-production.up.railway.app';
-  try{ const tg=window.Telegram&&window.Telegram.WebApp; if(tg){tg.ready();tg.expand();} }catch(e){}
+  const API='https://qujat-production.up.railway.app';
+  try{const tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){}
+  const $=id=>document.getElementById(id);
 
   const STR={
-    ru:{title:"Создайте документ онлайн",sub:"Бесплатно, прямо в браузере. Без регистрации.",
-      banner:"✓ Работает в браузере — заполните форму и скачайте готовый PDF",
-      note:'Нужны налоги, учёт, ИИ-помощник и оплата Kaspi? <a href="https://t.me/Qujatkz_bot">Откройте бот →</a>',
+    ru:{nav:["Документы","Калькуляторы","ИИ-помощник"],
+      htitle:"Создайте документ",hsub:"Бесплатно, в браузере. Без регистрации.",
+      hbanner:"✓ Заполните форму — скачайте готовый PDF",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
       sname:"Название (ИП/ТОО) *",sbin:"БИН/ИИН",sfio:"ФИО руководителя",bank:"Банковские реквизиты (необязательно)",
       bankname:"Банк",kaspi:"Ссылка Kaspi (для QR)",bname:"Название клиента",bbin:"БИН/ИИН клиента",
       num:"№ документа",date:"Дата",ihname:"Наименование",ihunit:"Кол-во",ihqty:"Цена",
       additem:"+ Добавить позицию",vat:"С НДС 16%",total:"Итого:",gen:"📄 Создать PDF",genwait:"Создаю…",
-      fnote:"Данные поставщика сохранятся в этом браузере для следующего раза.",
-      itemname:"Наименование",unit:"шт.",
-      rtitle:"Документ готов!",rsub:"PDF создан. Откройте или скачайте.",ropen:"👁 Открыть PDF",
-      rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",
-      errseller:"Укажите название поставщика",erritems:"Добавьте хотя бы одну позицию",errnet:"Ошибка сети. Попробуйте ещё раз."},
-    kz:{title:"Құжатты онлайн жасаңыз",sub:"Тегін, тікелей браузерде. Тіркелусіз.",
-      banner:"✓ Браузерде істейді — форманы толтырып, дайын PDF жүктеңіз",
-      note:'Салық, есеп, ИИ-көмекші және Kaspi төлемі керек пе? <a href="https://t.me/Qujatkz_bot">Ботты ашыңыз →</a>',
+      fnote:"Данные поставщика сохранятся в браузере.",itemname:"Наименование",
+      rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"👁 Открыть PDF",rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",
+      errseller:"Укажите название поставщика",erritems:"Добавьте позицию",errnet:"Ошибка сети. Попробуйте ещё раз.",
+      ctitle:"Калькуляторы 2026",csub:"Налоги, зарплата, режимы — по ставкам РК 2026.",crun:"Рассчитать",cresult:"Результат",
+      atitle:"ИИ-помощник",asub:"Спросите про налоги, документы, бухгалтерию РК 2026.",
+      aplaceholder:"Ваш вопрос…",agreet:"Здравствуйте! Я помощник Qujat. Спросите про налоги 2026, документы или бухгалтерию РК.",
+      achips:["Какой налог у ИП?","Когда сдавать 910?","ИП или ТОО?","Ставка НДС 2026?"],
+      ainote:"⚠️ ИИ может ошибаться. Точные данные — на kgd.gov.kz."},
+    kz:{nav:["Құжаттар","Калькулятор","AI-көмекші"],
+      htitle:"Құжат жасаңыз",hsub:"Тегін, браузерде. Тіркелусіз.",
+      hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
-      sname:"Атауы (ЖК/ТОО) *",sbin:"БИН/ЖСН",sfio:"Басшының аты-жөні",bank:"Банк деректемелері (міндетті емес)",
-      bankname:"Банк",kaspi:"Kaspi сілтемесі (QR үшін)",bname:"Клиент атауы",bbin:"Клиент БИН/ЖСН",
+      sname:"Атауы (ЖК/ТОО) *",sbin:"БИН/ЖСН",sfio:"Басшы аты-жөні",bank:"Банк деректемелері (міндетті емес)",
+      bankname:"Банк",kaspi:"Kaspi сілтемесі (QR)",bname:"Клиент атауы",bbin:"Клиент БИН/ЖСН",
       num:"Құжат №",date:"Күні",ihname:"Атауы",ihunit:"Саны",ihqty:"Баға",
       additem:"+ Атау қосу",vat:"ҚҚС 16%-бен",total:"Барлығы:",gen:"📄 PDF жасау",genwait:"Жасалуда…",
-      fnote:"Жеткізуші деректері келесі жолға осы браузерде сақталады.",
-      itemname:"Атауы",unit:"дана",
-      rtitle:"Құжат дайын!",rsub:"PDF жасалды. Ашыңыз немесе жүктеңіз.",ropen:"👁 PDF ашу",
-      rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",
-      errseller:"Жеткізуші атауын жазыңыз",erritems:"Кемінде бір атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз."}
+      fnote:"Жеткізуші деректері браузерде сақталады.",itemname:"Атауы",
+      rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"👁 PDF ашу",rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",
+      errseller:"Жеткізуші атауын жазыңыз",erritems:"Атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз.",
+      ctitle:"Калькуляторлар 2026",csub:"Салық, жалақы, режимдер — 2026 ставкалары.",crun:"Есептеу",cresult:"Нәтиже",
+      atitle:"AI-көмекші",asub:"2026 салық, құжат, бухгалтерия туралы сұраңыз.",
+      aplaceholder:"Сұрағыңыз…",agreet:"Сәлеметсіз бе! Мен Qujat көмекшісімін. 2026 салық, құжат немесе бухгалтерия туралы сұраңыз.",
+      achips:["ИП қандай салық төлейді?","910 қашан тапсырылады?","ИП па, ТОО ма?","2026 ҚҚС ставкасы?"],
+      ainote:"⚠️ AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз."}
   };
   const CATS=[
-    {key:"invoice",icon:"💵",ru:["Счёт на оплату","Реквизиты, сумма, Kaspi QR"],kz:["Шот (төлеуге)","Деректеме, сома, Kaspi QR"]},
+    {key:"invoice",icon:"💵",ru:["Счёт на оплату","Реквизиты, сумма, Kaspi QR"],kz:["Шот (төлеуге)","Деректеме, сома, QR"]},
     {key:"act",icon:"📑",ru:["Акт выполненных работ","Услуги, работы"],kz:["Орындалған жұмыс актісі","Қызмет, жұмыс"]},
     {key:"waybill",icon:"📦",ru:["Накладная","Отгрузка товара"],kz:["Жүкқұжат","Тауар жөнелту"]},
     {key:"sf",icon:"🧾",ru:["Счёт-фактура","Для плательщиков НДС"],kz:["Шот-фактура","ҚҚС төлеушілерге"]}
   ];
-  let lang = localStorage.getItem('qujat_weblang') || (navigator.language||'').toLowerCase().startsWith('kk')?'kz':'ru';
-  if(lang!=='kz'&&lang!=='ru') lang='ru';
-  let curDoc=null, lastUrl=null;
-  const $=id=>document.getElementById(id);
+  let lang=localStorage.getItem('qujat_weblang'); if(lang!=='kz'&&lang!=='ru') lang=(navigator.language||'').toLowerCase().startsWith('kk')?'kz':'ru';
+  let curDoc=null,lastUrl=null,curTab='docs',calcList=[],curCalc=null,aiHist=[];
+  const S=()=>STR[lang];
 
-  function toggleLang(){ lang=lang==='ru'?'kz':'ru'; localStorage.setItem('qujat_weblang',lang); renderAll(); }
+  function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
 
-  function renderHome(){
-    const s=STR[lang];
-    $('h-title').textContent=s.title; $('h-sub').textContent=s.sub; $('h-banner').textContent=s.banner;
-    $('h-note').innerHTML=s.note;
-    const box=$('cats'); box.innerHTML='';
-    CATS.forEach(c=>{
-      const[t,d]=c[lang];
-      const el=document.createElement('div'); el.className='card';
-      el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
-      el.onclick=()=>openForm(c.key); box.appendChild(el);
+  function renderNav(){
+    const s=S(),icons=["📄","🧮","💬"],ids=["docs","calc","ai"];
+    $('nav').innerHTML='';
+    s.nav.forEach((label,i)=>{
+      const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
+      b.innerHTML='<span>'+icons[i]+'</span><span class="nl">'+label+'</span>';
+      b.onclick=()=>showTab(ids[i]); $('nav').appendChild(b);
     });
   }
-  function labels(){
-    const s=STR[lang];
-    $('langbtn').textContent='🌐 '+(lang==='ru'?'RU':'KZ');
-    $('f-back').textContent=s.back; $('s-seller').textContent=s.seller; $('s-buyer').textContent=s.buyer;
-    $('s-items').textContent=s.items; $('s-bank').textContent=s.bank;
-    $('l-sname').textContent=s.sname; $('l-sbin').textContent=s.sbin; $('l-sfio').textContent=s.sfio;
-    $('l-bank').textContent=s.bankname; $('l-kaspi').textContent=s.kaspi;
-    $('l-bname').textContent=s.bname; $('l-bbin').textContent=s.bbin;
-    $('l-num').textContent=s.num; $('l-date').textContent=s.date;
-    $('ih-name').textContent=s.ihname; $('ih-unit').textContent=s.ihunit; $('ih-qty').textContent=s.ihqty;
-    $('b-additem').textContent=s.additem; $('l-vat').textContent=s.vat; $('l-total').textContent=s.total;
-    $('genbtn').textContent=s.gen; $('f-note').textContent=s.fnote;
-    $('r-title').textContent=s.rtitle; $('r-sub').textContent=s.rsub; $('r-open').textContent=s.ropen;
-    $('r-download').textContent=s.rdownload; $('r-new').textContent=s.rnew;
+  function showTab(t){
+    curTab=t;
+    ['docs','calc','ai'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
+    $('airow').classList.toggle('hidden',t!=='ai');
+    if(t==='calc'&&!calcList.length) loadCalc();
+    if(t==='ai'&&!aiHist.length) aiGreet();
+    renderNav(); window.scrollTo(0,0);
   }
-  function renderAll(){ renderHome(); labels(); }
 
-  function defUnit(){ return curDoc==='act' ? 'усл.' : 'шт.'; }
+  /* ---------- DOCUMENTS ---------- */
+  function renderHome(){
+    const s=S();
+    $('h-title').textContent=s.htitle;$('h-sub').textContent=s.hsub;$('h-banner').textContent=s.hbanner;
+    const box=$('cats');box.innerHTML='';
+    CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
+      el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>openForm(c.key);box.appendChild(el);});
+  }
+  function docLabels(){
+    const s=S();$('langbtn').textContent='🌐 '+(lang==='ru'?'RU':'KZ');
+    $('f-back').textContent=s.back;$('s-seller').textContent=s.seller;$('s-buyer').textContent=s.buyer;
+    $('s-items').textContent=s.items;$('s-bank').textContent=s.bank;$('l-sname').textContent=s.sname;
+    $('l-sbin').textContent=s.sbin;$('l-sfio').textContent=s.sfio;$('l-bank').textContent=s.bankname;
+    $('l-kaspi').textContent=s.kaspi;$('l-bname').textContent=s.bname;$('l-bbin').textContent=s.bbin;
+    $('l-num').textContent=s.num;$('l-date').textContent=s.date;$('ih-name').textContent=s.ihname;
+    $('ih-unit').textContent=s.ihunit;$('ih-qty').textContent=s.ihqty;$('b-additem').textContent=s.additem;
+    $('l-vat').textContent=s.vat;$('l-total').textContent=s.total;$('genbtn').textContent=s.gen;
+    $('f-note').textContent=s.fnote;$('r-title').textContent=s.rtitle;$('r-sub').textContent=s.rsub;
+    $('r-open').textContent=s.ropen;$('r-download').textContent=s.rdownload;$('r-new').textContent=s.rnew;
+  }
+  function defUnit(){return curDoc==='act'?'усл.':'шт.';}
   function addItem(name='',qty='1',price=''){
-    const s=STR[lang];
-    const row=document.createElement('div'); row.className='itemrow';
+    const s=S();const row=document.createElement('div');row.className='itemrow';
     row.innerHTML='<input type="text" placeholder="'+s.itemname+'" value="'+name+'">'+
       '<input type="number" inputmode="decimal" value="'+qty+'">'+
-      '<input type="number" inputmode="decimal" placeholder="0" value="'+price+'">'+
-      '<button class="del">×</button>';
-    const ins=row.querySelectorAll('input');
-    ins[0].dataset.k='name'; ins[1].dataset.k='qty'; ins[2].dataset.k='price';
-    ins[1].addEventListener('input',calcTotal);
-    ins[2].addEventListener('input',calcTotal);
+      '<input type="number" inputmode="decimal" placeholder="0" value="'+price+'"><button class="del">×</button>';
+    const ins=row.querySelectorAll('input');ins[0].dataset.k='name';ins[1].dataset.k='qty';ins[2].dataset.k='price';
+    ins[1].addEventListener('input',calcTotal);ins[2].addEventListener('input',calcTotal);
     row.querySelector('.del').onclick=()=>{row.remove();calcTotal();};
-    $('items').appendChild(row); calcTotal();
+    $('items').appendChild(row);calcTotal();
   }
-  function calcTotal(){
-    let sum=0;
-    document.querySelectorAll('#items .itemrow').forEach(r=>{
-      const q=parseFloat((r.querySelector('[data-k=qty]').value||'0').replace(',','.'))||0;
-      const price=parseFloat((r.querySelector('[data-k=price]').value||'0').replace(',','.'))||0;
-      sum+=q*price;
-    });
-    $('total').textContent=sum.toLocaleString('ru-RU')+' ₸';
-  }
-
+  function calcTotal(){let sum=0;document.querySelectorAll('#items .itemrow').forEach(r=>{
+    const q=parseFloat((r.querySelector('[data-k=qty]').value||'0').replace(',','.'))||0;
+    const p=parseFloat((r.querySelector('[data-k=price]').value||'0').replace(',','.'))||0;sum+=q*p;});
+    $('total').textContent=sum.toLocaleString('ru-RU')+' ₸';}
   function openForm(key){
-    curDoc=key; const c=CATS.find(x=>x.key===key);
-    $('f-title').textContent=c[lang][0]; $('f-sub').textContent=c[lang][1];
-    // профильді localStorage-тан толтыру
+    curDoc=key;const c=CATS.find(x=>x.key===key);
+    $('f-title').textContent=c[lang][0];$('f-sub').textContent=c[lang][1];
     const saved=JSON.parse(localStorage.getItem('qujat_seller')||'{}');
-    ['name','bin','fio','bank_name','iik','bik','kaspi_link'].forEach(k=>{ if($('s_'+k))$('s_'+k).value=saved[k]||''; });
-    $('b_name').value=''; $('b_bin').value=''; $('d_number').value='1';
-    $('d_date').valueAsDate=new Date();
-    $('items').innerHTML=''; addItem(); $('d_vat').checked=false;
-    $('home').classList.add('hidden'); $('result').classList.add('hidden'); $('form').classList.remove('hidden');
-    window.scrollTo(0,0);
+    ['name','bin','fio','bank_name','iik','bik','kaspi_link'].forEach(k=>{if($('s_'+k))$('s_'+k).value=saved[k]||'';});
+    $('b_name').value='';$('b_bin').value='';$('d_number').value='1';$('d_date').valueAsDate=new Date();
+    $('items').innerHTML='';addItem();$('d_vat').checked=false;
+    $('home').classList.add('hidden');$('result').classList.add('hidden');$('form').classList.remove('hidden');window.scrollTo(0,0);
   }
-  function goHome(){ $('form').classList.add('hidden'); $('result').classList.add('hidden'); $('home').classList.remove('hidden'); window.scrollTo(0,0); }
-
-  function val(id){ return ($(id).value||'').trim(); }
-  function fmtDate(){ const d=$('d_date').value; if(!d)return ''; const[y,m,dd]=d.split('-'); return dd+'.'+m+'.'+y; }
-
+  function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
+  const val=id=>($(id).value||'').trim();
+  function fmtDate(){const d=$('d_date').value;if(!d)return '';const[y,m,dd]=d.split('-');return dd+'.'+m+'.'+y;}
   async function generate(){
-    const s=STR[lang];
-    if(!val('s_name')){ alert(s.errseller); return; }
-    const items=[];
-    document.querySelectorAll('#items .itemrow').forEach(r=>{
+    const s=S();if(!val('s_name')){alert(s.errseller);return;}
+    const items=[];document.querySelectorAll('#items .itemrow').forEach(r=>{
       const name=r.querySelector('[data-k=name]').value.trim();
-      const qty=r.querySelector('[data-k=qty]').value||'1';
-      const price=r.querySelector('[data-k=price]').value;
-      if(name) items.push({name,unit:defUnit(),qty,price});
-    });
-    if(!items.length){ alert(s.erritems); return; }
-    const seller={name:val('s_name'),bin:val('s_bin'),fio:val('s_fio'),
-      bank_name:val('s_bank_name'),iik:val('s_iik'),bik:val('s_bik'),kaspi_link:val('s_kaspi_link')};
+      const qty=r.querySelector('[data-k=qty]').value||'1';const price=r.querySelector('[data-k=price]').value;
+      if(name)items.push({name,unit:defUnit(),qty,price});});
+    if(!items.length){alert(s.erritems);return;}
+    const seller={name:val('s_name'),bin:val('s_bin'),fio:val('s_fio'),bank_name:val('s_bank_name'),iik:val('s_iik'),bik:val('s_bik'),kaspi_link:val('s_kaspi_link')};
     localStorage.setItem('qujat_seller',JSON.stringify(seller));
-    const payload={doc:curDoc,number:val('d_number'),date:fmtDate(),vat:$('d_vat').checked,
-      seller,buyer:{name:val('b_name'),bin:val('b_bin')},items};
-    const btn=$('genbtn'); btn.disabled=true; btn.innerHTML='<span class="spin"></span>'+s.genwait;
+    const payload={doc:curDoc,number:val('d_number'),date:fmtDate(),vat:$('d_vat').checked,seller,buyer:{name:val('b_name'),bin:val('b_bin')},items};
+    const btn=$('genbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
     try{
       const res=await fetch(API+'/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      if(!res.ok){ throw new Error('http '+res.status); }
-      const blob=await res.blob();
-      if(lastUrl) URL.revokeObjectURL(lastUrl);
-      lastUrl=URL.createObjectURL(blob);
-      const fname=curDoc+'_'+(val('d_number')||'1')+'.pdf';
-      $('r-open').href=lastUrl;
-      $('r-download').href=lastUrl; $('r-download').setAttribute('download',fname);
-      $('form').classList.add('hidden'); $('result').classList.remove('hidden'); window.scrollTo(0,0);
-    }catch(e){ alert(s.errnet); }
-    finally{ btn.disabled=false; btn.textContent=s.gen; }
+      if(!res.ok)throw new Error('http');
+      const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
+      const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
+      $('form').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
+    }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
   }
 
-  renderAll();
+  /* ---------- CALCULATORS ---------- */
+  async function loadCalc(){
+    try{const r=await fetch(API+'/api/calc-catalog');calcList=(await r.json()).calc||[];}catch(e){calcList=[];}
+    renderCalcHome();
+  }
+  function renderCalcHome(){
+    const s=S();$('c-title').textContent=s.ctitle;$('c-sub').textContent=s.csub;$('c-back').textContent=s.back;
+    const box=$('calc-list');box.innerHTML='';
+    calcList.forEach(c=>{const el=document.createElement('div');el.className='card';
+      el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+c[lang]+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>openCalc(c);box.appendChild(el);});
+    $('calc-home').classList.remove('hidden');$('calc-form').classList.add('hidden');
+  }
+  function openCalc(c){
+    curCalc=c;$('cf-title').textContent=c[lang];$('c-run').textContent=S().crun;
+    const box=$('cf-fields');box.innerHTML='';
+    c.fields.forEach(f=>{const d=document.createElement('div');d.className='field';
+      d.innerHTML='<label>'+f[lang]+'</label><input type="number" inputmode="decimal" data-k="'+f.k+'">';box.appendChild(d);});
+    $('cf-result').classList.add('hidden');
+    $('calc-home').classList.add('hidden');$('calc-form').classList.remove('hidden');window.scrollTo(0,0);
+  }
+  function goCalcHome(){$('calc-form').classList.add('hidden');$('calc-home').classList.remove('hidden');window.scrollTo(0,0);}
+  async function runCalc(){
+    const params={};document.querySelectorAll('#cf-fields input').forEach(i=>{params[i.dataset.k]=i.value;});
+    const btn=$('c-run');btn.disabled=true;
+    try{
+      const r=await fetch(API+'/api/calc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:curCalc.type,lang,params})});
+      const d=await r.json();const box=$('cf-result');
+      box.innerHTML='<h3 style="margin-bottom:8px">'+S().cresult+'</h3>'+
+        d.lines.map(l=>'<div class="rline"><span>'+l[0]+'</span><b>'+l[1]+'</b></div>').join('')+
+        (d.note?'<p class="note" style="text-align:left;margin:10px 0 0">'+d.note+'</p>':'');
+      box.classList.remove('hidden');
+    }catch(e){alert(S().errnet);}finally{btn.disabled=false;}
+  }
+
+  /* ---------- AI ---------- */
+  function bubble(role,text){const m=document.createElement('div');m.className='msg '+(role==='user'?'u':'a');m.textContent=text;$('chat').appendChild(m);
+    window.scrollTo(0,document.body.scrollHeight);return m;}
+  function aiGreet(){
+    const s=S();$('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('ai-input').placeholder=s.aplaceholder;
+    $('chat').innerHTML='';aiHist=[];bubble('assistant',s.agreet);
+    const ch=$('a-chips');ch.innerHTML='';
+    s.achips.forEach(q=>{const b=document.createElement('div');b.className='chip';b.textContent=q;b.onclick=()=>{$('ai-input').value=q;sendAI();};ch.appendChild(b);});
+  }
+  async function sendAI(){
+    const inp=$('ai-input');const text=inp.value.trim();if(!text)return;inp.value='';
+    bubble('user',text);aiHist.push({role:'user',content:text});
+    const wait=bubble('assistant','…');
+    try{
+      const r=await fetch(API+'/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,lang,history:aiHist.slice(-6)})});
+      const d=await r.json();wait.textContent=d.reply||S().errnet;aiHist.push({role:'assistant',content:d.reply||''});
+    }catch(e){wait.textContent=S().errnet;}
+    window.scrollTo(0,document.body.scrollHeight);
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===$('ai-input'))sendAI();});
+
+  function renderAll(){renderHome();docLabels();renderNav();
+    if(curTab==='calc'&&calcList.length)renderCalcHome();
+    if(curTab==='ai')aiGreet();}
+  renderAll();showTab('docs');
 </script>
 </body>
 </html>
