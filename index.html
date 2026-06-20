@@ -158,6 +158,13 @@
   <!-- ===== TAB: ACCOUNT ===== -->
   <div id="tab-account" class="hidden">
     <h2 id="acc-h">👤</h2><p class="sub" id="acc-intro"></p>
+    <div id="acc-reset" class="hidden">
+      <div class="sec">
+        <h3 id="reset-h"></h3><p class="sub" id="reset-sub"></p>
+        <div class="field"><label id="la-reset"></label><input type="password" id="rs_pass"></div>
+        <button class="btn" id="a-resetbtn" onclick="doReset()"></button>
+      </div>
+    </div>
     <div id="acc-auth" class="hidden">
       <div class="sec">
         <div id="acc-reg">
@@ -172,6 +179,7 @@
           <div class="field"><label id="la-pass-l"></label><input type="password" id="al_pass"></div>
           <button class="btn" id="a-loginbtn" onclick="doLogin()"></button>
           <p class="note"><a id="a-to-reg" style="cursor:pointer" onclick="acctab('reg')"></a></p>
+          <p class="note"><a id="a-forgot" style="cursor:pointer" onclick="doForgot()"></a></p>
         </div>
       </div>
     </div>
@@ -186,6 +194,21 @@
       <div class="sec">
         <h3>📁 <span id="acc-hist-t"></span></h3>
         <div id="acc-history"></div>
+      </div>
+      <div class="sec" id="acc-link">
+        <h3 id="acc-link-t"></h3>
+        <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
+        <div id="acc-link-form">
+          <p class="sub" id="acc-link-hint" style="margin-bottom:8px"></p>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="lt_code" inputmode="numeric" placeholder="000000" style="flex:1">
+            <button class="btn" style="width:auto;padding:0 18px" id="a-linkbtn" onclick="doLinkTg()"></button>
+          </div>
+        </div>
+      </div>
+      <div class="sec hidden" id="acc-admin">
+        <h3 id="acc-admin-t"></h3>
+        <div id="admin-users"></div>
       </div>
       <details class="sec">
         <summary id="acc-chpass-t" style="color:var(--accent);font-weight:700"></summary>
@@ -236,6 +259,9 @@
       acchist:"История документов",accnohist:"Пока пусто — создайте документ",accrepeat:"Повторить",
       accchpass:"🔑 Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
       accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
+      forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
+      resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
+      linktg:"🔗 Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"💎 Premium активен",adminp:"⚙️ Админ-панель",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
     kz:{nav:["Құжаттар","Калькулятор","AI","Профиль"],
@@ -261,6 +287,9 @@
       acchist:"Құжат тарихы",accnohist:"Әзірге бос — құжат жасаңыз",accrepeat:"Қайталау",
       accchpass:"🔑 Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
       accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
+      forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
+      resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
+      linktg:"🔗 Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"💎 Premium белсенді",adminp:"⚙️ Админ-панель",
       e_email:"Дұрыс email жазыңыз",e_pass:"Пароль кемінде 6 таңба",e_name:"Аты кемінде 2 таңба",
       e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль"}
   };
@@ -442,13 +471,24 @@
     $('a-logout').textContent=s.acclogout;$('acc-welcome').textContent=s.accwelcome;
     $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
     $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
-    $('a-delete').textContent=s.accdelete;
+    $('a-delete').textContent=s.accdelete;$('a-forgot').textContent=s.forgot;
+    $('acc-link-t').textContent=s.linktg;$('acc-link-hint').textContent=s.linkhint;$('a-linkbtn').textContent=s.linkbtn;
+    $('acc-admin-t').textContent=s.adminp;$('reset-h').textContent=s.resettitle;$('reset-sub').textContent=s.resetsub;
+    $('la-reset').textContent=s.accnew;$('a-resetbtn').textContent=s.resetbtn;
   }
   function acctab(w){$('acc-reg').classList.toggle('hidden',w!=='reg');$('acc-login').classList.toggle('hidden',w!=='login');}
   function renderAccount(){
     accLabels();
+    if(resetTok){$('acc-reset').classList.remove('hidden');$('acc-auth').classList.add('hidden');$('acc-user').classList.add('hidden');return;}
+    $('acc-reset').classList.add('hidden');
     if(meUser){$('acc-user').classList.remove('hidden');$('acc-auth').classList.add('hidden');
-      $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';loadHistory();}
+      $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';
+      const linked=!!meUser.telegram_id;
+      $('acc-link-form').classList.toggle('hidden',linked);
+      const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
+      if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
+      const isAdmin=meUser.role==='admin';$('acc-admin').classList.toggle('hidden',!isAdmin);if(isAdmin)loadAdmin();
+      loadHistory();}
     else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');}
   }
   async function loadHistory(){
@@ -477,6 +517,40 @@
     try{await fetch(API+'/auth/delete',{method:'POST',credentials:'include'});}catch(e){}
     meUser=null;renderAccount();
   }
+  let resetTok=new URLSearchParams(location.search).get('reset')||'';
+  async function doForgot(){
+    const s=S();const email=prompt(s.forgotask,$('al_email').value||'');
+    if(!email||!reEmail.test(email.trim().toLowerCase()))return;
+    try{await fetch(API+'/auth/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.trim().toLowerCase()})});}catch(e){}
+    alert(s.forgotsent);
+  }
+  async function doReset(){
+    const s=S();const pass=$('rs_pass').value;if(pass.length<6)return alert(s.e_pass);
+    const b=$('a-resetbtn');b.disabled=true;
+    try{const r=await fetch(API+'/auth/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:resetTok,new_password:pass})});
+      if(!r.ok){alert(s.resetbad);return;}
+      alert(s.resetok);resetTok='';history.replaceState(null,'',location.pathname);renderAccount();acctab('login');
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doLinkTg(){
+    const s=S();const code=$('lt_code').value.trim();if(!code)return;
+    const b=$('a-linkbtn');b.disabled=true;
+    try{const r=await fetch(API+'/auth/link-telegram',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+      if(!r.ok){alert(s.linkbad);return;}
+      $('lt_code').value='';alert(s.linkok);await loadMe();
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function loadAdmin(){
+    const box=$('admin-users');if(!box)return;
+    try{const r=await fetch(API+'/api/admin/users',{credentials:'include'});const us=(await r.json()).users||[];
+      box.innerHTML=us.map(u=>'<div class="rline"><span>'+u.email+'<br><span style="color:var(--muted);font-size:12px">'+(u.name||'')+'</span></span>'+
+        '<select onchange="setUserRole('+u.id+',this.value)" style="border:1px solid var(--line);border-radius:8px;height:32px;background:var(--card);color:var(--text)">'+
+        ['client','manager','admin'].map(rr=>'<option value="'+rr+'"'+(u.role===rr?' selected':'')+'>'+rr+'</option>').join('')+'</select></div>').join('');
+    }catch(e){box.innerHTML='';}
+  }
+  async function setUserRole(id,role){
+    try{await fetch(API+'/api/admin/set-role',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,role})});}catch(e){}
+  }
   async function loadMe(){
     try{const r=await fetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
     renderAccount();
@@ -502,7 +576,7 @@
   function renderAll(){renderHome();docLabels();renderNav();renderAccount();
     if(curTab==='calc'&&calcList.length)renderCalcHome();
     if(curTab==='ai')aiGreet();}
-  renderAll();showTab('docs');
+  renderAll();showTab(resetTok?'account':'docs');
 </script>
 </body>
 </html>
