@@ -586,6 +586,7 @@
 
   /* ---------- CONVERTER ---------- */
   const CONV=[
+    {target:"ocr",icon:"🔎",ru:["OCR — скан/фото → текст","Распознать текст (ИИ) → Word"],kz:["OCR — скан/фото → мәтін","Мәтінді тану (AI) → Word"],accept:"application/pdf,image/*",multi:false},
     {target:"pdf2word",icon:"📝",ru:["PDF → Word","Редактируемый .docx (текст)"],kz:["PDF → Word",".docx (мәтін)"],accept:"application/pdf",multi:false},
     {target:"pdf2excel",icon:"📊",ru:["PDF → Excel","Текст PDF в таблицу .xlsx"],kz:["PDF → Excel","Кесте .xlsx"],accept:"application/pdf",multi:false},
     {target:"pdf2jpg",icon:"🖼️",ru:["PDF → JPG","Каждая страница — картинка (zip)"],kz:["PDF → JPG","Әр бет — сурет (zip)"],accept:"application/pdf",multi:false},
@@ -595,20 +596,36 @@
     {target:"splitpdf",icon:"✂️",ru:["Разделить PDF","Каждая страница — отдельный PDF (zip)"],kz:["PDF бөлу","Әр бет бөлек (zip)"],accept:"application/pdf",multi:false},
     {target:"compresspdf",icon:"🗜️",ru:["Сжать PDF","Уменьшить размер файла"],kz:["PDF сығу","Көлемін азайту"],accept:"application/pdf",multi:false},
     {target:"rotatepdf",icon:"🔄",ru:["Повернуть PDF","На 90° по часовой"],kz:["PDF бұру","90° сағат тілімен"],accept:"application/pdf",multi:false},
+    {target:"protect",icon:"🔒",ru:["Поставить пароль на PDF","Защитить PDF"],kz:["PDF-ке пароль қою","Қорғау"],accept:"application/pdf",multi:false,param:"password"},
+    {target:"unlock",icon:"🔓",ru:["Снять пароль с PDF","Убрать защиту"],kz:["PDF паролін алу","Қорғауды алу"],accept:"application/pdf",multi:false,param:"password"},
+    {target:"watermark",icon:"💧",ru:["Водяной знак на PDF","Текст по диагонали"],kz:["PDF-ке су белгісі","Қиғаш мәтін"],accept:"application/pdf",multi:false,param:"text"},
+    {target:"addpagenum",icon:"#️⃣",ru:["Номера страниц","Добавить нумерацию"],kz:["Бет нөмірлері","Нөмірлеу қосу"],accept:"application/pdf",multi:false},
+    {target:"delpages",icon:"🗑️",ru:["Удалить страницы","напр. 2,4-5"],kz:["Беттерді өшіру","мыс. 2,4-5"],accept:"application/pdf",multi:false,param:"range"},
     {target:"images2pdf",icon:"🖼️",ru:["Фото/картинки → PDF","Несколько изображений в один PDF"],kz:["Фото/сурет → PDF","Бір PDF-ке"],accept:"image/*",multi:true},
     {target:"img2jpg",icon:"🏞️",ru:["Картинка → JPG","PNG, WEBP, BMP… → JPG"],kz:["Сурет → JPG","PNG, WEBP… → JPG"],accept:"image/*",multi:false},
     {target:"img2png",icon:"🏞️",ru:["Картинка → PNG","JPG, WEBP… → PNG"],kz:["Сурет → PNG","JPG… → PNG"],accept:"image/*",multi:false},
     {target:"excel2csv",icon:"📈",ru:["Excel → CSV","XLSX → CSV"],kz:["Excel → CSV","XLSX → CSV"],accept:".xlsx,.xls",multi:false},
     {target:"csv2excel",icon:"📈",ru:["CSV → Excel","CSV → XLSX"],kz:["CSV → Excel","CSV → XLSX"],accept:".csv,text/csv",multi:false}
   ];
-  const CONV_EXT={pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
-  let convTarget=null;
+  const CONV_EXT={ocr:"docx",pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",protect:"pdf",unlock:"pdf",watermark:"pdf",addpagenum:"pdf",delpages:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
+  let convTarget=null,convParam="";
   function renderConvert(){
     $('conv-title').textContent=S().convtitle;$('conv-sub').textContent=S().convsub;$('conv-status').textContent='';
     const box=$('conv-list');box.innerHTML='';
     CONV.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
       el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
-      el.onclick=()=>{convTarget=c;const inp=$('conv-input');inp.accept=c.accept;inp.multiple=!!c.multi;inp.value='';inp.click();};
+      el.onclick=()=>{
+        convTarget=c;convParam='';
+        if(c.param){
+          const ru=lang==='ru';
+          const msg=c.param==='password'?(ru?'Введите пароль:':'Парольді енгізіңіз:'):
+                    c.param==='range'?(ru?'Какие страницы удалить? напр. 2,4-5':'Қай беттерді өшіру? мыс. 2,4-5'):
+                    (ru?'Текст водяного знака:':'Су белгісінің мәтіні:');
+          const v=prompt(msg,c.param==='text'?'КОПИЯ':'');
+          if(v===null)return;convParam=v;
+        }
+        const inp=$('conv-input');inp.accept=c.accept;inp.multiple=!!c.multi;inp.value='';inp.click();
+      };
       box.appendChild(el);});
   }
   async function onConvFiles(){
@@ -616,6 +633,7 @@
     const s=S();const fd=new FormData();
     for(const f of inp.files)fd.append('file',f);
     fd.append('target',convTarget.target);
+    if(convParam)fd.append('param',convParam);
     $('conv-status').textContent='⏳ '+s.convwait;
     try{
       const r=await fetch(API+'/api/convert',{method:'POST',body:fd});
