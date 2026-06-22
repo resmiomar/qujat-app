@@ -155,6 +155,14 @@
     <div class="chat" id="chat"></div>
   </div>
 
+  <!-- ===== TAB: CONVERT ===== -->
+  <div id="tab-convert" class="hidden">
+    <h2 id="conv-title"></h2><p class="sub" id="conv-sub"></p>
+    <div id="conv-list"></div>
+    <input type="file" id="conv-input" class="hidden" onchange="onConvFiles()">
+    <p class="note" id="conv-status" style="font-weight:600"></p>
+  </div>
+
   <!-- ===== TAB: ACCOUNT ===== -->
   <div id="tab-account" class="hidden">
     <h2 id="acc-h">👤</h2><p class="sub" id="acc-intro"></p>
@@ -236,7 +244,7 @@
   const $=id=>document.getElementById(id);
 
   const STR={
-    ru:{nav:["Документы","Калькуляторы","ИИ","Профиль"],
+    ru:{nav:["Документы","Расчёты","ИИ","Конвертер","Профиль"],
       htitle:"Создайте документ",hsub:"Бесплатно, в браузере. Без регистрации.",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -248,6 +256,7 @@
       rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"👁 Открыть PDF",rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",
       errseller:"Укажите название поставщика",erritems:"Добавьте позицию",errnet:"Ошибка сети. Попробуйте ещё раз.",
       ctitle:"Калькуляторы 2026",csub:"Налоги, зарплата, режимы — по ставкам РК 2026.",crun:"Рассчитать",cresult:"Результат",
+      convtitle:"Конвертер файлов",convsub:"Конвертируйте файлы прямо в браузере, бесплатно.",convwait:"Конвертирую…",convdone:"Готово! Файл скачан.",converr:"Не удалось — проверьте файл.",
       atitle:"ИИ-помощник",asub:"Спросите про налоги, документы, бухгалтерию РК 2026.",
       aplaceholder:"Ваш вопрос…",agreet:"Здравствуйте! Я помощник Qujat. Спросите про налоги 2026, документы или бухгалтерию РК.",
       achips:["Какой налог у ИП?","Когда сдавать 910?","ИП или ТОО?","Ставка НДС 2026?"],
@@ -264,7 +273,7 @@
       linktg:"🔗 Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"💎 Premium активен",adminp:"⚙️ Админ-панель",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
-    kz:{nav:["Құжаттар","Калькулятор","AI","Профиль"],
+    kz:{nav:["Құжаттар","Есеп","AI","Конвертер","Профиль"],
       htitle:"Құжат жасаңыз",hsub:"Тегін, браузерде. Тіркелусіз.",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -276,6 +285,7 @@
       rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"👁 PDF ашу",rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",
       errseller:"Жеткізуші атауын жазыңыз",erritems:"Атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз.",
       ctitle:"Калькуляторлар 2026",csub:"Салық, жалақы, режимдер — 2026 ставкалары.",crun:"Есептеу",cresult:"Нәтиже",
+      convtitle:"Файл конвертер",convsub:"Файлдарды браузерде тегін конвертациялаңыз.",convwait:"Конвертация…",convdone:"Дайын! Файл жүктелді.",converr:"Болмады — файлды тексеріңіз.",
       atitle:"AI-көмекші",asub:"2026 салық, құжат, бухгалтерия туралы сұраңыз.",
       aplaceholder:"Сұрағыңыз…",agreet:"Сәлеметсіз бе! Мен Qujat көмекшісімін. 2026 салық, құжат немесе бухгалтерия туралы сұраңыз.",
       achips:["ИП қандай салық төлейді?","910 қашан тапсырылады?","ИП па, ТОО ма?","2026 ҚҚС ставкасы?"],
@@ -306,7 +316,7 @@
   function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
 
   function renderNav(){
-    const s=S(),icons=["📄","🧮","💬","👤"],ids=["docs","calc","ai","account"];
+    const s=S(),icons=["📄","🧮","💬","🔄","👤"],ids=["docs","calc","ai","convert","account"];
     $('nav').innerHTML='';
     s.nav.forEach((label,i)=>{
       const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
@@ -316,10 +326,11 @@
   }
   function showTab(t){
     curTab=t;
-    ['docs','calc','ai','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
+    ['docs','calc','ai','convert','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
     $('airow').classList.toggle('hidden',t!=='ai');
     if(t==='calc'&&!calcList.length) loadCalc();
     if(t==='ai'&&!aiHist.length) aiGreet();
+    if(t==='convert') renderConvert();
     if(t==='account') loadMe();
     renderNav(); window.scrollTo(0,0);
   }
@@ -573,8 +584,45 @@
   }
   async function doLogout(){try{await fetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}meUser=null;renderAccount();}
 
+  /* ---------- CONVERTER ---------- */
+  const CONV=[
+    {target:"images2pdf",icon:"🖼️",ru:["Фото/картинки → PDF","Несколько изображений в один PDF"],kz:["Фото/сурет → PDF","Бірнеше суретті бір PDF-ке"],accept:"image/*",multi:true},
+    {target:"pdf2jpg",icon:"📄",ru:["PDF → картинки (JPG)","Каждая страница — JPG (в zip)"],kz:["PDF → сурет (JPG)","Әр бет — JPG (zip)"],accept:"application/pdf",multi:false},
+    {target:"img2jpg",icon:"🏞️",ru:["Картинка → JPG","PNG, WEBP, BMP… → JPG"],kz:["Сурет → JPG","PNG, WEBP… → JPG"],accept:"image/*",multi:false},
+    {target:"img2png",icon:"🖼️",ru:["Картинка → PNG","JPG, WEBP… → PNG"],kz:["Сурет → PNG","JPG, WEBP… → PNG"],accept:"image/*",multi:false},
+    {target:"merge",icon:"📑",ru:["Объединить PDF","Несколько PDF в один файл"],kz:["PDF біріктіру","Бірнеше PDF-ті бірге"],accept:"application/pdf",multi:true},
+    {target:"excel2csv",icon:"📊",ru:["Excel → CSV","XLSX → CSV"],kz:["Excel → CSV","XLSX → CSV"],accept:".xlsx,.xls",multi:false},
+    {target:"csv2excel",icon:"📈",ru:["CSV → Excel","CSV → XLSX"],kz:["CSV → Excel","CSV → XLSX"],accept:".csv,text/csv",multi:false}
+  ];
+  const CONV_EXT={images2pdf:"pdf",pdf2jpg:"zip",img2jpg:"jpg",img2png:"png",merge:"pdf",excel2csv:"csv",csv2excel:"xlsx"};
+  let convTarget=null;
+  function renderConvert(){
+    $('conv-title').textContent=S().convtitle;$('conv-sub').textContent=S().convsub;$('conv-status').textContent='';
+    const box=$('conv-list');box.innerHTML='';
+    CONV.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
+      el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>{convTarget=c;const inp=$('conv-input');inp.accept=c.accept;inp.multiple=!!c.multi;inp.value='';inp.click();};
+      box.appendChild(el);});
+  }
+  async function onConvFiles(){
+    const inp=$('conv-input');if(!inp.files.length||!convTarget)return;
+    const s=S();const fd=new FormData();
+    for(const f of inp.files)fd.append('file',f);
+    fd.append('target',convTarget.target);
+    $('conv-status').textContent='⏳ '+s.convwait;
+    try{
+      const r=await fetch(API+'/api/convert',{method:'POST',body:fd});
+      if(!r.ok){$('conv-status').textContent='❌ '+s.converr;return;}
+      const blob=await r.blob();const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='qujat_converted.'+CONV_EXT[convTarget.target];
+      document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+      $('conv-status').textContent='✅ '+s.convdone;
+    }catch(e){$('conv-status').textContent='❌ '+s.converr;}
+  }
+
   function renderAll(){renderHome();docLabels();renderNav();renderAccount();
     if(curTab==='calc'&&calcList.length)renderCalcHome();
+    if(curTab==='convert')renderConvert();
     if(curTab==='ai')aiGreet();}
   renderAll();showTab(resetTok?'account':'docs');
 </script>
