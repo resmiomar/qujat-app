@@ -586,15 +586,22 @@
 
   /* ---------- CONVERTER ---------- */
   const CONV=[
-    {target:"images2pdf",icon:"🖼️",ru:["Фото/картинки → PDF","Несколько изображений в один PDF"],kz:["Фото/сурет → PDF","Бірнеше суретті бір PDF-ке"],accept:"image/*",multi:true},
-    {target:"pdf2jpg",icon:"📄",ru:["PDF → картинки (JPG)","Каждая страница — JPG (в zip)"],kz:["PDF → сурет (JPG)","Әр бет — JPG (zip)"],accept:"application/pdf",multi:false},
-    {target:"img2jpg",icon:"🏞️",ru:["Картинка → JPG","PNG, WEBP, BMP… → JPG"],kz:["Сурет → JPG","PNG, WEBP… → JPG"],accept:"image/*",multi:false},
-    {target:"img2png",icon:"🖼️",ru:["Картинка → PNG","JPG, WEBP… → PNG"],kz:["Сурет → PNG","JPG, WEBP… → PNG"],accept:"image/*",multi:false},
+    {target:"pdf2word",icon:"📝",ru:["PDF → Word","Редактируемый .docx (текст)"],kz:["PDF → Word",".docx (мәтін)"],accept:"application/pdf",multi:false},
+    {target:"pdf2excel",icon:"📊",ru:["PDF → Excel","Текст PDF в таблицу .xlsx"],kz:["PDF → Excel","Кесте .xlsx"],accept:"application/pdf",multi:false},
+    {target:"pdf2jpg",icon:"🖼️",ru:["PDF → JPG","Каждая страница — картинка (zip)"],kz:["PDF → JPG","Әр бет — сурет (zip)"],accept:"application/pdf",multi:false},
+    {target:"word2pdf",icon:"📄",ru:["Word → PDF",".docx → PDF"],kz:["Word → PDF",".docx → PDF"],accept:".docx",multi:false},
+    {target:"excel2pdf",icon:"📄",ru:["Excel → PDF","Таблица .xlsx → PDF"],kz:["Excel → PDF","Кесте → PDF"],accept:".xlsx,.xls",multi:false},
     {target:"merge",icon:"📑",ru:["Объединить PDF","Несколько PDF в один файл"],kz:["PDF біріктіру","Бірнеше PDF-ті бірге"],accept:"application/pdf",multi:true},
-    {target:"excel2csv",icon:"📊",ru:["Excel → CSV","XLSX → CSV"],kz:["Excel → CSV","XLSX → CSV"],accept:".xlsx,.xls",multi:false},
+    {target:"splitpdf",icon:"✂️",ru:["Разделить PDF","Каждая страница — отдельный PDF (zip)"],kz:["PDF бөлу","Әр бет бөлек (zip)"],accept:"application/pdf",multi:false},
+    {target:"compresspdf",icon:"🗜️",ru:["Сжать PDF","Уменьшить размер файла"],kz:["PDF сығу","Көлемін азайту"],accept:"application/pdf",multi:false},
+    {target:"rotatepdf",icon:"🔄",ru:["Повернуть PDF","На 90° по часовой"],kz:["PDF бұру","90° сағат тілімен"],accept:"application/pdf",multi:false},
+    {target:"images2pdf",icon:"🖼️",ru:["Фото/картинки → PDF","Несколько изображений в один PDF"],kz:["Фото/сурет → PDF","Бір PDF-ке"],accept:"image/*",multi:true},
+    {target:"img2jpg",icon:"🏞️",ru:["Картинка → JPG","PNG, WEBP, BMP… → JPG"],kz:["Сурет → JPG","PNG, WEBP… → JPG"],accept:"image/*",multi:false},
+    {target:"img2png",icon:"🏞️",ru:["Картинка → PNG","JPG, WEBP… → PNG"],kz:["Сурет → PNG","JPG… → PNG"],accept:"image/*",multi:false},
+    {target:"excel2csv",icon:"📈",ru:["Excel → CSV","XLSX → CSV"],kz:["Excel → CSV","XLSX → CSV"],accept:".xlsx,.xls",multi:false},
     {target:"csv2excel",icon:"📈",ru:["CSV → Excel","CSV → XLSX"],kz:["CSV → Excel","CSV → XLSX"],accept:".csv,text/csv",multi:false}
   ];
-  const CONV_EXT={images2pdf:"pdf",pdf2jpg:"zip",img2jpg:"jpg",img2png:"png",merge:"pdf",excel2csv:"csv",csv2excel:"xlsx"};
+  const CONV_EXT={pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
   let convTarget=null;
   function renderConvert(){
     $('conv-title').textContent=S().convtitle;$('conv-sub').textContent=S().convsub;$('conv-status').textContent='';
