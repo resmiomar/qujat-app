@@ -6,6 +6,7 @@
 <title>Qujat — документы, налоги, ИИ онлайн</title>
 <meta name="description" content="Бухгалтерия Казахстана онлайн: создавайте счёт, акт, накладную, считайте налоги 2026 и спрашивайте ИИ-помощника — прямо в браузере, бесплатно.">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -381,6 +382,8 @@ details summary:hover{color:var(--accent-strong)}
 }
 /* ===== SVG иконкалар + қолжетімділік (ui-ux-pro-max) ===== */
 .ic svg{width:24px;height:24px;display:block}
+.g-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:15px 2px 4px}
+.g-or::before,.g-or::after{content:"";flex:1;height:1px;background:var(--line)}
 .nav .ni{display:flex;align-items:center;justify-content:center;height:24px}
 .nav .ni svg{width:24px;height:24px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
@@ -489,6 +492,10 @@ details summary:hover{color:var(--accent-strong)}
       </div>
     </div>
     <div id="acc-auth" class="hidden">
+      <div id="g-btn-wrap" class="hidden">
+        <div id="g-signin" style="display:flex;justify-content:center"></div>
+        <div class="g-or"><span id="g-or-t"></span></div>
+      </div>
       <div class="sec">
         <div id="acc-reg">
           <div class="field"><label id="la-name"></label><input type="text" id="a_name"></div>
@@ -848,7 +855,7 @@ details summary:hover{color:var(--accent-strong)}
       if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
       const isAdmin=meUser.role==='admin';$('acc-admin').classList.toggle('hidden',!isAdmin);if(isAdmin)loadAdmin();
       loadHistory();}
-    else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');}
+    else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');initGoogle();}
   }
   async function loadHistory(){
     const box=$('acc-history');if(!box)return;
@@ -1001,6 +1008,27 @@ details summary:hover{color:var(--accent-strong)}
       document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
       $('conv-status').textContent='✅ '+s.convdone;
     }catch(e){$('conv-status').textContent='❌ '+s.converr;}
+  }
+
+  /* ---------- Google Sign-In (Gmail) ---------- */
+  let GCID=null,gReady=false;
+  async function initGoogle(){
+    if(GCID===null){try{const r=await fetch(API+'/auth/config');GCID=(await r.json()).googleClientId||'';}catch(e){GCID='';}}
+    if(!GCID)return;
+    $('g-or-t').textContent=lang==='ru'?'или':'немесе';
+    function render(){
+      if(!window.google||!google.accounts||!google.accounts.id)return false;
+      if(!gReady){google.accounts.id.initialize({client_id:GCID,callback:onGoogle});gReady=true;}
+      const c=$('g-signin');c.innerHTML='';
+      google.accounts.id.renderButton(c,{theme:'outline',size:'large',shape:'pill',text:'continue_with',width:300,locale:lang==='kz'?'kk':'ru'});
+      $('g-btn-wrap').classList.remove('hidden');return true;
+    }
+    if(!render()){let n=0;const t=setInterval(()=>{if(render()||++n>25)clearInterval(t);},150);}
+  }
+  async function onGoogle(resp){
+    try{const r=await fetch(API+'/auth/google',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})});
+      if(r.ok){await loadMe();}else{alert(S().errnet);}
+    }catch(e){alert(S().errnet);}
   }
 
   function renderAll(){renderHome();docLabels();renderNav();renderAccount();
