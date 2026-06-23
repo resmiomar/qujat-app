@@ -379,6 +379,12 @@ details summary:hover{color:var(--accent-strong)}
   .airow{left:252px;bottom:0}
   #tab-ai{padding-bottom:94px}
 }
+/* ===== SVG иконкалар + қолжетімділік (ui-ux-pro-max) ===== */
+.ic svg{width:24px;height:24px;display:block}
+.nav .ni{display:flex;align-items:center;justify-content:center;height:24px}
+.nav .ni svg{width:24px;height:24px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -612,11 +618,44 @@ details summary:hover{color:var(--accent-strong)}
       e_email:"Дұрыс email жазыңыз",e_pass:"Пароль кемінде 6 таңба",e_name:"Аты кемінде 2 таңба",
       e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль"}
   };
+  /* ---------- SVG иконкалар (Lucide стилі — emoji орнына, премиум) ---------- */
+  const ICONS={
+    'file-text':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/>',
+    'file-check':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="m9 15 2 2 4-4"/>',
+    'file-out':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
+    'banknote':'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/>',
+    'package':'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+    'receipt':'<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+    'calc':'<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="18" x2="16.01" y2="18"/>',
+    'message':'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    'refresh':'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/>',
+    'user':'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    'scan':'<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8h8M7 12h10M7 16h6"/>',
+    'table':'<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>',
+    'image':'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+    'copy':'<rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/>',
+    'scissors':'<circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/>',
+    'minimize':'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',
+    'rotate':'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+    'lock':'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    'unlock':'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+    'droplet':'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+    'hash':'<line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>',
+    'trash':'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+    'wallet':'<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h16a1 1 0 0 1 1 1v3"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>',
+    'scale':'<path d="M12 3v18"/><path d="M5 21h14"/><path d="M6 7 3 14h6z"/><path d="M18 7l-3 7h6z"/><path d="M6 7h12"/>',
+    'sun':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/>',
+    'thermo':'<path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>',
+    'alarm':'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/>'
+  };
+  function svg(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||ICONS['file-text'])+'</svg>';}
+  const CALC_ICON={payroll:'wallet',compare:'scale','910':'file-text','300':'receipt',vacation:'sun',sick:'thermo',penalty:'alarm'};
+
   const CATS=[
-    {key:"invoice",icon:"💵",ru:["Счёт на оплату","Реквизиты, сумма, Kaspi QR"],kz:["Шот (төлеуге)","Деректеме, сома, QR"]},
-    {key:"act",icon:"📑",ru:["Акт выполненных работ","Услуги, работы"],kz:["Орындалған жұмыс актісі","Қызмет, жұмыс"]},
-    {key:"waybill",icon:"📦",ru:["Накладная","Отгрузка товара"],kz:["Жүкқұжат","Тауар жөнелту"]},
-    {key:"sf",icon:"🧾",ru:["Счёт-фактура","Для плательщиков НДС"],kz:["Шот-фактура","ҚҚС төлеушілерге"]}
+    {key:"invoice",icon:"banknote",ru:["Счёт на оплату","Реквизиты, сумма, Kaspi QR"],kz:["Шот (төлеуге)","Деректеме, сома, QR"]},
+    {key:"act",icon:"file-check",ru:["Акт выполненных работ","Услуги, работы"],kz:["Орындалған жұмыс актісі","Қызмет, жұмыс"]},
+    {key:"waybill",icon:"package",ru:["Накладная","Отгрузка товара"],kz:["Жүкқұжат","Тауар жөнелту"]},
+    {key:"sf",icon:"receipt",ru:["Счёт-фактура","Для плательщиков НДС"],kz:["Шот-фактура","ҚҚС төлеушілерге"]}
   ];
   let lang=localStorage.getItem('qujat_weblang'); if(lang!=='kz'&&lang!=='ru') lang=(navigator.language||'').toLowerCase().startsWith('kk')?'kz':'ru';
   let curDoc=null,lastUrl=null,curTab='docs',calcList=[],curCalc=null,aiHist=[];
@@ -625,11 +664,11 @@ details summary:hover{color:var(--accent-strong)}
   function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
 
   function renderNav(){
-    const s=S(),icons=["📄","🧮","💬","🔄","👤"],ids=["docs","calc","ai","convert","account"];
+    const s=S(),icons=["file-text","calc","message","refresh","user"],ids=["docs","calc","ai","convert","account"];
     $('nav').innerHTML='';
     s.nav.forEach((label,i)=>{
       const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
-      b.innerHTML='<span>'+icons[i]+'</span><span class="nl">'+label+'</span>';
+      b.innerHTML='<span class="ni">'+svg(icons[i])+'</span><span class="nl">'+label+'</span>';
       b.onclick=()=>showTab(ids[i]); $('nav').appendChild(b);
     });
   }
@@ -650,7 +689,7 @@ details summary:hover{color:var(--accent-strong)}
     $('h-title').textContent=s.htitle;$('h-sub').textContent=s.hsub;$('h-banner').textContent=s.hbanner;
     const box=$('cats');box.innerHTML='';
     CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
-      el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+      el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
       el.onclick=()=>openForm(c.key);box.appendChild(el);});
   }
   function docLabels(){
@@ -731,7 +770,7 @@ details summary:hover{color:var(--accent-strong)}
     const s=S();$('c-title').textContent=s.ctitle;$('c-sub').textContent=s.csub;$('c-back').textContent=s.back;
     const box=$('calc-list');box.innerHTML='';
     calcList.forEach(c=>{const el=document.createElement('div');el.className='card';
-      el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+c[lang]+'</div></div><div class="chev">›</div>';
+      el.innerHTML='<div class="ic">'+svg(CALC_ICON[c.type]||'calc')+'</div><div><div class="t">'+c[lang]+'</div></div><div class="chev">›</div>';
       el.onclick=()=>openCalc(c);box.appendChild(el);});
     $('calc-home').classList.remove('hidden');$('calc-form').classList.add('hidden');
   }
@@ -895,34 +934,34 @@ details summary:hover{color:var(--accent-strong)}
 
   /* ---------- CONVERTER ---------- */
   const CONV=[
-    {target:"ocr",icon:"🔎",ru:["OCR — скан/фото → текст","Распознать текст (ИИ) → Word"],kz:["OCR — скан/фото → мәтін","Мәтінді тану (AI) → Word"],accept:"application/pdf,image/*",multi:false},
-    {target:"pdf2word",icon:"📝",ru:["PDF → Word","Редактируемый .docx (текст)"],kz:["PDF → Word",".docx (мәтін)"],accept:"application/pdf",multi:false},
-    {target:"pdf2excel",icon:"📊",ru:["PDF → Excel","Текст PDF в таблицу .xlsx"],kz:["PDF → Excel","Кесте .xlsx"],accept:"application/pdf",multi:false},
-    {target:"pdf2jpg",icon:"🖼️",ru:["PDF → JPG","Каждая страница — картинка (zip)"],kz:["PDF → JPG","Әр бет — сурет (zip)"],accept:"application/pdf",multi:false},
-    {target:"word2pdf",icon:"📄",ru:["Word → PDF",".docx → PDF"],kz:["Word → PDF",".docx → PDF"],accept:".docx",multi:false},
-    {target:"excel2pdf",icon:"📄",ru:["Excel → PDF","Таблица .xlsx → PDF"],kz:["Excel → PDF","Кесте → PDF"],accept:".xlsx,.xls",multi:false},
-    {target:"merge",icon:"📑",ru:["Объединить PDF","Несколько PDF в один файл"],kz:["PDF біріктіру","Бірнеше PDF-ті бірге"],accept:"application/pdf",multi:true},
-    {target:"splitpdf",icon:"✂️",ru:["Разделить PDF","Каждая страница — отдельный PDF (zip)"],kz:["PDF бөлу","Әр бет бөлек (zip)"],accept:"application/pdf",multi:false},
-    {target:"compresspdf",icon:"🗜️",ru:["Сжать PDF","Уменьшить размер файла"],kz:["PDF сығу","Көлемін азайту"],accept:"application/pdf",multi:false},
-    {target:"rotatepdf",icon:"🔄",ru:["Повернуть PDF","На 90° по часовой"],kz:["PDF бұру","90° сағат тілімен"],accept:"application/pdf",multi:false},
-    {target:"protect",icon:"🔒",ru:["Поставить пароль на PDF","Защитить PDF"],kz:["PDF-ке пароль қою","Қорғау"],accept:"application/pdf",multi:false,param:"password"},
-    {target:"unlock",icon:"🔓",ru:["Снять пароль с PDF","Убрать защиту"],kz:["PDF паролін алу","Қорғауды алу"],accept:"application/pdf",multi:false,param:"password"},
-    {target:"watermark",icon:"💧",ru:["Водяной знак на PDF","Текст по диагонали"],kz:["PDF-ке су белгісі","Қиғаш мәтін"],accept:"application/pdf",multi:false,param:"text"},
-    {target:"addpagenum",icon:"#️⃣",ru:["Номера страниц","Добавить нумерацию"],kz:["Бет нөмірлері","Нөмірлеу қосу"],accept:"application/pdf",multi:false},
-    {target:"delpages",icon:"🗑️",ru:["Удалить страницы","напр. 2,4-5"],kz:["Беттерді өшіру","мыс. 2,4-5"],accept:"application/pdf",multi:false,param:"range"},
-    {target:"images2pdf",icon:"🖼️",ru:["Фото/картинки → PDF","Несколько изображений в один PDF"],kz:["Фото/сурет → PDF","Бір PDF-ке"],accept:"image/*",multi:true},
-    {target:"img2jpg",icon:"🏞️",ru:["Картинка → JPG","PNG, WEBP, BMP… → JPG"],kz:["Сурет → JPG","PNG, WEBP… → JPG"],accept:"image/*",multi:false},
-    {target:"img2png",icon:"🏞️",ru:["Картинка → PNG","JPG, WEBP… → PNG"],kz:["Сурет → PNG","JPG… → PNG"],accept:"image/*",multi:false},
-    {target:"excel2csv",icon:"📈",ru:["Excel → CSV","XLSX → CSV"],kz:["Excel → CSV","XLSX → CSV"],accept:".xlsx,.xls",multi:false},
-    {target:"csv2excel",icon:"📈",ru:["CSV → Excel","CSV → XLSX"],kz:["CSV → Excel","CSV → XLSX"],accept:".csv,text/csv",multi:false}
+    {target:"ocr",icon:"scan",ru:["OCR — скан/фото → текст","Распознать текст (ИИ) → Word"],kz:["OCR — скан/фото → мәтін","Мәтінді тану (AI) → Word"],accept:"application/pdf,image/*",multi:false},
+    {target:"pdf2word",icon:"file-text",ru:["PDF → Word","Редактируемый .docx (текст)"],kz:["PDF → Word",".docx (мәтін)"],accept:"application/pdf",multi:false},
+    {target:"pdf2excel",icon:"table",ru:["PDF → Excel","Текст PDF в таблицу .xlsx"],kz:["PDF → Excel","Кесте .xlsx"],accept:"application/pdf",multi:false},
+    {target:"pdf2jpg",icon:"image",ru:["PDF → JPG","Каждая страница — картинка (zip)"],kz:["PDF → JPG","Әр бет — сурет (zip)"],accept:"application/pdf",multi:false},
+    {target:"word2pdf",icon:"file-out",ru:["Word → PDF",".docx → PDF"],kz:["Word → PDF",".docx → PDF"],accept:".docx",multi:false},
+    {target:"excel2pdf",icon:"file-out",ru:["Excel → PDF","Таблица .xlsx → PDF"],kz:["Excel → PDF","Кесте → PDF"],accept:".xlsx,.xls",multi:false},
+    {target:"merge",icon:"copy",ru:["Объединить PDF","Несколько PDF в один файл"],kz:["PDF біріктіру","Бірнеше PDF-ті бірге"],accept:"application/pdf",multi:true},
+    {target:"splitpdf",icon:"scissors",ru:["Разделить PDF","Каждая страница — отдельный PDF (zip)"],kz:["PDF бөлу","Әр бет бөлек (zip)"],accept:"application/pdf",multi:false},
+    {target:"compresspdf",icon:"minimize",ru:["Сжать PDF","Уменьшить размер файла"],kz:["PDF сығу","Көлемін азайту"],accept:"application/pdf",multi:false},
+    {target:"rotatepdf",icon:"rotate",ru:["Повернуть PDF","На 90° по часовой"],kz:["PDF бұру","90° сағат тілімен"],accept:"application/pdf",multi:false},
+    {target:"protect",icon:"lock",ru:["Поставить пароль на PDF","Защитить PDF"],kz:["PDF-ке пароль қою","Қорғау"],accept:"application/pdf",multi:false,param:"password"},
+    {target:"unlock",icon:"unlock",ru:["Снять пароль с PDF","Убрать защиту"],kz:["PDF паролін алу","Қорғауды алу"],accept:"application/pdf",multi:false,param:"password"},
+    {target:"watermark",icon:"droplet",ru:["Водяной знак на PDF","Текст по диагонали"],kz:["PDF-ке су белгісі","Қиғаш мәтін"],accept:"application/pdf",multi:false,param:"text"},
+    {target:"addpagenum",icon:"hash",ru:["Номера страниц","Добавить нумерацию"],kz:["Бет нөмірлері","Нөмірлеу қосу"],accept:"application/pdf",multi:false},
+    {target:"delpages",icon:"trash",ru:["Удалить страницы","напр. 2,4-5"],kz:["Беттерді өшіру","мыс. 2,4-5"],accept:"application/pdf",multi:false,param:"range"},
+    {target:"images2pdf",icon:"image",ru:["Фото/картинки → PDF","Несколько изображений в один PDF"],kz:["Фото/сурет → PDF","Бір PDF-ке"],accept:"image/*",multi:true},
+    {target:"img2jpg",icon:"image",ru:["Картинка → JPG","PNG, WEBP, BMP… → JPG"],kz:["Сурет → JPG","PNG, WEBP… → JPG"],accept:"image/*",multi:false},
+    {target:"img2png",icon:"image",ru:["Картинка → PNG","JPG, WEBP… → PNG"],kz:["Сурет → PNG","JPG… → PNG"],accept:"image/*",multi:false},
+    {target:"excel2csv",icon:"table",ru:["Excel → CSV","XLSX → CSV"],kz:["Excel → CSV","XLSX → CSV"],accept:".xlsx,.xls",multi:false},
+    {target:"csv2excel",icon:"table",ru:["CSV → Excel","CSV → XLSX"],kz:["CSV → Excel","CSV → XLSX"],accept:".csv,text/csv",multi:false}
   ];
   const CONV_EXT={ocr:"docx",pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",protect:"pdf",unlock:"pdf",watermark:"pdf",addpagenum:"pdf",delpages:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
   let convTarget=null,convParam="";
   const CGROUPS=[
-    {ru:"🔄 Конвертация",kz:"🔄 Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"]},
-    {ru:"🛠 PDF-инструменты",kz:"🛠 PDF құралдары",keys:["merge","splitpdf","compresspdf","rotatepdf","protect","unlock","watermark","addpagenum","delpages"]},
-    {ru:"🖼 Изображения",kz:"🖼 Суреттер",keys:["images2pdf","img2jpg","img2png"]},
-    {ru:"📊 Таблицы",kz:"📊 Кестелер",keys:["excel2csv","csv2excel"]}
+    {ru:"Конвертация",kz:"Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"]},
+    {ru:"PDF-инструменты",kz:"PDF құралдары",keys:["merge","splitpdf","compresspdf","rotatepdf","protect","unlock","watermark","addpagenum","delpages"]},
+    {ru:"Изображения",kz:"Суреттер",keys:["images2pdf","img2jpg","img2png"]},
+    {ru:"Таблицы",kz:"Кестелер",keys:["excel2csv","csv2excel"]}
   ];
   function convClick(c){
     convTarget=c;convParam='';
@@ -943,7 +982,7 @@ details summary:hover{color:var(--accent-strong)}
       const h=document.createElement('div');h.className='cgh';if(gi===0)h.style.marginTop='4px';h.textContent=g[lang];box.appendChild(h);
       g.keys.forEach(k=>{const c=CONV.find(x=>x.target===k);if(!c)return;const[t,d]=c[lang];
         const el=document.createElement('div');el.className='card';
-        el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+        el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
         el.onclick=()=>convClick(c);box.appendChild(el);});
     });
   }
