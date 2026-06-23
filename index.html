@@ -420,6 +420,7 @@ body.gated .acard-top{display:block}
 .acard-mark{width:44px;height:44px;border-radius:13px;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 16px rgba(91,68,236,.42);flex:0 0 auto}
 .acard-mark svg{width:23px;height:23px;color:#fff}
 .acard-word{font-size:21px;font-weight:800;letter-spacing:-.03em;color:#1a1730}
+.acard-logo{height:29px;width:auto;display:block}
 .acard-lang{margin-left:auto;height:34px;padding:0 13px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.95);font-family:inherit;font-weight:700;font-size:12.5px;color:#3d3a52;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(40,32,90,.08);transition:background .18s var(--ease),transform .18s var(--ease)}
 .acard-lang:hover{background:#fff;transform:translateY(-1px)}
 .acard-lang svg{width:14px;height:14px;color:#7a7790}
@@ -446,7 +447,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
 </head>
 <body>
 <header><div class="wrap">
-  <div class="logo">📄 Qujat</div>
+  <div class="logo"><img src="qujat-logo.png" alt="Qujat"></div>
   <button class="ib" id="langbtn" onclick="toggleLang()">🌐 RU</button>
 </div></header>
 
@@ -549,8 +550,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       <div class="sec">
         <div class="acard-top">
           <div class="acard-brand">
-            <span class="acard-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg></span>
-            <span class="acard-word">Qujat</span>
+            <img class="acard-logo" src="qujat-logo.png" alt="Qujat">
             <button class="acard-lang" id="acc-langbtn" onclick="toggleLang()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="acc-lang-t">RU</span></button>
           </div>
           <h2 class="acard-h" id="acc-card-h"></h2>
