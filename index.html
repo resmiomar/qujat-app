@@ -22,6 +22,7 @@
   .ic{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;background:#f0eefe;flex:0 0 auto}
   .card .t{font-size:16px;font-weight:700}.card .d{font-size:12.5px;color:var(--muted)}
   .chev{margin-left:auto;color:var(--muted);font-size:22px}
+  .cgh{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin:22px 2px 9px}
   .field{margin-bottom:12px}
   label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 5px 3px}
   input[type=text],input[type=number],input[type=date]{width:100%;height:46px;border:1px solid var(--line);border-radius:12px;padding:0 13px;font-size:15px;background:var(--card);color:var(--text)}
@@ -609,24 +610,34 @@
   ];
   const CONV_EXT={ocr:"docx",pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",protect:"pdf",unlock:"pdf",watermark:"pdf",addpagenum:"pdf",delpages:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
   let convTarget=null,convParam="";
+  const CGROUPS=[
+    {ru:"🔄 Конвертация",kz:"🔄 Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"]},
+    {ru:"🛠 PDF-инструменты",kz:"🛠 PDF құралдары",keys:["merge","splitpdf","compresspdf","rotatepdf","protect","unlock","watermark","addpagenum","delpages"]},
+    {ru:"🖼 Изображения",kz:"🖼 Суреттер",keys:["images2pdf","img2jpg","img2png"]},
+    {ru:"📊 Таблицы",kz:"📊 Кестелер",keys:["excel2csv","csv2excel"]}
+  ];
+  function convClick(c){
+    convTarget=c;convParam='';
+    if(c.param){
+      const ru=lang==='ru';
+      const msg=c.param==='password'?(ru?'Введите пароль:':'Парольді енгізіңіз:'):
+                c.param==='range'?(ru?'Какие страницы удалить? напр. 2,4-5':'Қай беттерді өшіру? мыс. 2,4-5'):
+                (ru?'Текст водяного знака:':'Су белгісінің мәтіні:');
+      const v=prompt(msg,c.param==='text'?'КОПИЯ':'');
+      if(v===null)return;convParam=v;
+    }
+    const inp=$('conv-input');inp.accept=c.accept;inp.multiple=!!c.multi;inp.value='';inp.click();
+  }
   function renderConvert(){
     $('conv-title').textContent=S().convtitle;$('conv-sub').textContent=S().convsub;$('conv-status').textContent='';
     const box=$('conv-list');box.innerHTML='';
-    CONV.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
-      el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
-      el.onclick=()=>{
-        convTarget=c;convParam='';
-        if(c.param){
-          const ru=lang==='ru';
-          const msg=c.param==='password'?(ru?'Введите пароль:':'Парольді енгізіңіз:'):
-                    c.param==='range'?(ru?'Какие страницы удалить? напр. 2,4-5':'Қай беттерді өшіру? мыс. 2,4-5'):
-                    (ru?'Текст водяного знака:':'Су белгісінің мәтіні:');
-          const v=prompt(msg,c.param==='text'?'КОПИЯ':'');
-          if(v===null)return;convParam=v;
-        }
-        const inp=$('conv-input');inp.accept=c.accept;inp.multiple=!!c.multi;inp.value='';inp.click();
-      };
-      box.appendChild(el);});
+    CGROUPS.forEach((g,gi)=>{
+      const h=document.createElement('div');h.className='cgh';if(gi===0)h.style.marginTop='4px';h.textContent=g[lang];box.appendChild(h);
+      g.keys.forEach(k=>{const c=CONV.find(x=>x.target===k);if(!c)return;const[t,d]=c[lang];
+        const el=document.createElement('div');el.className='card';
+        el.innerHTML='<div class="ic">'+c.icon+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+        el.onclick=()=>convClick(c);box.appendChild(el);});
+    });
   }
   async function onConvFiles(){
     const inp=$('conv-input');if(!inp.files.length||!convTarget)return;
