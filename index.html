@@ -136,7 +136,7 @@ label{
   display:block;font-size:12.5px;font-weight:700;color:var(--text-2);
   letter-spacing:-.005em;margin:0 0 6px 3px;
 }
-input[type=text],input[type=number],input[type=date]{
+input[type=text],input[type=number],input[type=date],input[type=email],input[type=password]{
   width:100%;height:48px;
   border:1px solid var(--line-2);border-radius:13px;
   padding:0 14px;font-family:inherit;font-size:15px;font-weight:600;letter-spacing:-.01em;
@@ -144,7 +144,7 @@ input[type=text],input[type=number],input[type=date]{
   transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease);
 }
 input::placeholder{color:var(--muted-2);font-weight:500}
-input[type=text]:hover,input[type=number]:hover,input[type=date]:hover{border-color:#d6d7e0}
+input[type=text]:hover,input[type=number]:hover,input[type=date]:hover,input[type=email]:hover,input[type=password]:hover{border-color:#d6d7e0}
 input:focus{
   outline:none;border-color:var(--accent);background:var(--card);
   box-shadow:var(--ring);
@@ -382,6 +382,11 @@ details summary:hover{color:var(--accent-strong)}
 }
 /* ===== SVG иконкалар + қолжетімділік (ui-ux-pro-max) ===== */
 .ic svg{width:24px;height:24px;display:block}
+/* login-gate: кірмегенше тек экран входа */
+body.gated .nav{display:none}
+body.gated{padding-left:0}
+body.gated .wrap{max-width:430px}
+body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacing:-.03em}
 .g-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:15px 2px 4px}
 .g-or::before,.g-or::after{content:"";flex:1;height:1px;background:var(--line)}
 .nav .ni{display:flex;align-items:center;justify-content:center;height:24px}
@@ -483,7 +488,7 @@ details summary:hover{color:var(--accent-strong)}
 
   <!-- ===== TAB: ACCOUNT ===== -->
   <div id="tab-account" class="hidden">
-    <h2 id="acc-h">👤</h2><p class="sub" id="acc-intro"></p>
+    <h2 id="acc-h"></h2><p class="sub" id="acc-intro"></p>
     <div id="acc-reset" class="hidden">
       <div class="sec">
         <h3 id="reset-h"></h3><p class="sub" id="reset-sub"></p>
@@ -567,7 +572,7 @@ details summary:hover{color:var(--accent-strong)}
 
   const STR={
     ru:{nav:["Документы","Расчёты","ИИ","Конвертер","Профиль"],
-      htitle:"Создайте документ",hsub:"Бесплатно, в браузере. Без регистрации.",
+      htitle:"Создайте документ",hsub:"Бесплатно, прямо в браузере.",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
       sname:"Название (ИП/ТОО) *",sbin:"БИН/ИИН",sfio:"ФИО руководителя",bank:"Банковские реквизиты (необязательно)",
@@ -596,7 +601,7 @@ details summary:hover{color:var(--accent-strong)}
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
     kz:{nav:["Құжаттар","Есеп","AI","Конвертер","Профиль"],
-      htitle:"Құжат жасаңыз",hsub:"Тегін, браузерде. Тіркелусіз.",
+      htitle:"Құжат жасаңыз",hsub:"Тегін, тікелей браузерде.",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
       sname:"Атауы (ЖК/ТОО) *",sbin:"БИН/ЖСН",sfio:"Басшы аты-жөні",bank:"Банк деректемелері (міндетті емес)",
@@ -829,6 +834,7 @@ details summary:hover{color:var(--accent-strong)}
   const reEmail=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   function accLabels(){
     const s=S();
+    $('acc-h').textContent=meUser?(lang==='ru'?'Профиль':'Профиль'):(lang==='ru'?'Вход в Qujat':'Qujat-қа кіру');
     $('acc-intro').textContent=s.accintro;
     $('la-name').textContent=s.accname;$('la-email-r').textContent=s.accemail;$('la-pass-r').textContent=s.accpass;
     $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
@@ -919,7 +925,12 @@ details summary:hover{color:var(--accent-strong)}
   }
   async function loadMe(){
     try{const r=await fetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
-    renderAccount();
+    renderAccount();applyGate();
+  }
+  function applyGate(){
+    if(resetTok)return;
+    if(meUser){document.body.classList.remove('gated');if(curTab==='account')showTab('docs');}
+    else{document.body.classList.add('gated');if(curTab!=='account')showTab('account');}
   }
   async function doRegister(){
     const s=S(),name=$('a_name').value.trim(),email=$('ar_email').value.trim().toLowerCase(),pass=$('ar_pass').value;
@@ -937,7 +948,7 @@ details summary:hover{color:var(--accent-strong)}
       if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  async function doLogout(){try{await fetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}meUser=null;renderAccount();}
+  async function doLogout(){try{await fetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}meUser=null;renderAccount();applyGate();}
 
   /* ---------- CONVERTER ---------- */
   const CONV=[
@@ -1035,7 +1046,9 @@ details summary:hover{color:var(--accent-strong)}
     if(curTab==='calc'&&calcList.length)renderCalcHome();
     if(curTab==='convert')renderConvert();
     if(curTab==='ai')aiGreet();}
-  renderAll();showTab(resetTok?'account':'docs');
+  renderAll();
+  if(!resetTok)document.body.classList.add('gated');
+  showTab('account');
 </script>
 </body>
 </html>
