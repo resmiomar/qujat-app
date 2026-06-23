@@ -349,6 +349,29 @@ details summary:hover{color:var(--accent-strong)}
 .nav button.active::after{transform:translateX(-50%) scaleX(1)}
 .nav button.active .nl{color:var(--accent-strong)}
 .nav .nl{font-size:10.5px;font-weight:700;letter-spacing:.01em;color:inherit}
+/* ===== Десктоп: төмендегі нав → сол жақ sidebar ===== */
+@media(min-width:900px){
+  body{padding-bottom:0;padding-left:252px}
+  .wrap{max-width:680px}
+  header .wrap, .airow .wrap{max-width:680px}
+  .nav{
+    flex-direction:column;top:0;bottom:0;left:0;right:auto;
+    width:252px;height:100vh;align-items:stretch;justify-content:flex-start;
+    border-top:none;border-right:1px solid var(--line);
+    box-shadow:1px 0 24px rgba(40,32,90,.05);gap:6px;
+    padding:78px 16px 18px;background:rgba(255,255,255,.94);
+  }
+  .nav button{
+    flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:14px;
+    height:50px;width:100%;border-radius:13px;padding:0 15px;font-size:20px;
+  }
+  .nav button:hover{background:var(--accent-tint)}
+  .nav button::after{display:none}
+  .nav button.active{background:var(--accent-soft)}
+  .nav .nl{font-size:14.5px}
+  .airow{left:252px;bottom:0}
+  #tab-ai{padding-bottom:94px}
+}
 </style>
 </head>
 <body>
