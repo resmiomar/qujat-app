@@ -387,7 +387,8 @@ body.gated .nav{display:none}
 body.gated{padding-left:0}
 body.gated .wrap{max-width:430px}
 body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacing:-.03em}
-.g-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:15px 2px 4px}
+.g-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:16px 0}
+#g-signin{display:flex;justify-content:center}
 .g-or::before,.g-or::after{content:"";flex:1;height:1px;background:var(--line)}
 .nav .ni{display:flex;align-items:center;justify-content:center;height:24px}
 .nav .ni svg{width:24px;height:24px}
@@ -497,11 +498,11 @@ body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacin
       </div>
     </div>
     <div id="acc-auth" class="hidden">
-      <div id="g-btn-wrap" class="hidden">
-        <div id="g-signin" style="display:flex;justify-content:center"></div>
-        <div class="g-or"><span id="g-or-t"></span></div>
-      </div>
       <div class="sec">
+        <div id="g-btn-wrap" class="hidden">
+          <div id="g-signin" style="display:flex;justify-content:center"></div>
+          <div class="g-or"><span id="g-or-t"></span></div>
+        </div>
         <div id="acc-reg">
           <div class="field"><label id="la-name"></label><input type="text" id="a_name"></div>
           <div class="field"><label id="la-email-r"></label><input type="email" id="ar_email" inputmode="email"></div>
@@ -1031,7 +1032,7 @@ body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacin
       if(!window.google||!google.accounts||!google.accounts.id)return false;
       if(!gReady){google.accounts.id.initialize({client_id:GCID,callback:onGoogle});gReady=true;}
       const c=$('g-signin');c.innerHTML='';
-      google.accounts.id.renderButton(c,{theme:'outline',size:'large',shape:'pill',text:'continue_with',width:300,locale:lang==='kz'?'kk':'ru'});
+      google.accounts.id.renderButton(c,{theme:'outline',size:'large',shape:'pill',text:'continue_with',width:340,locale:lang==='kz'?'kk':'ru'});
       $('g-btn-wrap').classList.remove('hidden');return true;
     }
     if(!render()){let n=0;const t=setInterval(()=>{if(render()||++n>25)clearInterval(t);},150);}
