@@ -149,6 +149,10 @@ input:focus{
   outline:none;border-color:var(--accent);background:var(--card);
   box-shadow:var(--ring);
 }
+.ifield{position:relative}
+.ifield>svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted-2);pointer-events:none;transition:color .18s var(--ease)}
+.ifield input{padding-left:42px}
+.ifield:focus-within>svg{color:var(--accent)}
 
 .sec{
   background:var(--card);border:1px solid var(--line);
@@ -384,9 +388,53 @@ details summary:hover{color:var(--accent-strong)}
 .ic svg{width:24px;height:24px;display:block}
 /* login-gate: кірмегенше тек экран входа */
 body.gated .nav{display:none}
-body.gated{padding-left:0}
-body.gated .wrap{max-width:430px}
-body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacing:-.03em}
+body.gated header{display:none}
+body.gated{
+  padding:0;
+  background:
+    radial-gradient(40% 50% at 18% 22%,rgba(122,92,255,.85),transparent 60%),
+    radial-gradient(45% 55% at 82% 18%,rgba(90,63,219,.80),transparent 62%),
+    radial-gradient(50% 60% at 78% 85%,rgba(255,138,200,.55),transparent 60%),
+    radial-gradient(55% 65% at 12% 88%,rgba(98,68,236,.70),transparent 62%),
+    radial-gradient(60% 70% at 50% 50%,rgba(255,255,255,.45),transparent 65%),
+    linear-gradient(135deg,#8a6cff 0%,#6244ec 45%,#5a3fdb 100%);
+  background-attachment:fixed;
+}
+body.gated .wrap{max-width:452px}
+body.gated #tab-account{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:26px 0}
+body.gated #acc-h,body.gated #acc-intro{display:none}
+body.gated #acc-auth>.sec{
+  background:rgba(255,255,255,.62);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:28px;
+  box-shadow:0 1px 0 0 rgba(255,255,255,.7) inset,0 30px 70px -25px rgba(40,32,90,.55),0 10px 30px -15px rgba(40,32,90,.35);
+  padding:30px 26px 26px;margin:0;
+  animation:cardRise .8s var(--ease) both;
+}
+@keyframes cardRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.acard-top{display:none}
+body.gated .acard-top{display:block}
+.acard-brand{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.acard-mark{width:44px;height:44px;border-radius:13px;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 16px rgba(91,68,236,.42);flex:0 0 auto}
+.acard-mark svg{width:23px;height:23px;color:#fff}
+.acard-word{font-size:21px;font-weight:800;letter-spacing:-.03em;color:#1a1730}
+.acard-lang{margin-left:auto;height:34px;padding:0 13px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.95);font-family:inherit;font-weight:700;font-size:12.5px;color:#3d3a52;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(40,32,90,.08);transition:background .18s var(--ease),transform .18s var(--ease)}
+.acard-lang:hover{background:#fff;transform:translateY(-1px)}
+.acard-lang svg{width:14px;height:14px;color:#7a7790}
+.acard-h{font-size:24px;font-weight:800;letter-spacing:-.03em;color:#171430;margin-bottom:6px;line-height:1.15}
+.acard-sub{font-size:13.5px;font-weight:500;color:#5b5870;line-height:1.5;margin-bottom:20px}
+body.gated #acc-auth .ifield input{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.9)}
+body.gated #acc-auth .ifield input:hover{border-color:#fff}
+body.gated #acc-auth .ifield input:focus{background:#fff;border-color:var(--accent)}
+body.gated #acc-auth label{color:#46435c}
+body.gated #acc-auth .ifield>svg{color:#8a87a0}
+body.gated #acc-auth .ifield:focus-within>svg{color:var(--accent)}
+body.gated #acc-auth .note{color:#5b5870}
+body.gated #acc-auth .note a{color:var(--accent-ink);font-weight:700}
+body.gated .g-or{margin:20px 0;color:#5f5c75}
+body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
 .g-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:16px 0}
 #g-signin{display:flex;justify-content:center}
 .g-or::before,.g-or::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -499,20 +547,29 @@ body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacin
     </div>
     <div id="acc-auth" class="hidden">
       <div class="sec">
+        <div class="acard-top">
+          <div class="acard-brand">
+            <span class="acard-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg></span>
+            <span class="acard-word">Qujat</span>
+            <button class="acard-lang" id="acc-langbtn" onclick="toggleLang()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="acc-lang-t">RU</span></button>
+          </div>
+          <h2 class="acard-h" id="acc-card-h"></h2>
+          <p class="acard-sub" id="acc-card-sub"></p>
+        </div>
         <div id="g-btn-wrap" class="hidden">
           <div id="g-signin" style="display:flex;justify-content:center"></div>
           <div class="g-or"><span id="g-or-t"></span></div>
         </div>
         <div id="acc-reg">
-          <div class="field"><label id="la-name"></label><input type="text" id="a_name"></div>
-          <div class="field"><label id="la-email-r"></label><input type="email" id="ar_email" inputmode="email"></div>
-          <div class="field"><label id="la-pass-r"></label><input type="password" id="ar_pass"></div>
+          <div class="field"><label id="la-name"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" id="a_name"></div></div>
+          <div class="field"><label id="la-email-r"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><input type="email" id="ar_email" inputmode="email"></div></div>
+          <div class="field"><label id="la-pass-r"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" id="ar_pass"></div></div>
           <button class="btn" id="a-regbtn" onclick="doRegister()"></button>
           <p class="note"><a id="a-to-login" style="cursor:pointer" onclick="acctab('login')"></a></p>
         </div>
         <div id="acc-login" class="hidden">
-          <div class="field"><label id="la-email-l"></label><input type="email" id="al_email" inputmode="email"></div>
-          <div class="field"><label id="la-pass-l"></label><input type="password" id="al_pass"></div>
+          <div class="field"><label id="la-email-l"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><input type="email" id="al_email" inputmode="email"></div></div>
+          <div class="field"><label id="la-pass-l"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" id="al_pass"></div></div>
           <button class="btn" id="a-loginbtn" onclick="doLogin()"></button>
           <p class="note"><a id="a-to-reg" style="cursor:pointer" onclick="acctab('reg')"></a></p>
           <p class="note"><a id="a-forgot" style="cursor:pointer" onclick="doForgot()"></a></p>
@@ -837,6 +894,8 @@ body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacin
     const s=S();
     $('acc-h').textContent=meUser?(lang==='ru'?'Профиль':'Профиль'):(lang==='ru'?'Вход в Qujat':'Qujat-қа кіру');
     $('acc-intro').textContent=s.accintro;
+    $('acc-card-sub').textContent=s.accintro;
+    $('acc-lang-t').textContent=lang==='ru'?'RU':'KZ';
     $('la-name').textContent=s.accname;$('la-email-r').textContent=s.accemail;$('la-pass-r').textContent=s.accpass;
     $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
     $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
@@ -849,7 +908,11 @@ body.gated #acc-h{font-size:26px;font-weight:800;margin:26px 0 4px;letter-spacin
     $('acc-admin-t').textContent=s.adminp;$('reset-h').textContent=s.resettitle;$('reset-sub').textContent=s.resetsub;
     $('la-reset').textContent=s.accnew;$('a-resetbtn').textContent=s.resetbtn;
   }
-  function acctab(w){$('acc-reg').classList.toggle('hidden',w!=='reg');$('acc-login').classList.toggle('hidden',w!=='login');}
+  function acctab(w){
+    $('acc-reg').classList.toggle('hidden',w!=='reg');$('acc-login').classList.toggle('hidden',w!=='login');
+    const h=$('acc-card-h');
+    if(h)h.textContent=(w==='login')?(lang==='ru'?'С возвращением':'Қайта келдіңіз'):(lang==='ru'?'Создайте аккаунт':'Аккаунт жасаңыз');
+  }
   function renderAccount(){
     accLabels();
     if(resetTok){$('acc-reset').classList.remove('hidden');$('acc-auth').classList.add('hidden');$('acc-user').classList.add('hidden');return;}
