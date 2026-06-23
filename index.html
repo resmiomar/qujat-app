@@ -628,6 +628,18 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   try{const tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){}
   const $=id=>document.getElementById(id);
 
+  /* ---- Auth токен (Bearer): Safari/iPhone/Telegram-де cross-site cookie бұғатталғанда ---- */
+  let authToken=localStorage.getItem('qujat_token')||'';
+  function setToken(t){authToken=t||'';if(t){localStorage.setItem('qujat_token',t);}else{localStorage.removeItem('qujat_token');}}
+  function afetch(url,opts){
+    opts=opts||{};
+    if(!('credentials' in opts))opts.credentials='include';
+    const h=Object.assign({},opts.headers||{});
+    if(authToken)h['Authorization']='Bearer '+authToken;
+    opts.headers=h;
+    return fetch(url,opts);
+  }
+
   const STR={
     ru:{nav:["Документы","Расчёты","ИИ","Конвертер","Профиль"],
       htitle:"Создайте документ",hsub:"Бесплатно, прямо в браузере.",
@@ -797,7 +809,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     $('b_name').value='';$('b_bin').value='';$('d_number').value='1';$('d_date').valueAsDate=new Date();
     $('items').innerHTML='';addItem();$('d_vat').checked=false;
     $('home').classList.add('hidden');$('result').classList.add('hidden');$('form').classList.remove('hidden');window.scrollTo(0,0);
-    if(meUser)fetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{if(d.profile&&Object.keys(d.profile).length)fillSeller(d.profile);}).catch(()=>{});
+    if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{if(d.profile&&Object.keys(d.profile).length)fillSeller(d.profile);}).catch(()=>{});
   }
   function openFormWith(p){
     openForm(p.doc);
@@ -823,7 +835,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     const payload={doc:curDoc,number:val('d_number'),date:fmtDate(),vat:$('d_vat').checked,seller,buyer:{name:val('b_name'),bin:val('b_bin')},items};
     const btn=$('genbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
     try{
-      const res=await fetch(API+'/api/generate',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const res=await afetch(API+'/api/generate',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
       const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
@@ -833,7 +845,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
 
   /* ---------- CALCULATORS ---------- */
   async function loadCalc(){
-    try{const r=await fetch(API+'/api/calc-catalog');calcList=(await r.json()).calc||[];}catch(e){calcList=[];}
+    try{const r=await afetch(API+'/api/calc-catalog');calcList=(await r.json()).calc||[];}catch(e){calcList=[];}
     renderCalcHome();
   }
   function renderCalcHome(){
@@ -857,7 +869,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     const params={};document.querySelectorAll('#cf-fields input').forEach(i=>{params[i.dataset.k]=i.value;});
     const btn=$('c-run');btn.disabled=true;
     try{
-      const r=await fetch(API+'/api/calc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:curCalc.type,lang,params})});
+      const r=await afetch(API+'/api/calc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:curCalc.type,lang,params})});
       const d=await r.json();const box=$('cf-result');
       box.innerHTML='<h3 style="margin-bottom:8px">'+S().cresult+'</h3>'+
         d.lines.map(l=>'<div class="rline"><span>'+l[0]+'</span><b>'+l[1]+'</b></div>').join('')+
@@ -880,7 +892,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     bubble('user',text);aiHist.push({role:'user',content:text});
     const wait=bubble('assistant','…');
     try{
-      const r=await fetch(API+'/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,lang,history:aiHist.slice(-6)})});
+      const r=await afetch(API+'/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,lang,history:aiHist.slice(-6)})});
       const d=await r.json();wait.textContent=d.reply||S().errnet;aiHist.push({role:'assistant',content:d.reply||''});
     }catch(e){wait.textContent=S().errnet;}
     window.scrollTo(0,document.body.scrollHeight);
@@ -929,41 +941,41 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   }
   async function loadHistory(){
     const box=$('acc-history');if(!box)return;
-    try{const r=await fetch(API+'/api/history',{credentials:'include'});const docs=(await r.json()).docs||[];
+    try{const r=await afetch(API+'/api/history',{credentials:'include'});const docs=(await r.json()).docs||[];
       if(!docs.length){box.innerHTML='<p class="sub" style="margin:0">'+S().accnohist+'</p>';return;}
       box.innerHTML=docs.map(d=>'<div class="rline"><span>'+d.title+'<br><span style="color:var(--muted);font-size:12px">'+d.created+' · '+(d.total||0).toLocaleString('ru-RU')+' ₸</span></span>'+
         '<a style="cursor:pointer;color:var(--accent);font-weight:700;white-space:nowrap" onclick="repeatDoc('+d.id+')">'+S().accrepeat+'</a></div>').join('');
     }catch(e){box.innerHTML='';}
   }
   async function repeatDoc(id){
-    try{const r=await fetch(API+'/api/history-item?id='+id,{credentials:'include'});const p=(await r.json()).payload;
+    try{const r=await afetch(API+'/api/history-item?id='+id,{credentials:'include'});const p=(await r.json()).payload;
       if(p&&p.doc){showTab('docs');openFormWith(p);}}catch(e){}
   }
   async function doChangePass(){
     const s=S(),old=$('cp_old').value,nw=$('cp_new').value;
     if(nw.length<6)return alert(s.e_pass);
     const b=$('a-chpass');b.disabled=true;
-    try{const r=await fetch(API+'/auth/change-password',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_password:old,new_password:nw})});
+    try{const r=await afetch(API+'/auth/change-password',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_password:old,new_password:nw})});
       if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
       $('cp_old').value='';$('cp_new').value='';alert(s.accpassok);
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function doDelete(){
     if(!confirm(S().accdelconfirm))return;
-    try{await fetch(API+'/auth/delete',{method:'POST',credentials:'include'});}catch(e){}
-    meUser=null;renderAccount();
+    try{await afetch(API+'/auth/delete',{method:'POST',credentials:'include'});}catch(e){}
+    setToken('');meUser=null;renderAccount();applyGate();
   }
   let resetTok=new URLSearchParams(location.search).get('reset')||'';
   async function doForgot(){
     const s=S();const email=prompt(s.forgotask,$('al_email').value||'');
     if(!email||!reEmail.test(email.trim().toLowerCase()))return;
-    try{await fetch(API+'/auth/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.trim().toLowerCase()})});}catch(e){}
+    try{await afetch(API+'/auth/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.trim().toLowerCase()})});}catch(e){}
     alert(s.forgotsent);
   }
   async function doReset(){
     const s=S();const pass=$('rs_pass').value;if(pass.length<6)return alert(s.e_pass);
     const b=$('a-resetbtn');b.disabled=true;
-    try{const r=await fetch(API+'/auth/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:resetTok,new_password:pass})});
+    try{const r=await afetch(API+'/auth/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:resetTok,new_password:pass})});
       if(!r.ok){alert(s.resetbad);return;}
       alert(s.resetok);resetTok='';history.replaceState(null,'',location.pathname);renderAccount();acctab('login');
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
@@ -971,24 +983,24 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   async function doLinkTg(){
     const s=S();const code=$('lt_code').value.trim();if(!code)return;
     const b=$('a-linkbtn');b.disabled=true;
-    try{const r=await fetch(API+'/auth/link-telegram',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+    try{const r=await afetch(API+'/auth/link-telegram',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
       if(!r.ok){alert(s.linkbad);return;}
       $('lt_code').value='';alert(s.linkok);await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function loadAdmin(){
     const box=$('admin-users');if(!box)return;
-    try{const r=await fetch(API+'/api/admin/users',{credentials:'include'});const us=(await r.json()).users||[];
+    try{const r=await afetch(API+'/api/admin/users',{credentials:'include'});const us=(await r.json()).users||[];
       box.innerHTML=us.map(u=>'<div class="rline"><span>'+u.email+'<br><span style="color:var(--muted);font-size:12px">'+(u.name||'')+'</span></span>'+
         '<select onchange="setUserRole('+u.id+',this.value)" style="border:1px solid var(--line);border-radius:8px;height:32px;background:var(--card);color:var(--text)">'+
         ['client','manager','admin'].map(rr=>'<option value="'+rr+'"'+(u.role===rr?' selected':'')+'>'+rr+'</option>').join('')+'</select></div>').join('');
     }catch(e){box.innerHTML='';}
   }
   async function setUserRole(id,role){
-    try{await fetch(API+'/api/admin/set-role',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,role})});}catch(e){}
+    try{await afetch(API+'/api/admin/set-role',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,role})});}catch(e){}
   }
   async function loadMe(){
-    try{const r=await fetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
+    try{const r=await afetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
     renderAccount();applyGate();
   }
   function applyGate(){
@@ -1000,19 +1012,21 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     const s=S(),name=$('a_name').value.trim(),email=$('ar_email').value.trim().toLowerCase(),pass=$('ar_pass').value;
     if(name.length<2)return alert(s.e_name);if(!reEmail.test(email))return alert(s.e_email);if(pass.length<6)return alert(s.e_pass);
     const b=$('a-regbtn');b.disabled=true;
-    try{const r=await fetch(API+'/auth/register-email',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name})});
-      if(r.status===409){alert(s.e_taken);return;}if(!r.ok){alert(s.errnet);return;}await loadMe();
+    try{const r=await afetch(API+'/auth/register-email',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name})});
+      if(r.status===409){alert(s.e_taken);return;}if(!r.ok){alert(s.errnet);return;}
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function doLogin(){
     const s=S(),email=$('al_email').value.trim().toLowerCase(),pass=$('al_pass').value;
     if(!reEmail.test(email))return alert(s.e_email);if(!pass)return alert(s.e_pass);
     const b=$('a-loginbtn');b.disabled=true;
-    try{const r=await fetch(API+'/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
-      if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}await loadMe();
+    try{const r=await afetch(API+'/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+      if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  async function doLogout(){try{await fetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}meUser=null;renderAccount();applyGate();}
+  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;renderAccount();applyGate();}
 
   /* ---------- CONVERTER ---------- */
   const CONV=[
@@ -1076,7 +1090,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     if(convParam)fd.append('param',convParam);
     $('conv-status').textContent='⏳ '+s.convwait;
     try{
-      const r=await fetch(API+'/api/convert',{method:'POST',body:fd});
+      const r=await afetch(API+'/api/convert',{method:'POST',body:fd});
       if(!r.ok){$('conv-status').textContent='❌ '+s.converr;return;}
       const blob=await r.blob();const url=URL.createObjectURL(blob);
       const a=document.createElement('a');a.href=url;a.download='qujat_converted.'+CONV_EXT[convTarget.target];
@@ -1088,7 +1102,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   /* ---------- Google Sign-In (Gmail) ---------- */
   let GCID=null,gReady=false;
   async function initGoogle(){
-    if(GCID===null){try{const r=await fetch(API+'/auth/config');GCID=(await r.json()).googleClientId||'';}catch(e){GCID='';}}
+    if(GCID===null){try{const r=await afetch(API+'/auth/config');GCID=(await r.json()).googleClientId||'';}catch(e){GCID='';}}
     if(!GCID)return;
     $('g-or-t').textContent=lang==='ru'?'или':'немесе';
     function render(){
@@ -1101,8 +1115,8 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     if(!render()){let n=0;const t=setInterval(()=>{if(render()||++n>25)clearInterval(t);},150);}
   }
   async function onGoogle(resp){
-    try{const r=await fetch(API+'/auth/google',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})});
-      if(r.ok){await loadMe();}else{alert(S().errnet);}
+    try{const r=await afetch(API+'/auth/google',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})});
+      if(r.ok){const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();}else{alert(S().errnet);}
     }catch(e){alert(S().errnet);}
   }
 
