@@ -352,8 +352,15 @@ details summary:hover{color:var(--accent-strong)}
 /* ===== Десктоп: төмендегі нав → сол жақ sidebar ===== */
 @media(min-width:900px){
   body{padding-bottom:0;padding-left:252px}
-  .wrap{max-width:680px}
-  header .wrap, .airow .wrap{max-width:680px}
+  .wrap{max-width:900px}
+  header .wrap, .airow .wrap{max-width:900px}
+  /* карталар — 2 бағанға (бос орынды толтырады, ыңғайлы) */
+  #cats,#calc-list,#conv-list{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}
+  #cats .card,#calc-list .card,#conv-list .card{margin-bottom:0}
+  #conv-list .cgh{grid-column:1/-1}
+  /* форма/нәтиже — оқуға ыңғайлы ені */
+  #form,#result,#calc-form,#acc-auth,#acc-reset,#tab-ai{max-width:660px}
+  #cf-result{margin-top:14px}
   .nav{
     flex-direction:column;top:0;bottom:0;left:0;right:auto;
     width:252px;height:100vh;align-items:stretch;justify-content:flex-start;
