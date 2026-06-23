@@ -956,13 +956,19 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     curCalc=c;$('cf-title').textContent=c[lang];$('c-run').textContent=S().crun;
     const box=$('cf-fields');box.innerHTML='';
     c.fields.forEach(f=>{const d=document.createElement('div');d.className='field';
-      d.innerHTML='<label>'+f[lang]+'</label><input type="number" inputmode="decimal" data-k="'+f.k+'">';box.appendChild(d);});
+      if(f.opts){const li=lang==='ru'?1:2;
+        d.innerHTML='<label>'+f[lang]+'</label><select data-k="'+f.k+'" style="width:100%;height:48px;border:1px solid var(--line-2);border-radius:13px;padding:0 14px;font-family:inherit;font-size:15px;font-weight:600;background:var(--surface-2);color:var(--text)">'+
+          f.opts.map(o=>'<option value="'+o[0]+'">'+(o[li]||o[1])+'</option>').join('')+'</select>';
+      }else{
+        d.innerHTML='<label>'+f[lang]+'</label><input type="number" inputmode="decimal" data-k="'+f.k+'">';
+      }
+      box.appendChild(d);});
     $('cf-result').classList.add('hidden');
     $('calc-home').classList.add('hidden');$('calc-form').classList.remove('hidden');window.scrollTo(0,0);
   }
   function goCalcHome(){$('calc-form').classList.add('hidden');$('calc-home').classList.remove('hidden');window.scrollTo(0,0);}
   async function runCalc(){
-    const params={};document.querySelectorAll('#cf-fields input').forEach(i=>{params[i.dataset.k]=i.value;});
+    const params={};document.querySelectorAll('#cf-fields input,#cf-fields select').forEach(i=>{params[i.dataset.k]=i.value;});
     const btn=$('c-run');btn.disabled=true;
     try{
       const r=await afetch(API+'/api/calc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:curCalc.type,lang,params})});
