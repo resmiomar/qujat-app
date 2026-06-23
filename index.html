@@ -505,6 +505,15 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       <button class="btn ghost" onclick="goDocsHome()" id="r-new" style="margin-bottom:10px"></button>
       <button class="btn ghost" onclick="goHome()" id="r-home"></button>
     </div></div>
+    <!-- динамикалық форма (барлық басқа құжаттар) -->
+    <div id="xform" class="hidden">
+      <button class="back" onclick="goDocsHome()">‹ <span id="xf-back"></span></button>
+      <h2 id="xf-title"></h2>
+      <div class="sec"><h3 id="xf-seller-h"></h3><div id="xf-seller"></div></div>
+      <div class="sec"><div id="xf-fields"></div></div>
+      <button class="btn" id="xf-gen" onclick="genXDoc()"></button>
+      <p class="note" id="xf-note"></p>
+    </div>
   </div>
 
   <!-- ===== TAB: CALCULATORS ===== -->
@@ -774,6 +783,13 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
       el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
       el.onclick=()=>openForm(c.key);box.appendChild(el);});
+    if(DOC_CATS)DOC_CATS.forEach(cat=>{
+      const h=document.createElement('div');h.className='cgh';h.textContent=cat[lang];box.appendChild(h);
+      (cat.docs||[]).forEach(doc=>{const el=document.createElement('div');el.className='card';
+        el.innerHTML='<div class="ic">'+svg(CAT_ICON[cat.cat]||'file-text')+'</div><div><div class="t">'+doc[lang]+'</div></div><div class="chev">›</div>';
+        el.onclick=()=>openXForm(doc.key);box.appendChild(el);});
+    });
+    else loadSchemas();
   }
   function docLabels(){
     const s=S();$('langbtn').textContent='🌐 '+(lang==='ru'?'RU':'KZ');
@@ -821,7 +837,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     $('items').innerHTML='';(p.items||[]).forEach(it=>addItem(it.name,it.qty||'1',it.price));if(!(p.items||[]).length)addItem();
     calcTotal();
   }
-  function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
+  function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('xform').classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
   function goHome(){if(document.body.classList.contains('gated'))return;showTab('docs');goDocsHome();}
   const val=id=>($(id).value||'').trim();
   function fmtDate(){const d=$('d_date').value;if(!d)return '';const[y,m,dd]=d.split('-');return dd+'.'+m+'.'+y;}
@@ -842,6 +858,84 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
       const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
       $('form').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
+    }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
+  }
+
+  /* ---------- БАСҚА ҚҰЖАТТАР (схема-негізді динамикалық форма) ---------- */
+  let DOC_SCHEMAS=null,DOC_CATS=null,curXKey=null;
+  const CAT_ICON={cash:'banknote',hr:'user',tax:'receipt',contract:'file-text',warehouse:'package'};
+  async function loadSchemas(){
+    if(DOC_SCHEMAS)return;
+    try{const r=await afetch(API+'/api/doc-schemas');const d=await r.json();
+      DOC_SCHEMAS=d.schemas||{};DOC_CATS=d.cats||[];renderHome();}catch(e){}
+  }
+  function xField(f){
+    const d=document.createElement('div');
+    if(f.type==='items'){
+      d.className='sec';d.style.padding='12px 12px 8px';
+      d.innerHTML='<h3 style="font-size:13.5px;margin-bottom:8px">'+f[lang]+'</h3><div class="xitems" data-k="'+f.key+'"></div>'+
+        '<button type="button" class="additem">+ '+(lang==='ru'?'Добавить строку':'Жол қосу')+'</button>';
+      const wrap=d.querySelector('.xitems'),cols=f.cols||[];
+      function addRow(){const r=document.createElement('div');r.className='xrow';
+        r.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap';
+        r.innerHTML=cols.map(c=>'<input '+(c.type==='number'?'type="number" inputmode="decimal"':c.type==='date'?'type="date"':'type="text"')+' data-ck="'+c.key+'" placeholder="'+c[lang]+'" style="flex:1;min-width:84px;height:42px">').join('')+'<button type="button" class="del">×</button>';
+        r.querySelector('.del').onclick=()=>r.remove();wrap.appendChild(r);}
+      d.querySelector('.additem').onclick=addRow;addRow();
+      return d;
+    }
+    if(f.type==='checkbox'){
+      d.className='field';
+      d.innerHTML='<label class="chk" style="display:flex;align-items:center;gap:9px;cursor:pointer"><input type="checkbox" data-k="'+f.key+'"><span>'+f[lang]+'</span></label>';
+      return d;
+    }
+    d.className='field';
+    const lab='<label>'+f[lang]+(f.required?' *':'')+'</label>';
+    let inp;
+    if(f.type==='textarea')inp='<textarea data-k="'+f.key+'" rows="3" style="width:100%;border:1px solid var(--line-2);border-radius:13px;padding:10px 14px;font-family:inherit;font-size:15px;font-weight:500;background:var(--surface-2);color:var(--text);resize:vertical"></textarea>';
+    else inp='<input type="'+(f.type==='number'?'number':f.type==='date'?'date':'text')+'"'+(f.type==='number'?' inputmode="decimal"':'')+' data-k="'+f.key+'" value="'+(f.default||'')+'">';
+    d.innerHTML=lab+inp;
+    return d;
+  }
+  function openXForm(key){
+    curXKey=key;const sc=DOC_SCHEMAS&&DOC_SCHEMAS[key];if(!sc)return;
+    const s=S();
+    $('xf-title').textContent=sc[lang];$('xf-back').textContent=s.back;
+    $('xf-gen').textContent=s.gen;$('xf-seller-h').textContent=s.seller;
+    $('xf-note').textContent=s.fnote;
+    const sv=JSON.parse(localStorage.getItem('qujat_seller')||'{}');
+    let sf=[['name',s.sname],['bin',s.sbin],['fio',s.sfio],
+            ['accountant',lang==='ru'?'ФИО бухгалтера':'Бухгалтердің аты-жөні']];
+    if(key==='payment')sf=sf.concat([['bank_name',s.bankname],['iik','ИИК (IBAN)'],['bik','БИК'],['kbe','Кбе']]);
+    $('xf-seller').innerHTML=sf.map(([k,l])=>'<div class="field"><label>'+l+'</label><input type="text" data-sk="'+k+'" value="'+(sv[k]||'')+'"></div>').join('');
+    const box=$('xf-fields');box.innerHTML='';
+    sc.fields.forEach(f=>box.appendChild(xField(f)));
+    box.querySelectorAll('input[type=date][data-k=date]').forEach(i=>{if(!i.value)i.valueAsDate=new Date();});
+    $('home').classList.add('hidden');$('form').classList.add('hidden');$('result').classList.add('hidden');
+    $('xform').classList.remove('hidden');window.scrollTo(0,0);
+    if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{
+      const pr=d.profile||{};document.querySelectorAll('#xf-seller [data-sk]').forEach(i=>{if(!i.value&&pr[i.dataset.sk])i.value=pr[i.dataset.sk];});}).catch(()=>{});
+  }
+  async function genXDoc(){
+    const s=S();
+    const seller={};document.querySelectorAll('#xf-seller [data-sk]').forEach(i=>seller[i.dataset.sk]=i.value.trim());
+    if(!seller.name){alert(s.errseller);return;}
+    localStorage.setItem('qujat_seller',JSON.stringify(seller));
+    const vals={};
+    $('xf-fields').querySelectorAll('input[data-k],textarea[data-k],select[data-k]').forEach(i=>{
+      vals[i.dataset.k]=(i.type==='checkbox')?i.checked:i.value;});
+    $('xf-fields').querySelectorAll('.xitems').forEach(w=>{
+      const rows=[];w.querySelectorAll('.xrow').forEach(r=>{const o={};
+        r.querySelectorAll('[data-ck]').forEach(c=>o[c.dataset.ck]=c.value);
+        if(Object.values(o).some(v=>String(v).trim()))rows.push(o);});
+      vals[w.dataset.k]=rows;});
+    const btn=$('xf-gen');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
+    try{
+      const res=await afetch(API+'/api/gen-doc',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({doc:curXKey,seller,vals})});
+      if(!res.ok)throw new Error('http');
+      const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
+      const fn=curXKey+'_'+(vals.number||'1')+'.pdf';
+      $('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
+      $('xform').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
     }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
   }
 
@@ -951,7 +1045,8 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   }
   async function repeatDoc(id){
     try{const r=await afetch(API+'/api/history-item?id='+id,{credentials:'include'});const p=(await r.json()).payload;
-      if(p&&p.doc){showTab('docs');openFormWith(p);}}catch(e){}
+      if(!p||!p.doc)return;showTab('docs');
+      if(DOC_SCHEMAS&&DOC_SCHEMAS[p.doc])openXForm(p.doc);else openFormWith(p);}catch(e){}
   }
   async function doChangePass(){
     const s=S(),old=$('cp_old').value,nw=$('cp_new').value;
