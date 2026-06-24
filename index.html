@@ -596,6 +596,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
         <p class="sub" id="acc-email" style="margin-bottom:14px"></p>
         <button class="btn ghost" onclick="doLogout()" id="a-logout"></button>
       </div>
+      <div class="sec" id="acc-sub" style="text-align:center"></div>
       <div class="sec">
         <h3>📁 <span id="acc-hist-t"></span></h3>
         <div id="acc-history"></div>
@@ -630,6 +631,19 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
         </div>
       </details>
       <button class="btn ghost" style="color:var(--danger);border-color:#f3c0c0" onclick="doDelete()" id="a-delete"></button>
+    </div>
+    <!-- Pro / жазылым экраны -->
+    <div id="pro" class="hidden">
+      <button class="back" onclick="goAccount()">‹ <span id="pro-back"></span></button>
+      <h2 id="pro-h"></h2><p class="sub" id="pro-sub"></p>
+      <div id="pro-tariffs"></div>
+      <div class="sec">
+        <p class="sub" id="pro-pay-hint" style="margin-bottom:10px"></p>
+        <a class="btn" id="pro-kaspi" target="_blank" style="display:block;text-decoration:none;line-height:50px;margin-bottom:12px"></a>
+        <button class="btn ghost" id="pro-receipt-btn" onclick="pickReceipt()"></button>
+        <input type="file" id="pro-receipt" accept="application/pdf" class="hidden" onchange="onReceiptFile()">
+        <p class="note" id="pro-status" style="font-weight:600;margin-top:8px"></p>
+      </div>
     </div>
   </div>
 </div>
@@ -678,6 +692,13 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       ainote:"⚠️ ИИ может ошибаться. Точные данные — на kgd.gov.kz.",
       accintro:"Войдите — сессия будет работать на любом устройстве (без SMS).",
       consent:'Регистрируясь, вы принимаете <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">оферту</a> и <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">политику конфиденциальности</a>.',
+      proh:"Qujat Pro",prosub:"Безлимит документов, налоговые формы, ИИ-помощник, печать и подпись — без ограничений.",
+      prolimit:"Лимит бесплатных документов в этом месяце исчерпан. Оформите Pro:",
+      probuy:"💎 Оформить Pro",proextend:"Продлить Pro",prountil:"Активен до",
+      profree:"Бесплатный тариф",prousedl:"Документов в этом месяце:",proleft:"осталось",
+      propayhint:"Выберите тариф, оплатите через Kaspi и загрузите чек — Pro включится автоматически.",
+      prokaspi:"Оплатить через Kaspi",proreceipt:"📎 Загрузить чек Kaspi",prochoose:"Сначала выберите тариф",
+      proverify:"Проверяю чек…",prook:"Готово! Pro активирован 🎉",pronokaspi:"Оплата скоро будет. Напишите в @Qujatkz_bot.",
       accreg:"Регистрация",acclogin:"Вход",accname:"Имя",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Создать аккаунт",accloginbtn:"Войти",acctoreg:"Нет аккаунта? Регистрация",
       acctologin:"Уже есть аккаунт? Войти",acclogout:"Выйти",accwelcome:"Вы вошли как",
@@ -711,6 +732,13 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       ainote:"⚠️ AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз.",
       accintro:"Кіріңіз — сессия кез келген құрылғыда жұмыс істейді (SMS-сіз).",
       consent:'Тіркелу арқылы сіз <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">офертаны</a> және <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">құпиялылық саясатын</a> қабылдайсыз.',
+      proh:"Qujat Pro",prosub:"Шексіз құжат, салық формалары, AI-көмекші, печать пен қолтаңба — шектеусіз.",
+      prolimit:"Осы айдағы тегін құжат лимиті бітті. Pro рәсімдеңіз:",
+      probuy:"💎 Pro рәсімдеу",proextend:"Pro ұзарту",prountil:"Белсенді, дейін",
+      profree:"Тегін тариф",prousedl:"Осы айдағы құжат:",proleft:"қалды",
+      propayhint:"Тарифті таңдап, Kaspi арқылы төлеп, чекті жүктеңіз — Pro автоматты қосылады.",
+      prokaspi:"Kaspi арқылы төлеу",proreceipt:"📎 Kaspi чегін жүктеу",prochoose:"Алдымен тариф таңдаңыз",
+      proverify:"Чекті тексеру…",prook:"Дайын! Pro қосылды 🎉",pronokaspi:"Төлем жақында. @Qujatkz_bot-қа жазыңыз.",
       accreg:"Тіркелу",acclogin:"Кіру",accname:"Аты",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Аккаунт жасау",accloginbtn:"Кіру",acctoreg:"Аккаунт жоқ па? Тіркелу",
       acctologin:"Аккаунт бар ма? Кіру",acclogout:"Шығу",accwelcome:"Сіз кірдіңіз:",
@@ -870,6 +898,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     const btn=$('genbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
     try{
       const res=await afetch(API+'/api/generate',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      if(res.status===402){openPro(S().prolimit);return;}
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
       const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
@@ -947,6 +976,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     const btn=$('xf-gen');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
     try{
       const res=await afetch(API+'/api/gen-doc',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({doc:curXKey,seller,vals})});
+      if(res.status===402){openPro(S().prolimit);return;}
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
       const fn=curXKey+'_'+(vals.number||'1')+'.pdf';
@@ -1048,6 +1078,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   }
   function renderAccount(){
     accLabels();
+    if(proOpen)return;
     if(resetTok){$('acc-reset').classList.remove('hidden');$('acc-auth').classList.add('hidden');$('acc-user').classList.add('hidden');return;}
     $('acc-reset').classList.add('hidden');
     if(meUser){$('acc-user').classList.remove('hidden');$('acc-auth').classList.add('hidden');
@@ -1057,7 +1088,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
       if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
       const isAdmin=meUser.role==='admin';$('acc-admin').classList.toggle('hidden',!isAdmin);if(isAdmin)loadAdmin();
-      loadHistory();loadAssets();}
+      loadHistory();loadAssets();loadSub();}
     else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');initGoogle();}
   }
   async function loadHistory(){
@@ -1171,7 +1202,78 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;renderAccount();applyGate();}
+  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;renderAccount();applyGate();}
+
+  /* ----- Pro / жазылым (Kaspi + тенге) ----- */
+  let subInfo=null,proTariff=null,proOpen=false;
+  const kzt=v=>Number(v).toLocaleString('ru-RU')+' ₸';
+  async function loadSub(){
+    try{subInfo=await (await afetch(API+'/api/sub-status',{credentials:'include'})).json();}catch(e){subInfo=null;}
+    renderSubBox();
+  }
+  function renderSubBox(){
+    const box=$('acc-sub');if(!box)return;const s=S();
+    if(!subInfo){box.innerHTML='';return;}
+    if(subInfo.premium){
+      box.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--accent2)">💎 Qujat Pro</div>'+
+        '<div class="sub" style="margin:4px 0 12px">'+s.prountil+' <b>'+(subInfo.until||'')+'</b></div>'+
+        '<button class="btn ghost" onclick="openPro()">'+s.proextend+'</button>';
+    }else{
+      const left=Math.max(0,(subInfo.limit||0)-(subInfo.used||0));
+      box.innerHTML='<div style="font-size:15px;font-weight:700">'+s.profree+'</div>'+
+        '<div class="sub" style="margin:4px 0 12px">'+s.prousedl+' '+(subInfo.used||0)+'/'+(subInfo.limit||0)+' · '+s.proleft+' '+left+'</div>'+
+        '<button class="btn" onclick="openPro()">'+s.probuy+'</button>';
+    }
+  }
+  function renderTariffs(){
+    const box=$('pro-tariffs');if(!box||!subInfo)return;box.innerHTML='';
+    (subInfo.tariffs||[]).forEach(t=>{
+      const el=document.createElement('div');el.className='card';el.style.cursor='pointer';
+      el.dataset.k=t.key;
+      el.innerHTML='<div class="ic">💎</div><div><div class="t">'+t.title+'</div><div class="d">'+kzt(t.kzt)+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>selectTariff(t.key);box.appendChild(el);
+    });
+    if(subInfo.tariffs&&subInfo.tariffs.length)selectTariff(proTariff||subInfo.tariffs[0].key);
+  }
+  function selectTariff(key){
+    proTariff=key;const s=S();
+    document.querySelectorAll('#pro-tariffs .card').forEach(c=>{
+      const on=c.dataset.k===key;c.style.borderColor=on?'var(--accent)':'';c.style.boxShadow=on?'var(--ring)':'';});
+    const t=(subInfo.tariffs||[]).find(x=>x.key===key);
+    $('pro-pay-hint').textContent=s.propayhint;
+    if(subInfo.kaspi_url){
+      $('pro-kaspi').textContent=s.prokaspi+(t?(' · '+kzt(t.kzt)):'');
+      $('pro-kaspi').href=subInfo.kaspi_url;$('pro-kaspi').style.display='block';
+      $('pro-receipt-btn').style.display='block';
+    }else{
+      $('pro-kaspi').style.display='none';$('pro-receipt-btn').style.display='none';
+      $('pro-status').textContent=s.pronokaspi;
+    }
+  }
+  function openPro(msg){
+    proOpen=true;const s=S();
+    if(curTab!=='account'){curTab='account';['docs','calc','ai','convert','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!=='account'));renderNav();}
+    document.body.classList.remove('gated');
+    $('acc-auth').classList.add('hidden');$('acc-user').classList.add('hidden');$('acc-reset').classList.add('hidden');
+    $('acc-h').classList.add('hidden');$('acc-intro').classList.add('hidden');
+    $('pro-h').textContent=s.proh;$('pro-sub').textContent=msg||s.prosub;$('pro-back').textContent=s.back;
+    $('pro-receipt-btn').textContent=s.proreceipt;$('pro-status').textContent='';
+    renderTariffs();
+    $('pro').classList.remove('hidden');window.scrollTo(0,0);
+  }
+  function goAccount(){proOpen=false;$('pro').classList.add('hidden');$('acc-h').classList.remove('hidden');$('acc-intro').classList.remove('hidden');$('acc-user').classList.remove('hidden');loadSub();window.scrollTo(0,0);}
+  function pickReceipt(){if(!proTariff){alert(S().prochoose);return;}const i=$('pro-receipt');i.value='';i.click();}
+  async function onReceiptFile(){
+    const i=$('pro-receipt');if(!i.files.length||!proTariff)return;const s=S();
+    const fd=new FormData();fd.append('tariff',proTariff);fd.append('file',i.files[0]);
+    $('pro-status').textContent='⏳ '+s.proverify;
+    try{
+      const r=await afetch(API+'/api/kaspi-claim',{method:'POST',credentials:'include',body:fd});
+      const d=await r.json();
+      if(d.ok){$('pro-status').textContent='✅ '+s.prook;await loadMe();setTimeout(goAccount,1500);}
+      else{$('pro-status').textContent='❌ '+(d.reason||s.errnet);}
+    }catch(e){$('pro-status').textContent='❌ '+s.errnet;}
+  }
 
   /* ---------- CONVERTER ---------- */
   const CONV=[
