@@ -534,6 +534,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   <!-- ===== TAB: AI ===== -->
   <div id="tab-ai" class="hidden">
     <h2 id="a-title" style="margin-bottom:2px"></h2><p class="sub" id="a-sub"></p>
+    <p class="note" id="a-note" style="text-align:left;margin:-6px 0 10px;color:var(--muted)"></p>
     <div class="chips" id="a-chips"></div>
     <div class="chat" id="chat"></div>
   </div>
@@ -571,6 +572,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
           <div class="field"><label id="la-email-r"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><input type="email" id="ar_email" inputmode="email"></div></div>
           <div class="field"><label id="la-pass-r"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" id="ar_pass"></div></div>
           <button class="btn" id="a-regbtn" onclick="doRegister()"></button>
+          <p class="note" id="a-consent" style="font-size:11px;line-height:1.45;margin-top:8px"></p>
           <p class="note"><a id="a-to-login" style="cursor:pointer" onclick="acctab('login')"></a></p>
         </div>
         <div id="acc-login" class="hidden">
@@ -675,6 +677,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       achips:["Какой налог у ИП?","Когда сдавать 910?","ИП или ТОО?","Ставка НДС 2026?"],
       ainote:"⚠️ ИИ может ошибаться. Точные данные — на kgd.gov.kz.",
       accintro:"Войдите — сессия будет работать на любом устройстве (без SMS).",
+      consent:'Регистрируясь, вы принимаете <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">оферту</a> и <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">политику конфиденциальности</a>.',
       accreg:"Регистрация",acclogin:"Вход",accname:"Имя",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Создать аккаунт",accloginbtn:"Войти",acctoreg:"Нет аккаунта? Регистрация",
       acctologin:"Уже есть аккаунт? Войти",acclogout:"Выйти",accwelcome:"Вы вошли как",
@@ -707,6 +710,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       achips:["ИП қандай салық төлейді?","910 қашан тапсырылады?","ИП па, ТОО ма?","2026 ҚҚС ставкасы?"],
       ainote:"⚠️ AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз.",
       accintro:"Кіріңіз — сессия кез келген құрылғыда жұмыс істейді (SMS-сіз).",
+      consent:'Тіркелу арқылы сіз <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">офертаны</a> және <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">құпиялылық саясатын</a> қабылдайсыз.',
       accreg:"Тіркелу",acclogin:"Кіру",accname:"Аты",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Аккаунт жасау",accloginbtn:"Кіру",acctoreg:"Аккаунт жоқ па? Тіркелу",
       acctologin:"Аккаунт бар ма? Кіру",acclogout:"Шығу",accwelcome:"Сіз кірдіңіз:",
@@ -997,6 +1001,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     window.scrollTo(0,document.body.scrollHeight);return m;}
   function aiGreet(){
     const s=S();$('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('ai-input').placeholder=s.aplaceholder;
+    $('a-note').textContent=s.ainote;
     $('chat').innerHTML='';aiHist=[];bubble('assistant',s.agreet);
     const ch=$('a-chips');ch.innerHTML='';
     s.achips.forEach(q=>{const b=document.createElement('div');b.className='chip';b.textContent=q;b.onclick=()=>{$('ai-input').value=q;sendAI();};ch.appendChild(b);});
@@ -1022,6 +1027,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     $('acc-intro').textContent=s.accintro;
     $('acc-card-sub').textContent=s.accintro;
     $('acc-lang-t').textContent=lang==='ru'?'RU':'KZ';
+    if($('a-consent'))$('a-consent').innerHTML=s.consent;
     $('la-name').textContent=s.accname;$('la-email-r').textContent=s.accemail;$('la-pass-r').textContent=s.accpass;
     $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
     $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
