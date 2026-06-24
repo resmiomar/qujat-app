@@ -683,7 +683,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       additem:"+ Добавить позицию",vat:"С НДС 16%",total:"Итого:",gen:"📄 Создать PDF",genwait:"Создаю…",
       fnote:"Данные поставщика сохранятся в браузере.",itemname:"Наименование",
       rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"👁 Открыть PDF",rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",rhome:"🏠 На главную",
-      errseller:"Укажите название поставщика",erritems:"Добавьте позицию",errnet:"Ошибка сети. Попробуйте ещё раз.",
+      errseller:"Укажите название поставщика",erritems:"Добавьте позицию",errnet:"Ошибка сети. Попробуйте ещё раз.",fillreq:"Заполните обязательные поля (отмечены *)",
       ctitle:"Калькуляторы 2026",csub:"Налоги, зарплата, режимы — по ставкам РК 2026.",crun:"Рассчитать",cresult:"Результат",
       convtitle:"Конвертер файлов",convsub:"Конвертируйте файлы прямо в браузере, бесплатно.",convwait:"Конвертирую…",convdone:"Готово! Файл скачан.",converr:"Не удалось — проверьте файл.",
       atitle:"ИИ-помощник",asub:"Спросите про налоги, документы, бухгалтерию РК 2026.",
@@ -723,7 +723,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       additem:"+ Атау қосу",vat:"ҚҚС 16%-бен",total:"Барлығы:",gen:"📄 PDF жасау",genwait:"Жасалуда…",
       fnote:"Жеткізуші деректері браузерде сақталады.",itemname:"Атауы",
       rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"👁 PDF ашу",rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",rhome:"🏠 Басты бет",
-      errseller:"Жеткізуші атауын жазыңыз",erritems:"Атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз.",
+      errseller:"Жеткізуші атауын жазыңыз",erritems:"Атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз.",fillreq:"Міндетті өрістерді толтырыңыз (* белгісі)",
       ctitle:"Калькуляторлар 2026",csub:"Салық, жалақы, режимдер — 2026 ставкалары.",crun:"Есептеу",cresult:"Нәтиже",
       convtitle:"Файл конвертер",convsub:"Файлдарды браузерде тегін конвертациялаңыз.",convwait:"Конвертация…",convdone:"Дайын! Файл жүктелді.",converr:"Болмады — файлды тексеріңіз.",
       atitle:"AI-көмекші",asub:"2026 салық, құжат, бухгалтерия туралы сұраңыз.",
@@ -973,6 +973,16 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
         r.querySelectorAll('[data-ck]').forEach(c=>o[c.dataset.ck]=c.value);
         if(Object.values(o).some(v=>String(v).trim()))rows.push(o);});
       vals[w.dataset.k]=rows;});
+    const sc=DOC_SCHEMAS[curXKey]||{};let bad=null;
+    (sc.fields||[]).forEach(f=>{
+      if(f.required&&f.type!=='items'&&f.type!=='checkbox'){
+        const el=$('xf-fields').querySelector('[data-k="'+f.key+'"]');
+        const v=vals[f.key];
+        if(v===undefined||String(v).trim()===''){if(!bad)bad=el;if(el)el.style.borderColor='var(--danger)';}
+        else if(el){el.style.borderColor='';}
+      }
+    });
+    if(bad){alert(s.fillreq);bad.scrollIntoView({behavior:'smooth',block:'center'});try{bad.focus();}catch(e){}return;}
     const btn=$('xf-gen');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
     try{
       const res=await afetch(API+'/api/gen-doc',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({doc:curXKey,seller,vals})});
