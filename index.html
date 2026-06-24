@@ -598,6 +598,12 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
         <h3>📁 <span id="acc-hist-t"></span></h3>
         <div id="acc-history"></div>
       </div>
+      <div class="sec" id="acc-assets">
+        <h3>🖋 <span id="acc-assets-t"></span></h3>
+        <p class="sub" id="acc-assets-hint" style="margin-bottom:12px"></p>
+        <div id="assets-rows"></div>
+        <input type="file" id="asset-input" accept="image/*" class="hidden" onchange="onAssetFile()">
+      </div>
       <div class="sec" id="acc-link">
         <h3 id="acc-link-t"></h3>
         <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
@@ -673,6 +679,9 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       accregbtn:"Создать аккаунт",accloginbtn:"Войти",acctoreg:"Нет аккаунта? Регистрация",
       acctologin:"Уже есть аккаунт? Войти",acclogout:"Выйти",accwelcome:"Вы вошли как",
       acchist:"История документов",accnohist:"Пока пусто — создайте документ",accrepeat:"Повторить",
+      assetst:"Печать и подпись",assetshint:"Загрузите фото печати и подписи один раз — они автоматически встанут на все PDF-документы.",
+      assetstamp:"Печать",assetsign:"Подпись",assetup:"Загрузить",assetre:"Заменить",assetdel:"Удалить",
+      assetok:"✓ Загружено",assetno:"Не загружено",assetuperr:"Не удалось — нужно чёткое фото на светлом фоне",
       accchpass:"🔑 Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
       accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
@@ -702,6 +711,9 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       accregbtn:"Аккаунт жасау",accloginbtn:"Кіру",acctoreg:"Аккаунт жоқ па? Тіркелу",
       acctologin:"Аккаунт бар ма? Кіру",acclogout:"Шығу",accwelcome:"Сіз кірдіңіз:",
       acchist:"Құжат тарихы",accnohist:"Әзірге бос — құжат жасаңыз",accrepeat:"Қайталау",
+      assetst:"Печать пен қолтаңба",assetshint:"Печать пен қолтаңбаның фотосын бір рет жүктеңіз — олар барлық PDF-ке автоматты қойылады.",
+      assetstamp:"Печать",assetsign:"Қолтаңба",assetup:"Жүктеу",assetre:"Ауыстыру",assetdel:"Жою",
+      assetok:"✓ Жүктелді",assetno:"Жүктелмеген",assetuperr:"Болмады — ашық фондағы анық фото керек",
       accchpass:"🔑 Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
       accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
@@ -1016,6 +1028,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     $('a-to-login').textContent=s.acctologin;$('a-to-reg').textContent=s.acctoreg;
     $('a-logout').textContent=s.acclogout;$('acc-welcome').textContent=s.accwelcome;
     $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
+    $('acc-assets-t').textContent=s.assetst;$('acc-assets-hint').textContent=s.assetshint;
     $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
     $('a-delete').textContent=s.accdelete;$('a-forgot').textContent=s.forgot;
     $('acc-link-t').textContent=s.linktg;$('acc-link-hint').textContent=s.linkhint;$('a-linkbtn').textContent=s.linkbtn;
@@ -1038,7 +1051,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
       if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
       const isAdmin=meUser.role==='admin';$('acc-admin').classList.toggle('hidden',!isAdmin);if(isAdmin)loadAdmin();
-      loadHistory();}
+      loadHistory();loadAssets();}
     else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');initGoogle();}
   }
   async function loadHistory(){
@@ -1048,6 +1061,29 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       box.innerHTML=docs.map(d=>'<div class="rline"><span>'+d.title+'<br><span style="color:var(--muted);font-size:12px">'+d.created+' · '+(d.total||0).toLocaleString('ru-RU')+' ₸</span></span>'+
         '<a style="cursor:pointer;color:var(--accent);font-weight:700;white-space:nowrap" onclick="repeatDoc('+d.id+')">'+S().accrepeat+'</a></div>').join('');
     }catch(e){box.innerHTML='';}
+  }
+  /* ----- Печать / қолтаңба ----- */
+  let assetKind=null;
+  async function loadAssets(){
+    const box=$('assets-rows');if(!box)return;const s=S();
+    let st={stamp:false,signature:false};
+    try{st=await (await afetch(API+'/auth/assets',{credentials:'include'})).json();}catch(e){}
+    const row=(kind,label,has)=>'<div class="rline"><span>'+label+'<br><span style="font-size:12px;color:'+(has?'var(--accent2)':'var(--muted)')+'">'+(has?s.assetok:s.assetno)+'</span></span>'+
+      '<span style="display:flex;gap:12px;white-space:nowrap">'+
+      (has?'<a style="cursor:pointer;color:var(--danger);font-weight:700" onclick="delAsset(\''+kind+'\')">'+s.assetdel+'</a>':'')+
+      '<a style="cursor:pointer;color:var(--accent);font-weight:700" onclick="pickAsset(\''+kind+'\')">'+(has?s.assetre:s.assetup)+'</a></span></div>';
+    box.innerHTML=row('stamp',s.assetstamp,!!st.stamp)+row('signature',s.assetsign,!!st.signature);
+  }
+  function pickAsset(k){assetKind=k;const i=$('asset-input');i.value='';i.click();}
+  async function onAssetFile(){
+    const i=$('asset-input');if(!i.files.length||!assetKind)return;const s=S();
+    const fd=new FormData();fd.append('kind',assetKind);fd.append('file',i.files[0]);
+    try{const r=await afetch(API+'/auth/upload-asset',{method:'POST',credentials:'include',body:fd});
+      if(!r.ok){alert(s.assetuperr);return;}await loadAssets();}catch(e){alert(s.errnet);}
+  }
+  async function delAsset(k){
+    try{await afetch(API+'/auth/asset-delete',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k})});}catch(e){}
+    loadAssets();
   }
   async function repeatDoc(id){
     try{const r=await afetch(API+'/api/history-item?id='+id,{credentials:'include'});const p=(await r.json()).payload;
