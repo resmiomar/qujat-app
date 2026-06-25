@@ -662,6 +662,8 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   const $=id=>document.getElementById(id);
   /* Нативті iOS (Capacitor) — Apple 3.1.1/3.1.3: ішкі төлем тек Apple IAP арқылы, сыртқы Kaspi-ді ЖАСЫРАМЫЗ */
   const NATIVE_IOS=!!(window.Capacitor&&typeof window.Capacitor.getPlatform==='function'&&window.Capacitor.getPlatform()==='ios');
+  /* Кез келген нативті қосымша (iOS не Android) — монетизация кейінге қалды, Pro/төлемді жасырамыз */
+  const NATIVE_APP=!!(window.Capacitor&&typeof window.Capacitor.isNativePlatform==='function'&&window.Capacitor.isNativePlatform());
 
   /* ---- Auth токен (Bearer): Safari/iPhone/Telegram-де cross-site cookie бұғатталғанда ---- */
   let authToken=localStorage.getItem('qujat_token')||'';
@@ -1107,7 +1109,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     $('acc-reset').classList.add('hidden');
     if(meUser){$('acc-user').classList.remove('hidden');$('acc-auth').classList.add('hidden');
       $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';
-      $('acc-link').classList.toggle('hidden',NATIVE_IOS);   /* Apple 3.1.3: iOS-та Telegram/Kaspi сатып алуға бағыттауды жасыру */
+      $('acc-link').classList.toggle('hidden',NATIVE_APP);   /* Нативті қосымшада (iOS/Android) Telegram/Kaspi сатып алуға бағыттауды жасыру */
       const linked=!!meUser.telegram_id;
       $('acc-link-form').classList.toggle('hidden',linked);
       const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
@@ -1239,16 +1241,16 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   function renderSubBox(){
     const box=$('acc-sub');if(!box)return;const s=S();
     if(!subInfo){box.innerHTML='';return;}
-    const m=NATIVE_IOS?'0':'12px';
+    const m=NATIVE_APP?'0':'12px';
     if(subInfo.premium){
       box.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--accent2)">💎 Qujat Pro</div>'+
         '<div class="sub" style="margin:4px 0 '+m+'">'+s.prountil+' <b>'+(subInfo.until||'')+'</b></div>'+
-        (NATIVE_IOS?'':'<button class="btn ghost" onclick="openPro()">'+s.proextend+'</button>');
+        (NATIVE_APP?'':'<button class="btn ghost" onclick="openPro()">'+s.proextend+'</button>');
     }else{
       const left=Math.max(0,(subInfo.limit||0)-(subInfo.used||0));
       box.innerHTML='<div style="font-size:15px;font-weight:700">'+s.profree+'</div>'+
         '<div class="sub" style="margin:4px 0 '+m+'">'+s.prousedl+' '+(subInfo.used||0)+'/'+(subInfo.limit||0)+' · '+s.proleft+' '+left+'</div>'+
-        (NATIVE_IOS?'':'<button class="btn" onclick="openPro()">'+s.probuy+'</button>');
+        (NATIVE_APP?'':'<button class="btn" onclick="openPro()">'+s.probuy+'</button>');
     }
   }
   function renderTariffs(){
@@ -1283,7 +1285,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   }
   function openPro(msg){
     const s=S();
-    if(NATIVE_IOS){alert(msg||s.prolimit);return;}
+    if(NATIVE_APP){alert(msg||s.prolimit);return;}
     proOpen=true;
     if(curTab!=='account'){curTab='account';['docs','calc','ai','convert','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!=='account'));renderNav();}
     document.body.classList.remove('gated');
