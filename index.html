@@ -502,6 +502,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       <div class="em">✅</div><h2 id="r-title"></h2><p class="sub" id="r-sub"></p>
       <a class="btn" id="r-open" target="_blank" style="display:block;text-decoration:none;line-height:50px;margin-bottom:10px"></a>
       <a class="btn ghost" id="r-download" style="display:block;text-decoration:none;line-height:48px;margin-bottom:10px"></a>
+      <button class="btn ghost" id="r-share" onclick="shareDoc()" style="display:none;margin-bottom:10px"></button>
       <button class="btn ghost" onclick="goDocsHome()" id="r-new" style="margin-bottom:10px"></button>
       <button class="btn ghost" onclick="goHome()" id="r-home"></button>
     </div></div>
@@ -659,6 +660,8 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
   const API='https://qujat-production.up.railway.app';
   try{const tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){}
   const $=id=>document.getElementById(id);
+  /* Нативті iOS (Capacitor) — Apple 3.1.1/3.1.3: ішкі төлем тек Apple IAP арқылы, сыртқы Kaspi-ді ЖАСЫРАМЫЗ */
+  const NATIVE_IOS=!!(window.Capacitor&&typeof window.Capacitor.getPlatform==='function'&&window.Capacitor.getPlatform()==='ios');
 
   /* ---- Auth токен (Bearer): Safari/iPhone/Telegram-де cross-site cookie бұғатталғанда ---- */
   let authToken=localStorage.getItem('qujat_token')||'';
@@ -682,7 +685,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       num:"№ документа",date:"Дата",ihname:"Наименование",ihunit:"Кол-во",ihqty:"Цена",
       additem:"+ Добавить позицию",vat:"С НДС 16%",total:"Итого:",gen:"📄 Создать PDF",genwait:"Создаю…",
       fnote:"Данные поставщика сохранятся в браузере.",itemname:"Наименование",
-      rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"👁 Открыть PDF",rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",rhome:"🏠 На главную",
+      rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"👁 Открыть PDF",rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",rhome:"🏠 На главную",rshare:"📤 Поделиться",
       errseller:"Укажите название поставщика",erritems:"Добавьте позицию",errnet:"Ошибка сети. Попробуйте ещё раз.",fillreq:"Заполните обязательные поля (отмечены *)",
       ctitle:"Калькуляторы 2026",csub:"Налоги, зарплата, режимы — по ставкам РК 2026.",crun:"Рассчитать",cresult:"Результат",
       convtitle:"Конвертер файлов",convsub:"Конвертируйте файлы прямо в браузере, бесплатно.",convwait:"Конвертирую…",convdone:"Готово! Файл скачан.",converr:"Не удалось — проверьте файл.",
@@ -699,6 +702,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       propayhint:"Выберите тариф, оплатите через Kaspi и загрузите чек — Pro включится автоматически.",
       prokaspi:"Оплатить через Kaspi",proreceipt:"📎 Загрузить чек Kaspi",prochoose:"Сначала выберите тариф",
       proverify:"Проверяю чек…",prook:"Готово! Pro активирован 🎉",pronokaspi:"Оплата скоро будет. Напишите в @Qujatkz_bot.",
+      proios:"Подписка Pro оформляется через App Store. Появится в ближайшем обновлении приложения.",
       accreg:"Регистрация",acclogin:"Вход",accname:"Имя",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Создать аккаунт",accloginbtn:"Войти",acctoreg:"Нет аккаунта? Регистрация",
       acctologin:"Уже есть аккаунт? Войти",acclogout:"Выйти",accwelcome:"Вы вошли как",
@@ -722,7 +726,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       num:"Құжат №",date:"Күні",ihname:"Атауы",ihunit:"Саны",ihqty:"Баға",
       additem:"+ Атау қосу",vat:"ҚҚС 16%-бен",total:"Барлығы:",gen:"📄 PDF жасау",genwait:"Жасалуда…",
       fnote:"Жеткізуші деректері браузерде сақталады.",itemname:"Атауы",
-      rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"👁 PDF ашу",rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",rhome:"🏠 Басты бет",
+      rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"👁 PDF ашу",rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",rhome:"🏠 Басты бет",rshare:"📤 Бөлісу",
       errseller:"Жеткізуші атауын жазыңыз",erritems:"Атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз.",fillreq:"Міндетті өрістерді толтырыңыз (* белгісі)",
       ctitle:"Калькуляторлар 2026",csub:"Салық, жалақы, режимдер — 2026 ставкалары.",crun:"Есептеу",cresult:"Нәтиже",
       convtitle:"Файл конвертер",convsub:"Файлдарды браузерде тегін конвертациялаңыз.",convwait:"Конвертация…",convdone:"Дайын! Файл жүктелді.",converr:"Болмады — файлды тексеріңіз.",
@@ -739,6 +743,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       propayhint:"Тарифті таңдап, Kaspi арқылы төлеп, чекті жүктеңіз — Pro автоматты қосылады.",
       prokaspi:"Kaspi арқылы төлеу",proreceipt:"📎 Kaspi чегін жүктеу",prochoose:"Алдымен тариф таңдаңыз",
       proverify:"Чекті тексеру…",prook:"Дайын! Pro қосылды 🎉",pronokaspi:"Төлем жақында. @Qujatkz_bot-қа жазыңыз.",
+      proios:"Pro жазылым App Store арқылы рәсімделеді. Қосымшаның жақын жаңартуында қосылады.",
       accreg:"Тіркелу",acclogin:"Кіру",accname:"Аты",accemail:"Email",accpass:"Пароль (мин. 6)",
       accregbtn:"Аккаунт жасау",accloginbtn:"Кіру",acctoreg:"Аккаунт жоқ па? Тіркелу",
       acctologin:"Аккаунт бар ма? Кіру",acclogout:"Шығу",accwelcome:"Сіз кірдіңіз:",
@@ -794,7 +799,16 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     {key:"sf",icon:"receipt",ru:["Счёт-фактура","Для плательщиков НДС"],kz:["Шот-фактура","ҚҚС төлеушілерге"]}
   ];
   let lang=localStorage.getItem('qujat_weblang'); if(lang!=='kz'&&lang!=='ru') lang=(navigator.language||'').toLowerCase().startsWith('kk')?'kz':'ru';
-  let curDoc=null,lastUrl=null,curTab='docs',calcList=[],curCalc=null,aiHist=[];
+  let curDoc=null,lastUrl=null,lastBlob=null,lastFn='qujat.pdf',curTab='docs',calcList=[],curCalc=null,aiHist=[];
+  async function shareDoc(){
+    if(!lastBlob)return;
+    try{
+      const f=new File([lastBlob],lastFn,{type:'application/pdf'});
+      if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'Qujat'});
+      else if(navigator.share)await navigator.share({title:'Qujat',text:lastFn});
+    }catch(e){}
+  }
+  function showShareBtn(){if($('r-share'))$('r-share').style.display=(lastBlob&&navigator.share)?'block':'none';}
   const S=()=>STR[lang];
 
   function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
@@ -845,7 +859,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
     $('ih-unit').textContent=s.ihunit;$('ih-qty').textContent=s.ihqty;$('b-additem').textContent=s.additem;
     $('l-vat').textContent=s.vat;$('l-total').textContent=s.total;$('genbtn').textContent=s.gen;
     $('f-note').textContent=s.fnote;$('r-title').textContent=s.rtitle;$('r-sub').textContent=s.rsub;
-    $('r-open').textContent=s.ropen;$('r-download').textContent=s.rdownload;$('r-new').textContent=s.rnew;$('r-home').textContent=s.rhome;
+    $('r-open').textContent=s.ropen;$('r-download').textContent=s.rdownload;$('r-new').textContent=s.rnew;$('r-home').textContent=s.rhome;$('r-share').textContent=s.rshare;
   }
   function defUnit(){return curDoc==='act'?'усл.':'шт.';}
   function addItem(name='',qty='1',price=''){
@@ -901,7 +915,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       if(res.status===402){openPro(S().prolimit);return;}
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
-      const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
+      const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';lastBlob=blob;lastFn=fn;showShareBtn();$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
       $('form').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
     }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
   }
@@ -989,7 +1003,7 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       if(res.status===402){openPro(S().prolimit);return;}
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
-      const fn=curXKey+'_'+(vals.number||'1')+'.pdf';
+      const fn=curXKey+'_'+(vals.number||'1')+'.pdf';lastBlob=blob;lastFn=fn;showShareBtn();
       $('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
       $('xform').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
     }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
@@ -1251,6 +1265,11 @@ body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
       const on=c.dataset.k===key;c.style.borderColor=on?'var(--accent)':'';c.style.boxShadow=on?'var(--ring)':'';});
     const t=(subInfo.tariffs||[]).find(x=>x.key===key);
     $('pro-pay-hint').textContent=s.propayhint;
+    if(NATIVE_IOS){
+      $('pro-kaspi').style.display='none';$('pro-receipt-btn').style.display='none';
+      $('pro-pay-hint').textContent=s.proios;$('pro-status').textContent='';
+      return;
+    }
     if(subInfo.kaspi_url){
       $('pro-kaspi').textContent=s.prokaspi+(t?(' · '+kzt(t.kzt)):'');
       $('pro-kaspi').href=subInfo.kaspi_url;$('pro-kaspi').style.display='block';
