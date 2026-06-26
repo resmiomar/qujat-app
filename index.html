@@ -475,6 +475,30 @@ body.gated #acc-auth .btn:active{transform:translateY(0) scale(.985)}
 body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!important;overflow:hidden}
 .nav .ni{display:flex;align-items:center;justify-content:center;height:24px}
 .nav .ni svg{width:24px;height:24px}
+.nav.nav-6 button .nl{font-size:9.5px}
+@media(min-width:900px){.nav.nav-6 .nl{font-size:13px}}
+
+.adm-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:600px){.adm-stats{grid-template-columns:repeat(3,1fr)}}
+.adm-stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 12px;text-align:center;box-shadow:var(--sh-xs)}
+.adm-stat b{display:block;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1.1}
+.adm-stat span{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:4px;display:block}
+.adm-stat small{display:block;font-size:10.5px;color:var(--accent2);font-weight:700;margin-top:3px}
+.adm-search{width:100%;height:44px;border:1px solid var(--line-2);border-radius:12px;padding:0 14px;font-family:inherit;font-size:14px;background:var(--card);margin-bottom:12px}
+.adm-search:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.adm-user{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--sh-xs)}
+.adm-user-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.adm-user-email{font-weight:700;font-size:14px;word-break:break-all}
+.adm-badge{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.adm-badge.pro{background:var(--accent-soft);color:var(--accent-strong)}
+.adm-badge.free{background:var(--line-soft);color:var(--muted)}
+.adm-badge.admin{background:#fef3c7;color:#b45309}
+.adm-user-meta{font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:10px}
+.adm-user-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.adm-user-actions select{flex:1;min-width:90px;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-family:inherit;font-size:13px;font-weight:600;padding:0 8px}
+.adm-user-actions .btn-mini{height:36px;padding:0 12px;width:auto;font-size:12.5px;border-radius:10px}
+.adm-section{margin-bottom:20px}
+.adm-section h3{font-size:15px;font-weight:800;margin-bottom:10px;color:var(--text-2)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 </style>
@@ -662,10 +686,6 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
           </div>
         </div>
       </div>
-      <div class="sec hidden" id="acc-admin">
-        <h3 id="acc-admin-t"></h3>
-        <div id="admin-users"></div>
-      </div>
       <details class="sec">
         <summary id="acc-chpass-t" style="color:var(--accent);font-weight:700"></summary>
         <div style="margin-top:12px">
@@ -688,6 +708,27 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         <input type="file" id="pro-receipt" accept="application/pdf" class="hidden" onchange="onReceiptFile()">
         <p class="note" id="pro-status" style="font-weight:600;margin-top:8px"></p>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: ADMIN ===== -->
+  <div id="tab-admin" class="hidden">
+    <h2 id="adm-title"></h2><p class="sub" id="adm-sub"></p>
+    <div class="adm-section">
+      <h3 id="adm-sec-web"></h3>
+      <div class="adm-stats" id="adm-stats-web"></div>
+    </div>
+    <div class="adm-section">
+      <h3 id="adm-sec-tg"></h3>
+      <div class="adm-stats" id="adm-stats-tg"></div>
+    </div>
+    <div class="adm-section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h3 id="adm-sec-users" style="margin:0"></h3>
+        <button class="ib" id="adm-refresh" onclick="loadAdminPanel()" style="height:34px;font-size:12px"></button>
+      </div>
+      <input type="search" class="adm-search" id="adm-search" autocomplete="off">
+      <div id="admin-users"></div>
     </div>
   </div>
 </div>
@@ -759,7 +800,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
-      linktg:"🔗 Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"💎 Premium активен",adminp:"⚙️ Админ-панель",
+      linktg:"🔗 Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"💎 Premium активен",
+      navadmin:"Админ",admTitle:"Панель управления",admSub:"Статистика и пользователи Qujat",
+      admSecWeb:"🌐 Веб-приложение",admSecTg:"🤖 Telegram-бот",admSecUsers:"👥 Пользователи",
+      admWebUsers:"Пользователи",admWebPrem:"Pro",admWebDocs:"Документы",admWebLinks:"Telegram связан",
+      admKaspi:"Kaspi чеки",admNewToday:"+ сегодня",
+      admTgUsers:"Пользователи",admTgPrem:"Premium",admTgDocs:"Документы",admShop:"Магазин",
+      admSearch:"Поиск email или имени…",admRefresh:"Обновить",admGrant:"+30 дн Pro",admGranted:"Pro выдан ✓",
+      admNoUsers:"Пользователей не найдено",admDocsUsed:"Док. в месяце",admUntil:"Pro до",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
     kz:{nav:["Құжаттар","Есеп","AI","Конвертер","Профиль"],
@@ -800,7 +848,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
-      linktg:"🔗 Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"💎 Premium белсенді",adminp:"⚙️ Админ-панель",
+      linktg:"🔗 Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"💎 Premium белсенді",
+      navadmin:"Админ",admTitle:"Басқару панелі",admSub:"Qujat статистикасы мен пайдаланушылар",
+      admSecWeb:"🌐 Веб-қосымша",admSecTg:"🤖 Telegram-бот",admSecUsers:"👥 Пайдаланушылар",
+      admWebUsers:"Пайдаланушылар",admWebPrem:"Pro",admWebDocs:"Құжаттар",admWebLinks:"Telegram байланыс",
+      admKaspi:"Kaspi чектер",admNewToday:"+ бүгін",
+      admTgUsers:"Пайдаланушылар",admTgPrem:"Premium",admTgDocs:"Құжаттар",admShop:"Дүкен",
+      admSearch:"Email немесе атын іздеу…",admRefresh:"Жаңарту",admGrant:"+30 күн Pro",admGranted:"Pro берілді ✓",
+      admNoUsers:"Пайдаланушы табылмады",admDocsUsed:"Айдағы құжат",admUntil:"Pro дейін",
       e_email:"Дұрыс email жазыңыз",e_pass:"Пароль кемінде 6 таңба",e_name:"Аты кемінде 2 таңба",
       e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль"}
   };
@@ -816,6 +871,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     'message':'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
     'refresh':'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/>',
     'user':'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    'settings':'<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
     'scan':'<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8h8M7 12h10M7 16h6"/>',
     'table':'<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>',
     'image':'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
@@ -859,22 +915,34 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
 
   function renderNav(){
-    const s=S(),icons=["file-text","calc","message","refresh","user"],ids=["docs","calc","ai","convert","account"];
-    $('nav').innerHTML='';
-    s.nav.forEach((label,i)=>{
-      const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
-      b.innerHTML='<span class="ni">'+svg(icons[i])+'</span><span class="nl">'+label+'</span>';
-      b.onclick=()=>showTab(ids[i]); $('nav').appendChild(b);
+    const s=S(),meAdmin=meUser&&meUser.role==='admin';
+    const tabs=[
+      {id:'docs',icon:'file-text',label:s.nav[0]},
+      {id:'calc',icon:'calc',label:s.nav[1]},
+      {id:'ai',icon:'message',label:s.nav[2]},
+      {id:'convert',icon:'refresh',label:s.nav[3]},
+      {id:'account',icon:'user',label:s.nav[4]}
+    ];
+    if(meAdmin)tabs.push({id:'admin',icon:'settings',label:s.navadmin});
+    const nav=$('nav');nav.innerHTML='';nav.classList.toggle('nav-6',tabs.length>5);
+    tabs.forEach(({id,icon,label})=>{
+      const b=document.createElement('button');if(id===curTab)b.className='active';
+      b.innerHTML='<span class="ni">'+svg(icon)+'</span><span class="nl">'+label+'</span>';
+      b.onclick=()=>showTab(id);nav.appendChild(b);
     });
   }
   function showTab(t){
+    if(t==='admin'&&(!meUser||meUser.role!=='admin'))t='docs';
     curTab=t;
-    ['docs','calc','ai','convert','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
+    ['docs','calc','ai','convert','account','admin'].forEach(x=>{
+      const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==t);
+    });
     $('airow').classList.toggle('hidden',t!=='ai');
     if(t==='calc'&&!calcList.length) loadCalc();
     if(t==='ai'&&!aiHist.length) aiGreet();
     if(t==='convert') renderConvert();
     if(t==='account') loadMe();
+    if(t==='admin') loadAdminPanel();
     renderNav(); window.scrollTo(0,0);
   }
 
@@ -1154,7 +1222,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
     $('a-delete').textContent=s.accdelete;$('a-forgot').textContent=s.forgot;
     $('acc-link-t').textContent=s.linktg;$('acc-link-hint').textContent=s.linkhint;$('a-linkbtn').textContent=s.linkbtn;
-    $('acc-admin-t').textContent=s.adminp;$('reset-h').textContent=s.resettitle;$('reset-sub').textContent=s.resetsub;
+    $('reset-h').textContent=s.resettitle;$('reset-sub').textContent=s.resetsub;
     $('la-reset').textContent=s.accnew;$('a-resetbtn').textContent=s.resetbtn;
   }
   function acctab(w){
@@ -1174,8 +1242,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       $('acc-link-form').classList.toggle('hidden',linked);
       const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
       if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
-      const isAdmin=meUser.role==='admin';$('acc-admin').classList.toggle('hidden',!isAdmin);if(isAdmin)loadAdmin();
-      loadHistory();loadAssets();loadSub();}
+      loadHistory();loadAssets();loadSub();renderNav();}
     else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');initGoogle();}
   }
   async function loadHistory(){
@@ -1251,13 +1318,62 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       $('lt_code').value='';alert(s.linkok);await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  async function loadAdmin(){
-    const box=$('admin-users');if(!box)return;
-    try{const r=await afetch(API+'/api/admin/users',{credentials:'include'});const us=(await r.json()).users||[];
-      box.innerHTML=us.map(u=>'<div class="rline"><span>'+u.email+'<br><span style="color:var(--muted);font-size:12px">'+(u.name||'')+'</span></span>'+
-        '<select onchange="setUserRole('+u.id+',this.value)" style="border:1px solid var(--line);border-radius:8px;height:32px;background:var(--card);color:var(--text)">'+
-        ['client','manager','admin'].map(rr=>'<option value="'+rr+'"'+(u.role===rr?' selected':'')+'>'+rr+'</option>').join('')+'</select></div>').join('');
+  function admLabels(){
+    const s=S();
+    $('adm-title').textContent=s.admTitle;$('adm-sub').textContent=s.admSub;
+    $('adm-sec-web').textContent=s.admSecWeb;$('adm-sec-tg').textContent=s.admSecTg;
+    $('adm-sec-users').textContent=s.admSecUsers;$('adm-refresh').textContent=s.admRefresh;
+    const si=$('adm-search');if(si&&!si.dataset.bound){si.placeholder=s.admSearch;si.dataset.bound='1';
+      let tmr=null;si.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>loadAdminUsers(si.value.trim()),300);});}
+    else if(si)si.placeholder=s.admSearch;
+  }
+  function admStat(val,label,today){
+    const s=S();return '<div class="adm-stat"><b>'+val+'</b><span>'+label+'</span>'+(today?'<small>'+s.admNewToday+' '+today+'</small>':'')+'</div>';
+  }
+  async function loadAdminStats(){
+    admLabels();const sw=$('adm-stats-web'),st=$('adm-stats-tg');if(!sw||!st)return;
+    try{
+      const d=await (await afetch(API+'/api/admin/stats',{credentials:'include'})).json();
+      const s=S();
+      sw.innerHTML=admStat(d.web_users||0,s.admWebUsers,d.web_users_today)+
+        admStat(d.web_premium||0,s.admWebPrem)+admStat(d.web_docs||0,s.admWebDocs,d.web_docs_today)+
+        admStat(d.web_links||0,s.admWebLinks)+admStat(d.kaspi_receipts||0,s.admKaspi);
+      st.innerHTML=admStat(d.users||0,s.admTgUsers)+admStat(d.premium||0,s.admTgPrem)+
+        admStat(d.docs||0,s.admTgDocs,d.docs_today)+admStat(d.shop_sales||0,s.admShop);
+    }catch(e){sw.innerHTML='';st.innerHTML='';}
+  }
+  function isPremUntil(until){
+    if(!until)return false;const t=new Date(until+'T23:59:59');return t>=new Date();
+  }
+  async function loadAdminUsers(q){
+    const box=$('admin-users');if(!box)return;const s=S();
+    try{
+      const url=API+'/api/admin/users'+(q?'?q='+encodeURIComponent(q):'');
+      const us=(await (await afetch(url,{credentials:'include'})).json()).users||[];
+      if(!us.length){box.innerHTML='<p class="sub" style="margin:0">'+s.admNoUsers+'</p>';return;}
+      box.innerHTML=us.map(u=>{
+        const prem=isPremUntil(u.premium_until);
+        const badge=prem?'<span class="adm-badge pro">Pro</span>':(u.role==='admin'?'<span class="adm-badge admin">admin</span>':'<span class="adm-badge free">free</span>');
+        const meta=[u.name||'—',u.role,u.created?u.created.slice(0,10):'',
+          s.admDocsUsed+': '+(u.docs_used||0),
+          prem?(s.admUntil+' '+u.premium_until):'',
+          u.telegram_id?'TG: '+u.telegram_id:''].filter(Boolean).join(' · ');
+        return '<div class="adm-user"><div class="adm-user-top"><span class="adm-user-email">'+u.email+'</span>'+badge+'</div>'+
+          '<div class="adm-user-meta">'+meta+'</div><div class="adm-user-actions">'+
+          '<select onchange="setUserRole('+u.id+',this.value)">'+
+          ['client','manager','admin'].map(rr=>'<option value="'+rr+'"'+(u.role===rr?' selected':'')+'>'+rr+'</option>').join('')+
+          '</select><button class="btn btn-mini" onclick="grantPremium('+u.id+',this)">'+s.admGrant+'</button></div></div>';
+      }).join('');
     }catch(e){box.innerHTML='';}
+  }
+  function loadAdminPanel(){loadAdminStats();loadAdminUsers(($('adm-search')||{}).value||'');}
+  async function grantPremium(id,btn){
+    const s=S();if(btn)btn.disabled=true;
+    try{
+      const r=await afetch(API+'/api/admin/grant-premium',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,days:30})});
+      if(!r.ok){alert(s.errnet);return;}
+      alert(s.admGranted);loadAdminUsers(($('adm-search')||{}).value||'');loadAdminStats();
+    }catch(e){alert(s.errnet);}finally{if(btn)btn.disabled=false;}
   }
   async function setUserRole(id,role){
     try{await afetch(API+'/api/admin/set-role',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,role})});}catch(e){}
@@ -1463,7 +1579,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     }catch(e){alert(S().errnet);}
   }
 
-  function renderAll(){renderHome();docLabels();renderNav();renderAccount();
+  function renderAll(){renderHome();docLabels();renderNav();renderAccount();admLabels();
     if(curTab==='calc'&&calcList.length)renderCalcHome();
     if(curTab==='convert')renderConvert();
     if(curTab==='ai')aiGreet();}
