@@ -499,6 +499,13 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 .adm-user-actions .btn-mini{height:36px;padding:0 12px;width:auto;font-size:12.5px;border-radius:10px}
 .adm-section{margin-bottom:20px}
 .adm-section h3{font-size:15px;font-weight:800;margin-bottom:10px;color:var(--text-2)}
+.adm-form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:16px;box-shadow:var(--sh-xs)}
+.adm-form .field{margin-bottom:10px}
+.adm-form label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.adm-form input{width:100%;height:42px;border:1px solid var(--line-2);border-radius:10px;padding:0 12px;font-family:inherit;font-size:14px;background:var(--card)}
+.adm-form input:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.adm-del{background:var(--danger-soft)!important;color:var(--danger)!important;border-color:#f3c0c0!important}
+.adm-you{font-size:11px;color:var(--accent);font-weight:700}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 </style>
@@ -714,14 +721,17 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   <!-- ===== TAB: ADMIN ===== -->
   <div id="tab-admin" class="hidden">
     <h2 id="adm-title"></h2><p class="sub" id="adm-sub"></p>
+
     <div class="adm-section">
-      <h3 id="adm-sec-web"></h3>
-      <div class="adm-stats" id="adm-stats-web"></div>
+      <h3 id="adm-sec-add"></h3>
+      <div class="adm-form">
+        <div class="field"><label id="adm-l-name"></label><input type="text" id="adm-name" autocomplete="name"></div>
+        <div class="field"><label id="adm-l-email"></label><input type="email" id="adm-email" inputmode="email" autocomplete="off"></div>
+        <div class="field"><label id="adm-l-pass"></label><input type="password" id="adm-pass" autocomplete="new-password"></div>
+        <button class="btn" id="adm-create-btn" onclick="adminCreateUser()"></button>
+      </div>
     </div>
-    <div class="adm-section">
-      <h3 id="adm-sec-tg"></h3>
-      <div class="adm-stats" id="adm-stats-tg"></div>
-    </div>
+
     <div class="adm-section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <h3 id="adm-sec-users" style="margin:0"></h3>
@@ -730,6 +740,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <input type="search" class="adm-search" id="adm-search" autocomplete="off">
       <div id="admin-users"></div>
     </div>
+
+    <details class="adm-section">
+      <summary id="adm-sec-stats" style="font-weight:800;color:var(--text-2);cursor:pointer;margin-bottom:10px"></summary>
+      <h3 id="adm-sec-web" style="margin-top:12px"></h3>
+      <div class="adm-stats" id="adm-stats-web"></div>
+      <h3 id="adm-sec-tg" style="margin-top:14px"></h3>
+      <div class="adm-stats" id="adm-stats-tg"></div>
+    </details>
   </div>
 </div>
 
@@ -801,8 +819,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
       linktg:"🔗 Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"💎 Premium активен",
-      navadmin:"Админ",admTitle:"Панель управления",admSub:"Статистика и пользователи Qujat",
-      admSecWeb:"🌐 Веб-приложение",admSecTg:"🤖 Telegram-бот",admSecUsers:"👥 Пользователи",
+      navadmin:"Админ",admTitle:"Управление Qujat",admSub:"Смотрите кто зарегистрировался, создавайте и удаляйте аккаунты",
+      admSecAdd:"➕ Создать пользователя",admSecUsers:"👥 Кто зарегистрировался",admSecStats:"📊 Статистика",
+      admSecWeb:"🌐 Веб-приложение",admSecTg:"🤖 Telegram-бот",
+      admCreateBtn:"Создать аккаунт",admCreated:"Пользователь создан ✓",
+      admDelete:"Удалить",admDelConfirm:"Удалить {email} и все его данные?",admDeleted:"Удалён ✓",
+      admSelf:"это вы",admRegistered:"Зарегистрировался",
       admWebUsers:"Пользователи",admWebPrem:"Pro",admWebDocs:"Документы",admWebLinks:"Telegram связан",
       admKaspi:"Kaspi чеки",admNewToday:"+ сегодня",
       admTgUsers:"Пользователи",admTgPrem:"Premium",admTgDocs:"Документы",admShop:"Магазин",
@@ -849,8 +871,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
       linktg:"🔗 Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"💎 Premium белсенді",
-      navadmin:"Админ",admTitle:"Басқару панелі",admSub:"Qujat статистикасы мен пайдаланушылар",
-      admSecWeb:"🌐 Веб-қосымша",admSecTg:"🤖 Telegram-бот",admSecUsers:"👥 Пайдаланушылар",
+      navadmin:"Админ",admTitle:"Qujat басқару",admSub:"Кім тіркелгенін көріңіз, аккаунт жасаңыз не жойыңыз",
+      admSecAdd:"➕ Пайдаланушы жасау",admSecUsers:"👥 Кім тіркелген",admSecStats:"📊 Статистика",
+      admSecWeb:"🌐 Веб-қосымша",admSecTg:"🤖 Telegram-бот",
+      admCreateBtn:"Аккаунт жасау",admCreated:"Пайдаланушы жасалды ✓",
+      admDelete:"Жою",admDelConfirm:"{email} және барлық деректі жою керек пе?",admDeleted:"Жойылды ✓",
+      admSelf:"сіз",admRegistered:"Тіркелген",
       admWebUsers:"Пайдаланушылар",admWebPrem:"Pro",admWebDocs:"Құжаттар",admWebLinks:"Telegram байланыс",
       admKaspi:"Kaspi чектер",admNewToday:"+ бүгін",
       admTgUsers:"Пайдаланушылар",admTgPrem:"Premium",admTgDocs:"Құжаттар",admShop:"Дүкен",
@@ -1321,8 +1347,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function admLabels(){
     const s=S();
     $('adm-title').textContent=s.admTitle;$('adm-sub').textContent=s.admSub;
+    $('adm-sec-add').textContent=s.admSecAdd;$('adm-sec-users').textContent=s.admSecUsers;
+    $('adm-sec-stats').textContent=s.admSecStats;
     $('adm-sec-web').textContent=s.admSecWeb;$('adm-sec-tg').textContent=s.admSecTg;
-    $('adm-sec-users').textContent=s.admSecUsers;$('adm-refresh').textContent=s.admRefresh;
+    $('adm-refresh').textContent=s.admRefresh;
+    $('adm-l-name').textContent=s.accname;$('adm-l-email').textContent=s.accemail;
+    $('adm-l-pass').textContent=s.accpass;$('adm-create-btn').textContent=s.admCreateBtn;
     const si=$('adm-search');if(si&&!si.dataset.bound){si.placeholder=s.admSearch;si.dataset.bound='1';
       let tmr=null;si.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>loadAdminUsers(si.value.trim()),300);});}
     else if(si)si.placeholder=s.admSearch;
@@ -1352,19 +1382,51 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       const us=(await (await afetch(url,{credentials:'include'})).json()).users||[];
       if(!us.length){box.innerHTML='<p class="sub" style="margin:0">'+s.admNoUsers+'</p>';return;}
       box.innerHTML=us.map(u=>{
+        const isSelf=meUser&&meUser.id===u.id;
         const prem=isPremUntil(u.premium_until);
         const badge=prem?'<span class="adm-badge pro">Pro</span>':(u.role==='admin'?'<span class="adm-badge admin">admin</span>':'<span class="adm-badge free">free</span>');
-        const meta=[u.name||'—',u.role,u.created?u.created.slice(0,10):'',
+        const regDate=u.created?u.created.replace('T',' ').slice(0,16):'—';
+        const meta=[
+          u.name||'—',
+          s.admRegistered+': '+regDate,
           s.admDocsUsed+': '+(u.docs_used||0),
           prem?(s.admUntil+' '+u.premium_until):'',
-          u.telegram_id?'TG: '+u.telegram_id:''].filter(Boolean).join(' · ');
+          u.telegram_id?'Telegram ✓':''
+        ].filter(Boolean).join(' · ');
+        const delBtn=isSelf?' <span class="adm-you">('+s.admSelf+')</span>':
+          '<button class="btn btn-mini adm-del" onclick="adminDeleteUser('+u.id+',\''+u.email.replace(/'/g,"\\'")+'\')">'+s.admDelete+'</button>';
         return '<div class="adm-user"><div class="adm-user-top"><span class="adm-user-email">'+u.email+'</span>'+badge+'</div>'+
           '<div class="adm-user-meta">'+meta+'</div><div class="adm-user-actions">'+
           '<select onchange="setUserRole('+u.id+',this.value)">'+
           ['client','manager','admin'].map(rr=>'<option value="'+rr+'"'+(u.role===rr?' selected':'')+'>'+rr+'</option>').join('')+
-          '</select><button class="btn btn-mini" onclick="grantPremium('+u.id+',this)">'+s.admGrant+'</button></div></div>';
+          '</select><button class="btn btn-mini" onclick="grantPremium('+u.id+',this)">'+s.admGrant+'</button>'+
+          delBtn+'</div></div>';
       }).join('');
     }catch(e){box.innerHTML='';}
+  }
+  async function adminCreateUser(){
+    const s=S(),name=$('adm-name').value.trim(),email=$('adm-email').value.trim().toLowerCase(),pass=$('adm-pass').value;
+    if(name.length<2)return alert(s.e_name);
+    if(!reEmail.test(email))return alert(s.e_email);
+    if(pass.length<6)return alert(s.e_pass);
+    const btn=$('adm-create-btn');btn.disabled=true;
+    try{
+      const r=await afetch(API+'/api/admin/create-user',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
+      if(r.status===409){alert(s.e_taken);return;}
+      if(!r.ok){alert(s.errnet);return;}
+      $('adm-name').value='';$('adm-email').value='';$('adm-pass').value='';
+      alert(s.admCreated);loadAdminUsers(($('adm-search')||{}).value||'');loadAdminStats();
+    }catch(e){alert(s.errnet);}finally{btn.disabled=false;}
+  }
+  async function adminDeleteUser(id,email){
+    const s=S();
+    if(!confirm(s.admDelConfirm.replace('{email}',email)))return;
+    try{
+      const r=await afetch(API+'/api/admin/delete-user',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+      if(r.status===400){alert(s.errnet);return;}
+      if(!r.ok){alert(s.errnet);return;}
+      alert(s.admDeleted);loadAdminUsers(($('adm-search')||{}).value||'');loadAdminStats();
+    }catch(e){alert(s.errnet);}
   }
   function loadAdminPanel(){loadAdminStats();loadAdminUsers(($('adm-search')||{}).value||'');}
   async function grantPremium(id,btn){
