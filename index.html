@@ -717,38 +717,6 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       </div>
     </div>
   </div>
-
-  <!-- ===== TAB: ADMIN ===== -->
-  <div id="tab-admin" class="hidden">
-    <h2 id="adm-title"></h2><p class="sub" id="adm-sub"></p>
-
-    <div class="adm-section">
-      <h3 id="adm-sec-add"></h3>
-      <div class="adm-form">
-        <div class="field"><label id="adm-l-name"></label><input type="text" id="adm-name" autocomplete="name"></div>
-        <div class="field"><label id="adm-l-email"></label><input type="email" id="adm-email" inputmode="email" autocomplete="off"></div>
-        <div class="field"><label id="adm-l-pass"></label><input type="password" id="adm-pass" autocomplete="new-password"></div>
-        <button class="btn" id="adm-create-btn" onclick="adminCreateUser()"></button>
-      </div>
-    </div>
-
-    <div class="adm-section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <h3 id="adm-sec-users" style="margin:0"></h3>
-        <button class="ib" id="adm-refresh" onclick="loadAdminPanel()" style="height:34px;font-size:12px"></button>
-      </div>
-      <input type="search" class="adm-search" id="adm-search" autocomplete="off">
-      <div id="admin-users"></div>
-    </div>
-
-    <details class="adm-section">
-      <summary id="adm-sec-stats" style="font-weight:800;color:var(--text-2);cursor:pointer;margin-bottom:10px"></summary>
-      <h3 id="adm-sec-web" style="margin-top:12px"></h3>
-      <div class="adm-stats" id="adm-stats-web"></div>
-      <h3 id="adm-sec-tg" style="margin-top:14px"></h3>
-      <div class="adm-stats" id="adm-stats-tg"></div>
-    </details>
-  </div>
 </div>
 
 <div class="airow hidden" id="airow"><div class="wrap">
@@ -941,34 +909,22 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
 
   function renderNav(){
-    const s=S(),meAdmin=meUser&&meUser.role==='admin';
-    const tabs=[
-      {id:'docs',icon:'file-text',label:s.nav[0]},
-      {id:'calc',icon:'calc',label:s.nav[1]},
-      {id:'ai',icon:'message',label:s.nav[2]},
-      {id:'convert',icon:'refresh',label:s.nav[3]},
-      {id:'account',icon:'user',label:s.nav[4]}
-    ];
-    if(meAdmin)tabs.push({id:'admin',icon:'settings',label:s.navadmin});
-    const nav=$('nav');nav.innerHTML='';nav.classList.toggle('nav-6',tabs.length>5);
-    tabs.forEach(({id,icon,label})=>{
-      const b=document.createElement('button');if(id===curTab)b.className='active';
-      b.innerHTML='<span class="ni">'+svg(icon)+'</span><span class="nl">'+label+'</span>';
-      b.onclick=()=>showTab(id);nav.appendChild(b);
+    const s=S(),icons=["file-text","calc","message","refresh","user"],ids=["docs","calc","ai","convert","account"];
+    $('nav').innerHTML='';$('nav').classList.remove('nav-6');
+    s.nav.forEach((label,i)=>{
+      const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
+      b.innerHTML='<span class="ni">'+svg(icons[i])+'</span><span class="nl">'+label+'</span>';
+      b.onclick=()=>showTab(ids[i]); $('nav').appendChild(b);
     });
   }
   function showTab(t){
-    if(t==='admin'&&(!meUser||meUser.role!=='admin'))t='docs';
     curTab=t;
-    ['docs','calc','ai','convert','account','admin'].forEach(x=>{
-      const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==t);
-    });
+    ['docs','calc','ai','convert','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
     $('airow').classList.toggle('hidden',t!=='ai');
     if(t==='calc'&&!calcList.length) loadCalc();
     if(t==='ai'&&!aiHist.length) aiGreet();
     if(t==='convert') renderConvert();
     if(t==='account') loadMe();
-    if(t==='admin') loadAdminPanel();
     renderNav(); window.scrollTo(0,0);
   }
 
@@ -1344,102 +1300,6 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       $('lt_code').value='';alert(s.linkok);await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  function admLabels(){
-    const s=S();
-    $('adm-title').textContent=s.admTitle;$('adm-sub').textContent=s.admSub;
-    $('adm-sec-add').textContent=s.admSecAdd;$('adm-sec-users').textContent=s.admSecUsers;
-    $('adm-sec-stats').textContent=s.admSecStats;
-    $('adm-sec-web').textContent=s.admSecWeb;$('adm-sec-tg').textContent=s.admSecTg;
-    $('adm-refresh').textContent=s.admRefresh;
-    $('adm-l-name').textContent=s.accname;$('adm-l-email').textContent=s.accemail;
-    $('adm-l-pass').textContent=s.accpass;$('adm-create-btn').textContent=s.admCreateBtn;
-    const si=$('adm-search');if(si&&!si.dataset.bound){si.placeholder=s.admSearch;si.dataset.bound='1';
-      let tmr=null;si.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>loadAdminUsers(si.value.trim()),300);});}
-    else if(si)si.placeholder=s.admSearch;
-  }
-  function admStat(val,label,today){
-    const s=S();return '<div class="adm-stat"><b>'+val+'</b><span>'+label+'</span>'+(today?'<small>'+s.admNewToday+' '+today+'</small>':'')+'</div>';
-  }
-  async function loadAdminStats(){
-    admLabels();const sw=$('adm-stats-web'),st=$('adm-stats-tg');if(!sw||!st)return;
-    try{
-      const d=await (await afetch(API+'/api/admin/stats',{credentials:'include'})).json();
-      const s=S();
-      sw.innerHTML=admStat(d.web_users||0,s.admWebUsers,d.web_users_today)+
-        admStat(d.web_premium||0,s.admWebPrem)+admStat(d.web_docs||0,s.admWebDocs,d.web_docs_today)+
-        admStat(d.web_links||0,s.admWebLinks)+admStat(d.kaspi_receipts||0,s.admKaspi);
-      st.innerHTML=admStat(d.users||0,s.admTgUsers)+admStat(d.premium||0,s.admTgPrem)+
-        admStat(d.docs||0,s.admTgDocs,d.docs_today)+admStat(d.shop_sales||0,s.admShop);
-    }catch(e){sw.innerHTML='';st.innerHTML='';}
-  }
-  function isPremUntil(until){
-    if(!until)return false;const t=new Date(until+'T23:59:59');return t>=new Date();
-  }
-  async function loadAdminUsers(q){
-    const box=$('admin-users');if(!box)return;const s=S();
-    try{
-      const url=API+'/api/admin/users'+(q?'?q='+encodeURIComponent(q):'');
-      const us=(await (await afetch(url,{credentials:'include'})).json()).users||[];
-      if(!us.length){box.innerHTML='<p class="sub" style="margin:0">'+s.admNoUsers+'</p>';return;}
-      box.innerHTML=us.map(u=>{
-        const isSelf=meUser&&meUser.id===u.id;
-        const prem=isPremUntil(u.premium_until);
-        const badge=prem?'<span class="adm-badge pro">Pro</span>':(u.role==='admin'?'<span class="adm-badge admin">admin</span>':'<span class="adm-badge free">free</span>');
-        const regDate=u.created?u.created.replace('T',' ').slice(0,16):'—';
-        const meta=[
-          u.name||'—',
-          s.admRegistered+': '+regDate,
-          s.admDocsUsed+': '+(u.docs_used||0),
-          prem?(s.admUntil+' '+u.premium_until):'',
-          u.telegram_id?'Telegram ✓':''
-        ].filter(Boolean).join(' · ');
-        const delBtn=isSelf?' <span class="adm-you">('+s.admSelf+')</span>':
-          '<button class="btn btn-mini adm-del" onclick="adminDeleteUser('+u.id+',\''+u.email.replace(/'/g,"\\'")+'\')">'+s.admDelete+'</button>';
-        return '<div class="adm-user"><div class="adm-user-top"><span class="adm-user-email">'+u.email+'</span>'+badge+'</div>'+
-          '<div class="adm-user-meta">'+meta+'</div><div class="adm-user-actions">'+
-          '<select onchange="setUserRole('+u.id+',this.value)">'+
-          ['client','manager','admin'].map(rr=>'<option value="'+rr+'"'+(u.role===rr?' selected':'')+'>'+rr+'</option>').join('')+
-          '</select><button class="btn btn-mini" onclick="grantPremium('+u.id+',this)">'+s.admGrant+'</button>'+
-          delBtn+'</div></div>';
-      }).join('');
-    }catch(e){box.innerHTML='';}
-  }
-  async function adminCreateUser(){
-    const s=S(),name=$('adm-name').value.trim(),email=$('adm-email').value.trim().toLowerCase(),pass=$('adm-pass').value;
-    if(name.length<2)return alert(s.e_name);
-    if(!reEmail.test(email))return alert(s.e_email);
-    if(pass.length<6)return alert(s.e_pass);
-    const btn=$('adm-create-btn');btn.disabled=true;
-    try{
-      const r=await afetch(API+'/api/admin/create-user',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
-      if(r.status===409){alert(s.e_taken);return;}
-      if(!r.ok){alert(s.errnet);return;}
-      $('adm-name').value='';$('adm-email').value='';$('adm-pass').value='';
-      alert(s.admCreated);loadAdminUsers(($('adm-search')||{}).value||'');loadAdminStats();
-    }catch(e){alert(s.errnet);}finally{btn.disabled=false;}
-  }
-  async function adminDeleteUser(id,email){
-    const s=S();
-    if(!confirm(s.admDelConfirm.replace('{email}',email)))return;
-    try{
-      const r=await afetch(API+'/api/admin/delete-user',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
-      if(r.status===400){alert(s.errnet);return;}
-      if(!r.ok){alert(s.errnet);return;}
-      alert(s.admDeleted);loadAdminUsers(($('adm-search')||{}).value||'');loadAdminStats();
-    }catch(e){alert(s.errnet);}
-  }
-  function loadAdminPanel(){loadAdminStats();loadAdminUsers(($('adm-search')||{}).value||'');}
-  async function grantPremium(id,btn){
-    const s=S();if(btn)btn.disabled=true;
-    try{
-      const r=await afetch(API+'/api/admin/grant-premium',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,days:30})});
-      if(!r.ok){alert(s.errnet);return;}
-      alert(s.admGranted);loadAdminUsers(($('adm-search')||{}).value||'');loadAdminStats();
-    }catch(e){alert(s.errnet);}finally{if(btn)btn.disabled=false;}
-  }
-  async function setUserRole(id,role){
-    try{await afetch(API+'/api/admin/set-role',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,role})});}catch(e){}
-  }
   async function loadMe(){
     try{const r=await afetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
     renderAccount();applyGate();
@@ -1641,7 +1501,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     }catch(e){alert(S().errnet);}
   }
 
-  function renderAll(){renderHome();docLabels();renderNav();renderAccount();admLabels();
+  function renderAll(){renderHome();docLabels();renderNav();renderAccount();
     if(curTab==='calc'&&calcList.length)renderCalcHome();
     if(curTab==='convert')renderConvert();
     if(curTab==='ai')aiGreet();}
