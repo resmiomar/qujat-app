@@ -18,17 +18,17 @@
   --text-2:#3d4453;
   --muted:#5f6573;
   --muted-2:#7a8090;
-  --accent:#5b54e6;
-  --accent-ink:#4f47df;
-  --accent-strong:#4a43d6;
-  --accent-deep:#3f38c2;
-  --accent-soft:#efeefc;
-  --accent-soft2:#e4e1fb;
-  --accent-tint:#f6f5ff;
+  --accent:#5e17eb;
+  --accent-ink:#5314d4;
+  --accent-strong:#4c12bf;
+  --accent-deep:#4410aa;
+  --accent-soft:#f0ebfd;
+  --accent-soft2:#e3d7fc;
+  --accent-tint:#f7f2ff;
   --accent2:#0fb886;
   --accent2-soft:#e6f7f1;
-  --grad:linear-gradient(135deg,#7a5cff 0%,#6244ec 52%,#5a3fdb 100%);
-  --grad-soft:linear-gradient(155deg,#f4f1ff 0%,#e9e5ff 100%);
+  --grad:linear-gradient(135deg,#7a3ef0 0%,#5e17eb 52%,#520fdb 100%);
+  --grad-soft:linear-gradient(155deg,#f3edff 0%,#e8ddff 100%);
   --line:#e9eaef;
   --line-2:#e1e2e9;
   --line-soft:#f1f2f5;
@@ -45,9 +45,9 @@
   --sh-sm:0 1px 2px rgba(16,18,28,.05), 0 4px 10px rgba(16,18,28,.05);
   --sh-md:0 2px 4px rgba(16,18,28,.05), 0 10px 26px rgba(40,32,90,.08);
   --sh-lg:0 6px 14px rgba(40,32,90,.10), 0 20px 44px rgba(40,32,90,.14);
-  --sh-accent:0 4px 12px rgba(91,84,230,.28), 0 12px 30px rgba(91,84,230,.22);
-  --sh-accent-soft:0 2px 8px rgba(91,84,230,.14), 0 10px 28px rgba(91,84,230,.12);
-  --ring:0 0 0 4px rgba(91,84,230,.13);
+  --sh-accent:0 4px 12px rgba(94,23,235,.28), 0 12px 30px rgba(94,23,235,.22);
+  --sh-accent-soft:0 2px 8px rgba(94,23,235,.14), 0 10px 28px rgba(94,23,235,.12);
+  --ring:0 0 0 4px rgba(94,23,235,.13);
   --ease:cubic-bezier(.22,.61,.36,1);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -106,7 +106,7 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
   transition:transform .2s var(--ease),box-shadow .25s var(--ease),border-color .2s var(--ease);
 }
 .card:hover{
-  border-color:rgba(91,84,230,.28);
+  border-color:rgba(94,23,235,.28);
   transform:translateY(-3px);
   box-shadow:var(--sh-md);
 }
@@ -115,7 +115,7 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
   width:48px;height:48px;border-radius:14px;
   display:flex;align-items:center;justify-content:center;font-size:23px;
   background:var(--grad-soft);color:var(--accent);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 0 0 1px rgba(91,84,230,.08),0 4px 10px rgba(91,84,230,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 0 0 1px rgba(94,23,235,.08),0 4px 10px rgba(94,23,235,.10);
   flex:0 0 auto;
 }
 .card .t{font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.25}
@@ -178,11 +178,11 @@ input.bad,input.bad:focus{border-color:var(--danger);background:var(--danger-sof
 .del:active{transform:scale(.92)}
 .additem{
   width:100%;height:46px;
-  border:1.5px dashed rgba(91,84,230,.42);background:var(--grad-soft);color:var(--accent-strong);
+  border:1.5px dashed rgba(94,23,235,.42);background:var(--grad-soft);color:var(--accent-strong);
   border-radius:13px;font-family:inherit;font-weight:700;font-size:14px;letter-spacing:-.01em;cursor:pointer;
   transition:background .18s var(--ease),border-color .18s var(--ease),box-shadow .18s var(--ease),transform .12s var(--ease);
 }
-.additem:hover{border-color:var(--accent);box-shadow:0 6px 16px rgba(91,84,230,.14)}
+.additem:hover{border-color:var(--accent);box-shadow:0 6px 16px rgba(94,23,235,.14)}
 .additem:active{transform:scale(.985)}
 .ihead{
   display:grid;grid-template-columns:1fr 50px 82px 32px;gap:8px;
@@ -205,7 +205,7 @@ details summary:hover{color:var(--accent-strong)}
   font-size:18px;font-weight:800;letter-spacing:-.025em;
   padding:14px;margin-top:4px;border-radius:14px;
   background:var(--grad-soft);
-  box-shadow:inset 0 0 0 1px rgba(91,84,230,.10);
+  box-shadow:inset 0 0 0 1px rgba(94,23,235,.10);
 }
 
 .chk{
@@ -232,7 +232,7 @@ details summary:hover{color:var(--accent-strong)}
   border:1px solid var(--line-2);
   box-shadow:var(--sh-xs);
 }
-.btn.ghost:hover{border-color:rgba(91,84,230,.4);background:var(--accent-tint);box-shadow:var(--sh-sm);filter:none;transform:none}
+.btn.ghost:hover{border-color:rgba(94,23,235,.4);background:var(--accent-tint);box-shadow:var(--sh-sm);filter:none;transform:none}
 
 .back{
   background:none;border:none;color:var(--muted);
@@ -245,7 +245,7 @@ details summary:hover{color:var(--accent-strong)}
 .hidden{display:none}
 
 .note{font-size:12.5px;font-weight:500;color:var(--muted);text-align:center;margin:18px 0;line-height:1.6}
-.note a{color:var(--accent-strong);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(91,84,230,.25)}
+.note a{color:var(--accent-strong);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(94,23,235,.25)}
 .note a:hover{border-bottom-color:var(--accent)}
 
 .ok{text-align:center;padding:42px 12px;animation:rise .5s var(--ease)}
@@ -324,7 +324,7 @@ details summary:hover{color:var(--accent-strong)}
   box-shadow:var(--sh-xs);
   transition:background .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease),transform .12s var(--ease);
 }
-.chip:hover{background:var(--accent-tint);border-color:rgba(91,84,230,.4);box-shadow:var(--sh-sm);transform:translateY(-1px)}
+.chip:hover{background:var(--accent-tint);border-color:rgba(94,23,235,.4);box-shadow:var(--sh-sm);transform:translateY(-1px)}
 .chip:active{transform:scale(.95)}
 
 .nav{
@@ -398,7 +398,7 @@ body.gated{
     radial-gradient(50% 60% at 78% 85%,rgba(255,138,200,.55),transparent 60%),
     radial-gradient(55% 65% at 12% 88%,rgba(98,68,236,.70),transparent 62%),
     radial-gradient(60% 70% at 50% 50%,rgba(255,255,255,.45),transparent 65%),
-    linear-gradient(135deg,#8a6cff 0%,#6244ec 45%,#5a3fdb 100%);
+    linear-gradient(135deg,#8a5cff 0%,#5e17eb 45%,#520fdb 100%);
   background-attachment:fixed;
 }
 body.gated .wrap{max-width:452px}
@@ -418,7 +418,7 @@ body.gated #acc-auth>.sec{
 .acard-top{display:none}
 body.gated .acard-top{display:block}
 .acard-brand{display:flex;align-items:center;gap:11px;margin-bottom:18px}
-.acard-mark{width:44px;height:44px;border-radius:13px;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 16px rgba(91,68,236,.42);flex:0 0 auto}
+.acard-mark{width:44px;height:44px;border-radius:13px;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 16px rgba(94,23,235,.42);flex:0 0 auto}
 .acard-mark svg{width:23px;height:23px;color:#fff}
 .acard-word{font-size:21px;font-weight:800;letter-spacing:-.03em;color:#1a1730}
 .acard-logo{height:29px;width:auto;display:block}
@@ -458,18 +458,18 @@ body.gated #acc-auth .ifield input{
 body.gated #acc-auth .ifield input:hover{background:rgba(255,255,255,.78);border-color:#fff}
 body.gated #acc-auth .ifield input:focus{
   background:#fff;border-color:var(--accent);
-  box-shadow:0 0 0 4px rgba(91,84,230,.16),0 8px 20px -10px rgba(91,68,236,.45);
+  box-shadow:0 0 0 4px rgba(94,23,235,.16),0 8px 20px -10px rgba(94,23,235,.45);
   transform:translateY(-1px);
 }
 body.gated #acc-auth .ifield>svg{left:16px;width:19px;height:19px}
 body.gated #acc-auth .btn{
   height:56px;border-radius:16px;font-size:16px;margin-top:4px;
-  background:linear-gradient(135deg,#7c5cff 0%,#6244ec 50%,#5638d4 100%);
-  box-shadow:0 8px 22px -8px rgba(91,68,236,.65),inset 0 1px 0 rgba(255,255,255,.28);
+  background:linear-gradient(135deg,#7a3ef0 0%,#5e17eb 50%,#4c12bf 100%);
+  box-shadow:0 8px 22px -8px rgba(94,23,235,.65),inset 0 1px 0 rgba(255,255,255,.28);
 }
 body.gated #acc-auth .btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 14px 30px -8px rgba(91,68,236,.7),inset 0 1px 0 rgba(255,255,255,.32);
+  box-shadow:0 14px 30px -8px rgba(94,23,235,.7),inset 0 1px 0 rgba(255,255,255,.32);
 }
 body.gated #acc-auth .btn:active{transform:translateY(0) scale(.985)}
 body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!important;overflow:hidden}
@@ -517,7 +517,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <h1 style="font-size:20px;margin:0 0 8px">Qujat</h1>
     <p style="margin:0 0 8px">Для работы приложения нужен включённый JavaScript.</p>
     <p style="margin:0;color:#5f6573">Включите JavaScript в настройках браузера или откройте бота
-      <a href="https://t.me/Qujatkz_bot" style="color:#4f47df">@Qujatkz_bot</a> в Telegram.</p>
+      <a href="https://t.me/Qujatkz_bot" style="color:#5314d4">@Qujatkz_bot</a> в Telegram.</p>
   </div>
 </noscript>
 <header><div class="wrap">
