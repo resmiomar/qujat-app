@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Qujat Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f9;--card:#fff;--text:#0d0f14;--muted:#5f6573;--line:#e9eaef;--line-2:#e1e2e9;
+  --accent:#5b54e6;--accent-soft:#efeefc;--accent-strong:#4a43d6;--danger:#e5484d;--danger-soft:#fdecee;
+  --ok:#0a9d6e;--sh-xs:0 1px 2px rgba(16,18,28,.05);--ring:0 0 0 4px rgba(91,84,230,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:40px}
+.wrap{max-width:640px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:0;z-index:10;background:rgba(247,248,251,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,#7a5cff,#5a3fdb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ib{height:36px;padding:0 12px;border-radius:10px;background:var(--card);border:1px solid var(--line-2);font-family:inherit;font-weight:700;font-size:12px;cursor:pointer}
+h2{font-size:24px;font-weight:800;margin:20px 0 6px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+.btn{display:block;width:100%;height:48px;border:none;border-radius:13px;background:linear-gradient(135deg,#7a5cff,#5a3fdb);color:#fff;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;box-shadow:var(--sh-xs)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line-2)}
+.btn-mini{height:36px;padding:0 12px;width:auto;font-size:12.5px;border-radius:10px;display:inline-block;line-height:36px;text-align:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--sh-xs);margin-bottom:16px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.field input{width:100%;height:44px;border:1px solid var(--line-2);border-radius:11px;padding:0 12px;font-family:inherit;font-size:14px}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.hidden{display:none!important}
+.adm-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+@media(min-width:560px){.adm-stats{grid-template-columns:repeat(3,1fr)}}
+.adm-stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.adm-stat b{display:block;font-size:20px;font-weight:800}
+.adm-stat span{font-size:11px;color:var(--muted);font-weight:600}
+.adm-stat small{display:block;font-size:10px;color:var(--ok);font-weight:700;margin-top:2px}
+.adm-search{width:100%;height:44px;border:1px solid var(--line-2);border-radius:12px;padding:0 14px;font-family:inherit;font-size:14px;background:var(--card);margin-bottom:12px}
+.adm-user{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.adm-user-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+.adm-user-email{font-weight:700;font-size:14px;word-break:break-all}
+.adm-badge{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;text-transform:uppercase}
+.adm-badge.pro{background:var(--accent-soft);color:var(--accent-strong)}
+.adm-badge.free{background:#f1f2f5;color:var(--muted)}
+.adm-badge.admin{background:#fef3c7;color:#b45309}
+.adm-user-meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+.adm-user-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.adm-user-actions select{flex:1;min-width:90px;height:36px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px;padding:0 8px}
+.adm-del{background:var(--danger-soft)!important;color:var(--danger)!important;border:1px solid #f3c0c0!important}
+.adm-you{font-size:11px;color:var(--accent);font-weight:700}
+.adm-section{margin-bottom:18px}
+.adm-section h3{font-size:15px;font-weight:800;margin-bottom:10px;color:#3d4453}
+.adm-form .field{margin-bottom:10px}
+.err{color:var(--danger);font-weight:700;font-size:13px;margin-top:8px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.note a{color:var(--accent-strong)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="logo">Qujat Admin</div>
+  <div style="display:flex;gap:8px">
+    <button class="ib" id="langbtn" onclick="toggleLang()">RU</button>
+    <button class="ib hidden" id="logoutbtn" onclick="doLogout()"></button>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div id="login-screen">
+    <h2 id="login-h"></h2>
+    <p class="sub" id="login-sub"></p>
+    <div class="card">
+      <div class="field"><label id="l-email"></label><input type="email" id="email" inputmode="email" autocomplete="username"></div>
+      <div class="field"><label id="l-pass"></label><input type="password" id="pass" autocomplete="current-password"></div>
+      <button class="btn" id="loginbtn" onclick="doLogin()"></button>
+      <p class="err hidden" id="login-err"></p>
+      <p class="note"><a href="https://app.qujat.digital">app.qujat.digital</a></p>
+    </div>
+  </div>
+
+  <div id="panel" class="hidden">
+    <h2 id="adm-title"></h2><p class="sub" id="adm-sub"></p>
+    <p class="sub" id="adm-you" style="margin-top:-8px"></p>
+
+    <div class="adm-section">
+      <h3 id="adm-sec-add"></h3>
+      <div class="card adm-form">
+        <div class="field"><label id="adm-l-name"></label><input type="text" id="adm-name"></div>
+        <div class="field"><label id="adm-l-email"></label><input type="email" id="adm-email" inputmode="email"></div>
+        <div class="field"><label id="adm-l-pass"></label><input type="password" id="adm-pass"></div>
+        <button class="btn" id="adm-create-btn" onclick="adminCreateUser()"></button>
+      </div>
+    </div>
+
+    <div class="adm-section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h3 id="adm-sec-users" style="margin:0"></h3>
+        <button class="ib" id="adm-refresh" onclick="loadAdminPanel()"></button>
+      </div>
+      <input type="search" class="adm-search" id="adm-search" autocomplete="off">
+      <div id="admin-users"></div>
+    </div>
+
+    <details class="adm-section">
+      <summary id="adm-sec-stats" style="font-weight:800;cursor:pointer;margin-bottom:10px"></summary>
+      <h3 id="adm-sec-web" style="margin-top:12px"></h3>
+      <div class="adm-stats" id="adm-stats-web"></div>
+      <h3 id="adm-sec-tg" style="margin-top:12px"></h3>
+      <div class="adm-stats" id="adm-stats-tg"></div>
+    </details>
+  </div>
+</div>
+
+<script>
+const API='https://qujat-production.up.railway.app';
+const $=id=>document.getElementById(id);
+const reEmail=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+let authToken=localStorage.getItem('qujat_admin_token')||'';
+let meUser=null;
+let lang=localStorage.getItem('qujat_admin_lang')||'ru';
+function setToken(t){authToken=t||'';if(t)localStorage.setItem('qujat_admin_token',t);else localStorage.removeItem('qujat_admin_token');}
+function afetch(url,opts){opts=opts||{};if(!('credentials'in opts))opts.credentials='include';const h=Object.assign({},opts.headers||{});if(authToken)h.Authorization='Bearer '+authToken;opts.headers=h;return fetch(url,opts);}
+
+const STR={
+  ru:{loginH:'Вход в админ-панель',loginSub:'Только для администратора Qujat',loginBtn:'Войти',logout:'Выйти',
+    noAdmin:'Доступ запрещён. Этот сайт только для администратора.',
+    admTitle:'Управление Qujat',admSub:'Кто зарегистрировался — создавайте и удаляйте аккаунты',
+    admYou:'Вы вошли как',admSecAdd:'➕ Создать пользователя',admSecUsers:'👥 Кто зарегистрировался',
+    admSecStats:'📊 Статистика',admSecWeb:'🌐 Веб',admSecTg:'🤖 Telegram',
+    accname:'Имя',accemail:'Email',accpass:'Пароль (мин. 6)',admCreateBtn:'Создать аккаунт',
+    admCreated:'Пользователь создан ✓',admDelete:'Удалить',admDelConfirm:'Удалить {email} и все данные?',
+    admDeleted:'Удалён ✓',admSelf:'это вы',admRegistered:'Зарегистрировался',admRefresh:'Обновить',
+    admSearch:'Поиск email или имени…',admGrant:'+30 дн Pro',admGranted:'Pro выдан ✓',
+    admNoUsers:'Пользователей нет',admDocsUsed:'Док. в месяце',admUntil:'Pro до',
+    admWebUsers:'Пользователи',admWebPrem:'Pro',admWebDocs:'Документы',admWebLinks:'Telegram',
+    admKaspi:'Kaspi чеки',admNewToday:'+ сегодня',admTgUsers:'Пользователи',admTgPrem:'Premium',
+    admTgDocs:'Документы',admShop:'Магазин',
+    e_email:'Введите корректный email',e_pass:'Пароль минимум 6 символов',e_name:'Имя минимум 2 символа',
+    e_taken:'Этот email уже занят',e_creds:'Неверный email или пароль',errnet:'Ошибка сети'},
+  kz:{loginH:'Админ-панельге кіру',loginSub:'Тек Qujat әкімшісі үшін',loginBtn:'Кіру',logout:'Шығу',
+    noAdmin:'Рұқсат жоқ. Бұл сайт тек әкімшіге арналған.',
+    admTitle:'Qujat басқару',admSub:'Кім тіркелген — аккаунт жасаңыз не жойыңыз',
+    admYou:'Сіз кірдіңіз:',admSecAdd:'➕ Пайдаланушы жасау',admSecUsers:'👥 Кім тіркелген',
+    admSecStats:'📊 Статистика',admSecWeb:'🌐 Веб',admSecTg:'🤖 Telegram',
+    accname:'Аты',accemail:'Email',accpass:'Пароль (мин. 6)',admCreateBtn:'Аккаунт жасау',
+    admCreated:'Пайдаланушы жасалды ✓',admDelete:'Жою',admDelConfirm:'{email} және барлық деректі жою керек пе?',
+    admDeleted:'Жойылды ✓',admSelf:'сіз',admRegistered:'Тіркелген',admRefresh:'Жаңарту',
+    admSearch:'Email немесе атын іздеу…',admGrant:'+30 күн Pro',admGranted:'Pro берілді ✓',
+    admNoUsers:'Пайдаланушы жоқ',admDocsUsed:'Айдағы құжат',admUntil:'Pro дейін',
+    admWebUsers:'Пайдаланушылар',admWebPrem:'Pro',admWebDocs:'Құжаттар',admWebLinks:'Telegram',
+    admKaspi:'Kaspi чектер',admNewToday:'+ бүгін',admTgUsers:'Пайдаланушылар',admTgPrem:'Premium',
+    admTgDocs:'Құжаттар',admShop:'Дүкен',
+    e_email:'Дұрыс email жазыңыз',e_pass:'Пароль кемінде 6 таңба',e_name:'Аты кемінде 2 таңба',
+    e_taken:'Бұл email бос емес',e_creds:'Қате email немесе пароль',errnet:'Желі қатесі'}
+};
+const S=()=>STR[lang];
+function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_admin_lang',lang);renderLabels();}
+
+function renderLabels(){
+  const s=S();
+  $('langbtn').textContent=lang==='ru'?'RU':'KZ';
+  $('login-h').textContent=s.loginH;$('login-sub').textContent=s.loginSub;
+  $('l-email').textContent=s.accemail;$('l-pass').textContent=s.accpass;
+  $('loginbtn').textContent=s.loginBtn;$('logoutbtn').textContent=s.logout;
+  $('adm-title').textContent=s.admTitle;$('adm-sub').textContent=s.admSub;
+  $('adm-sec-add').textContent=s.admSecAdd;$('adm-sec-users').textContent=s.admSecUsers;
+  $('adm-sec-stats').textContent=s.admSecStats;$('adm-sec-web').textContent=s.admSecWeb;
+  $('adm-sec-tg').textContent=s.admSecTg;$('adm-refresh').textContent=s.admRefresh;
+  $('adm-l-name').textContent=s.accname;$('adm-l-email').textContent=s.accemail;
+  $('adm-l-pass').textContent=s.accpass;$('adm-create-btn').textContent=s.admCreateBtn;
+  const si=$('adm-search');if(si)si.placeholder=s.admSearch;
+  if(meUser)$('adm-you').textContent=s.admYou+' '+meUser.email;
+}
+
+function showLogin(msg){
+  $('login-screen').classList.remove('hidden');
+  $('panel').classList.add('hidden');
+  $('logoutbtn').classList.add('hidden');
+  const e=$('login-err');if(msg){e.textContent=msg;e.classList.remove('hidden');}else e.classList.add('hidden');
+}
+function showPanel(){
+  $('login-screen').classList.add('hidden');
+  $('panel').classList.remove('hidden');
+  $('logoutbtn').classList.remove('hidden');
+  renderLabels();loadAdminPanel();
+}
+
+async function loadMe(){
+  try{
+    const r=await afetch(API+'/auth/me');
+    meUser=(await r.json()).user;
+    if(meUser&&meUser.role==='admin'){showPanel();return;}
+    setToken('');meUser=null;showLogin(meUser?S().noAdmin:'');
+  }catch(e){setToken('');showLogin('');}
+}
+
+async function doLogin(){
+  const s=S(),email=$('email').value.trim().toLowerCase(),pass=$('pass').value;
+  if(!reEmail.test(email))return showLogin(s.e_email);
+  if(!pass)return showLogin(s.e_pass);
+  const b=$('loginbtn');b.disabled=true;
+  try{
+    const r=await afetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    if(r.status===401){showLogin(s.e_creds);return;}
+    if(!r.ok){showLogin(s.errnet);return;}
+    const d=await r.json();if(d.token)setToken(d.token);
+    await loadMe();
+    if(!meUser||meUser.role!=='admin')showLogin(S().noAdmin);
+  }catch(e){showLogin(s.errnet);}finally{b.disabled=false;}
+}
+
+function doLogout(){setToken('');meUser=null;$('pass').value='';showLogin('');}
+
+function admStat(val,label,today){
+  const s=S();return '<div class="adm-stat"><b>'+val+'</b><span>'+label+'</span>'+(today?'<small>'+s.admNewToday+' '+today+'</small>':'')+'</div>';
+}
+async function loadAdminStats(){
+  const sw=$('adm-stats-web'),st=$('adm-stats-tg');
+  try{
+    const d=await (await afetch(API+'/api/admin/stats')).json();
+    const s=S();
+    sw.innerHTML=admStat(d.web_users||0,s.admWebUsers,d.web_users_today)+admStat(d.web_premium||0,s.admWebPrem)+admStat(d.web_docs||0,s.admWebDocs,d.web_docs_today)+admStat(d.web_links||0,s.admWebLinks)+admStat(d.kaspi_receipts||0,s.admKaspi);
+    st.innerHTML=admStat(d.users||0,s.admTgUsers)+admStat(d.premium||0,s.admTgPrem)+admStat(d.docs||0,s.admTgDocs,d.docs_today)+admStat(d.shop_sales||0,s.admShop);
+  }catch(e){sw.innerHTML='';st.innerHTML='';}
+}
+function isPremUntil(u){if(!u)return false;return new Date(u+'T23:59:59')>=new Date();}
+
+async function loadAdminUsers(q){
+  const box=$('admin-users'),s=S();
+  try{
+    const url=API+'/api/admin/users'+(q?'?q='+encodeURIComponent(q):'');
+    const us=(await (await afetch(url)).json()).users||[];
+    if(!us.length){box.innerHTML='<p class="sub">'+s.admNoUsers+'</p>';return;}
+    box.innerHTML=us.map(u=>{
+      const isSelf=meUser&&meUser.id===u.id;
+      const prem=isPremUntil(u.premium_until);
+      const badge=prem?'<span class="adm-badge pro">Pro</span>':(u.role==='admin'?'<span class="adm-badge admin">admin</span>':'<span class="adm-badge free">free</span>');
+      const meta=[u.name||'—',s.admRegistered+': '+(u.created||'—').slice(0,16),s.admDocsUsed+': '+(u.docs_used||0),prem?(s.admUntil+' '+u.premium_until):'',u.telegram_id?'Telegram ✓':''].filter(Boolean).join(' · ');
+      const delBtn=isSelf?' <span class="adm-you">('+s.admSelf+')</span>':'<button class="btn btn-mini adm-del" onclick="adminDeleteUser('+u.id+',\''+u.email.replace(/'/g,"\\'")+'\')">'+s.admDelete+'</button>';
+      return '<div class="adm-user"><div class="adm-user-top"><span class="adm-user-email">'+u.email+'</span>'+badge+'</div><div class="adm-user-meta">'+meta+'</div><div class="adm-user-actions"><select onchange="setUserRole('+u.id+',this.value)">'+['client','manager','admin'].map(rr=>'<option value="'+rr+'"'+(u.role===rr?' selected':'')+'>'+rr+'</option>').join('')+'</select><button class="btn btn-mini" onclick="grantPremium('+u.id+',this)">'+s.admGrant+'</button>'+delBtn+'</div></div>';
+    }).join('');
+  }catch(e){box.innerHTML='';}
+}
+
+async function adminCreateUser(){
+  const s=S(),name=$('adm-name').value.trim(),email=$('adm-email').value.trim().toLowerCase(),pass=$('adm-pass').value;
+  if(name.length<2)return alert(s.e_name);if(!reEmail.test(email))return alert(s.e_email);if(pass.length<6)return alert(s.e_pass);
+  const btn=$('adm-create-btn');btn.disabled=true;
+  try{
+    const r=await afetch(API+'/api/admin/create-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
+    if(r.status===409){alert(s.e_taken);return;}if(!r.ok){alert(s.errnet);return;}
+    $('adm-name').value='';$('adm-email').value='';$('adm-pass').value='';
+    alert(s.admCreated);loadAdminPanel();
+  }catch(e){alert(s.errnet);}finally{btn.disabled=false;}
+}
+
+async function adminDeleteUser(id,email){
+  const s=S();if(!confirm(s.admDelConfirm.replace('{email}',email)))return;
+  try{
+    const r=await afetch(API+'/api/admin/delete-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+    if(!r.ok){alert(s.errnet);return;}alert(s.admDeleted);loadAdminPanel();
+  }catch(e){alert(s.errnet);}
+}
+
+async function grantPremium(id,btn){
+  const s=S();if(btn)btn.disabled=true;
+  try{
+    const r=await afetch(API+'/api/admin/grant-premium',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,days:30})});
+    if(!r.ok){alert(s.errnet);return;}alert(s.admGranted);loadAdminPanel();
+  }catch(e){alert(s.errnet);}finally{if(btn)btn.disabled=false;}
+}
+
+async function setUserRole(id,role){
+  try{await afetch(API+'/api/admin/set-role',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,role})});}catch(e){}
+}
+
+function loadAdminPanel(){renderLabels();loadAdminStats();loadAdminUsers(($('adm-search')||{}).value||'');}
+
+$('adm-search').addEventListener('input',function(){clearTimeout(window._admT);window._admT=setTimeout(()=>loadAdminUsers(this.value.trim()),300);});
+$('pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+renderLabels();
+if(authToken)loadMe();else showLogin('');
+</script>
+</body>
+</html>
