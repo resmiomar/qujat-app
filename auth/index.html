@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Qujat — вход</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../public-ios.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<div class="lang-fixed">
+  <div style="position:relative">
+    <button type="button" class="lang-pill" aria-label="Language"><span class="on">RU</span></button>
+    <div class="lang-menu" role="menu"></div>
+  </div>
+</div>
+
+<div class="ios-shell" id="shell">
+  <div class="ios-inner">
+    <div class="auth-glass fade-up" id="card">
+
+      <!-- LOGIN -->
+      <div id="view-login">
+        <div class="auth-logo">Qujat</div>
+        <h1 class="auth-h" id="login-h"></h1>
+        <p class="auth-sub" id="login-sub"></p>
+        <div class="field">
+          <label for="l-email" id="lbl-email"></label>
+          <div class="inp-wrap">
+            <svg class="inp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input class="inp has-icon" type="email" id="l-email" inputmode="email" autocomplete="email">
+          </div>
+        </div>
+        <div class="field">
+          <label for="l-pass" id="lbl-pass"></label>
+          <div class="inp-wrap">
+            <svg class="inp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input class="inp has-icon" type="password" id="l-pass" autocomplete="current-password" style="padding-right:52px">
+            <button type="button" class="inp-toggle" data-target="l-pass" aria-label="Show password">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="button" class="btn-primary" id="btn-login"></button>
+        <button type="button" class="link-muted link-center" id="btn-forgot"></button>
+        <div class="divider-or"><span id="or-login"></span></div>
+        <div id="g-wrap-login"></div>
+        <button type="button" class="oauth-btn oauth-apple" id="btn-apple-login">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          Apple
+        </button>
+        <p class="auth-foot"><span id="no-acc"></span> <button type="button" class="link-inline" id="go-register"></button></p>
+      </div>
+
+      <!-- RESET -->
+      <div id="view-reset" class="hidden">
+        <div class="auth-logo">Qujat</div>
+        <h1 class="auth-h" id="reset-h"></h1>
+        <p class="auth-sub" id="reset-sub"></p>
+        <div class="field">
+          <label for="r-pass" id="lbl-rpass"></label>
+          <input class="inp" type="password" id="r-pass" autocomplete="new-password">
+        </div>
+        <button type="button" class="btn-primary" id="btn-reset"></button>
+      </div>
+
+      <!-- REGISTER STEP 1 -->
+      <div id="view-reg" class="hidden">
+        <div class="auth-logo">Qujat</div>
+        <h1 class="auth-h" id="reg-h"></h1>
+        <p class="auth-sub" id="reg-sub"></p>
+        <div class="field">
+          <label for="r-email" id="lbl-remail"></label>
+          <input class="inp" type="email" id="r-email" inputmode="email" autocomplete="email">
+        </div>
+        <label class="chk">
+          <input type="checkbox" id="r-consent">
+          <span id="consent-text"></span>
+        </label>
+        <button type="button" class="btn-primary" id="btn-reg-continue"></button>
+        <div class="divider-or"><span id="or-reg"></span></div>
+        <div id="g-wrap-reg"></div>
+        <button type="button" class="oauth-btn oauth-apple" id="btn-apple-reg">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          Apple
+        </button>
+        <p class="auth-foot"><span id="has-acc"></span> <button type="button" class="link-inline" id="go-login"></button></p>
+      </div>
+
+      <!-- REGISTER STEP 2 -->
+      <div id="view-code" class="hidden">
+        <div class="auth-logo">Qujat</div>
+        <h1 class="auth-h" id="code-h"></h1>
+        <p class="auth-sub" id="code-sub"></p>
+        <p class="email-badge" id="code-email"></p>
+        <div class="field">
+          <input class="inp inp-code" type="text" id="r-code" inputmode="numeric" maxlength="6" pattern="[0-9]*" autocomplete="one-time-code">
+        </div>
+        <button type="button" class="btn-primary" id="btn-code"></button>
+        <button type="button" class="link-muted link-center" id="btn-resend"></button>
+      </div>
+
+      <!-- REGISTER STEP 3 -->
+      <div id="view-profile" class="hidden">
+        <div class="auth-logo">Qujat</div>
+        <h1 class="auth-h" id="prof-h"></h1>
+        <p class="email-badge" id="prof-email"></p>
+        <div class="row2">
+          <div class="field">
+            <label for="r-fname" id="lbl-fname"></label>
+            <input class="inp" type="text" id="r-fname" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label for="r-lname" id="lbl-lname"></label>
+            <input class="inp" type="text" id="r-lname" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="field">
+          <label for="r-pass2" id="lbl-pass2"></label>
+          <div class="inp-wrap">
+            <input class="inp" type="password" id="r-pass2" autocomplete="new-password" style="padding-right:52px">
+            <button type="button" class="inp-toggle" data-target="r-pass2" aria-label="Show password">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="button" class="btn-primary" id="btn-register"></button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../public-core.js"></script>
+<script>
+(function () {
+  const Q = window.QujatPublic;
+  const $ = (id) => document.getElementById(id);
+  const NATIVE_IOS = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios');
+  let regEmail = '';
+  let resetTok = new URLSearchParams(location.search).get('reset') || '';
+  let GCID = null;
+  let gReady = false;
+
+  const views = {
+    login: $('view-login'), reset: $('view-reset'), reg: $('view-reg'),
+    code: $('view-code'), profile: $('view-profile'),
+  };
+
+  function showView(name) {
+    Object.keys(views).forEach((k) => views[k].classList.toggle('hidden', k !== name));
+  }
+
+  function render() {
+    const s = Q.S();
+    $('login-h').textContent = s.welcome;
+    $('login-sub').textContent = s.welcomeSub;
+    $('lbl-email').textContent = $('lbl-remail').textContent = s.email;
+    $('lbl-pass').textContent = $('lbl-pass2').textContent = $('lbl-rpass').textContent = s.password;
+    $('btn-login').textContent = s.signIn;
+    $('btn-forgot').textContent = s.forgot;
+    $('or-login').textContent = $('or-reg').textContent = s.or;
+    $('no-acc').textContent = s.noAccount;
+    $('go-register').textContent = s.create;
+    $('reg-h').textContent = s.createAcc;
+    $('reg-sub').textContent = s.createAccSub;
+    $('btn-reg-continue').textContent = $('btn-code').textContent = s.continue;
+    $('has-acc').textContent = s.hasAccount;
+    $('go-login').textContent = s.loginLink;
+    $('consent-text').innerHTML = `${s.consent} <a href="https://qujat.digital/offer.html" target="_blank" rel="noopener">${s.terms}</a> ${s.and} <a href="https://qujat.digital/privacy.html" target="_blank" rel="noopener">${s.privacy}</a>`;
+    $('code-h').textContent = s.verifyTitle;
+    $('code-sub').textContent = s.verifySub;
+    $('btn-resend').textContent = s.resend;
+    $('prof-h').textContent = s.finishTitle;
+    $('lbl-fname').textContent = s.firstName;
+    $('lbl-lname').textContent = s.lastName;
+    $('btn-register').textContent = s.register;
+    $('reset-h').textContent = s.resetTitle;
+    $('reset-sub').textContent = s.resetSub;
+    $('btn-reset').textContent = s.resetBtn;
+  }
+
+  window.onLangChange = () => { render(); initGoogle(); };
+
+  document.querySelectorAll('.inp-toggle').forEach((btn) => {
+    btn.onclick = () => {
+      const inp = $(btn.dataset.target);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    };
+  });
+
+  function goRegister() { history.replaceState(null, '', '?mode=register'); showView('reg'); }
+  function goLogin() { history.replaceState(null, '', location.pathname); showView('login'); }
+
+  $('go-register').onclick = goRegister;
+  $('go-login').onclick = goLogin;
+
+  async function afterAuth(token) {
+    if (token) Q.setToken(token);
+    location.replace('/app.html');
+  }
+
+  $('btn-login').onclick = async () => {
+    const s = Q.S();
+    const email = $('l-email').value.trim().toLowerCase();
+    const pass = $('l-pass').value;
+    if (!Q.reEmail.test(email)) return alert(s.e_email);
+    if (!pass) return alert(s.e_pass);
+    $('btn-login').disabled = true;
+    try {
+      const r = await Q.afetch(Q.API + '/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass }),
+      });
+      if (r.status === 401) return alert(s.e_creds);
+      if (!r.ok) return alert(s.errnet);
+      const d = await r.json();
+      await afterAuth(d.token);
+    } catch (e) { alert(s.errnet); }
+    finally { $('btn-login').disabled = false; }
+  };
+
+  $('btn-forgot').onclick = async () => {
+    const s = Q.S();
+    const email = prompt(s.forgotAsk, $('l-email').value || '') || '';
+    if (!email || !Q.reEmail.test(email.trim().toLowerCase())) return;
+    try {
+      await Q.afetch(Q.API + '/auth/forgot', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      });
+    } catch (e) {}
+    alert(s.forgotSent);
+  };
+
+  $('btn-reg-continue').onclick = async () => {
+    const s = Q.S();
+    regEmail = $('r-email').value.trim().toLowerCase();
+    if (!Q.reEmail.test(regEmail)) return alert(s.e_email);
+    if (!$('r-consent').checked) return alert(s.e_consent);
+    $('btn-reg-continue').disabled = true;
+    try {
+      const r = await Q.afetch(Q.API + '/auth/send-verification', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: regEmail }),
+      });
+      if (r.status === 409) return alert(s.e_taken);
+      if (!r.ok) return alert(s.errnet);
+      $('code-email').textContent = s.verifySub + ' ' + regEmail;
+      $('r-code').value = '';
+      showView('code');
+    } catch (e) { alert(s.errnet); }
+    finally { $('btn-reg-continue').disabled = false; }
+  };
+
+  $('btn-resend').onclick = () => $('btn-reg-continue').click();
+
+  $('btn-code').onclick = async () => {
+    const s = Q.S();
+    const code = $('r-code').value.replace(/\D/g, '');
+    if (code.length !== 6) return alert(s.e_code);
+    $('btn-code').disabled = true;
+    try {
+      const r = await Q.afetch(Q.API + '/auth/verify-email-code', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: regEmail, code }),
+      });
+      if (!r.ok) return alert(s.e_code);
+      $('prof-email').textContent = s.loginLabel + ': ' + regEmail;
+      showView('profile');
+    } catch (e) { alert(s.errnet); }
+    finally { $('btn-code').disabled = false; }
+  };
+
+  $('btn-register').onclick = async () => {
+    const s = Q.S();
+    const fn = $('r-fname').value.trim();
+    const ln = $('r-lname').value.trim();
+    const pass = $('r-pass2').value;
+    const name = (fn + ' ' + ln).trim();
+    if (fn.length < 1 || ln.length < 1) return alert(s.e_name);
+    if (pass.length < 6) return alert(s.e_pass);
+    $('btn-register').disabled = true;
+    try {
+      const r = await Q.afetch(Q.API + '/auth/register-email', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: regEmail, password: pass, name }),
+      });
+      if (r.status === 409) return alert(s.e_taken);
+      if (r.status === 403) return alert(s.e_code);
+      if (!r.ok) return alert(s.errnet);
+      const d = await r.json();
+      await afterAuth(d.token);
+    } catch (e) { alert(s.errnet); }
+    finally { $('btn-register').disabled = false; }
+  };
+
+  $('btn-reset').onclick = async () => {
+    const s = Q.S();
+    const pass = $('r-pass').value;
+    if (pass.length < 6) return alert(s.e_pass);
+    $('btn-reset').disabled = true;
+    try {
+      const r = await Q.afetch(Q.API + '/auth/reset', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: resetTok, new_password: pass }),
+      });
+      if (!r.ok) return alert(s.resetBad);
+      alert(s.resetOk);
+      resetTok = '';
+      history.replaceState(null, '', location.pathname);
+      showView('login');
+    } catch (e) { alert(s.errnet); }
+    finally { $('btn-reset').disabled = false; }
+  };
+
+  document.querySelectorAll('.oauth-apple').forEach((b) => {
+    b.onclick = () => alert(Q.S().appleSoon);
+  });
+
+  async function onGoogle(resp) {
+    try {
+      const r = await Q.afetch(Q.API + '/auth/google', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: resp.credential }),
+      });
+      if (!r.ok) return alert(Q.S().errnet);
+      const d = await r.json();
+      await afterAuth(d.token);
+    } catch (e) { alert(Q.S().errnet); }
+  }
+
+  async function initGoogle() {
+    if (NATIVE_IOS) {
+      $('g-wrap-login').innerHTML = '';
+      $('g-wrap-reg').innerHTML = '';
+      return;
+    }
+    if (GCID === null) {
+      try {
+        const r = await Q.afetch(Q.API + '/auth/config');
+        GCID = (await r.json()).googleClientId || '';
+      } catch (e) { GCID = ''; }
+    }
+    if (!GCID) return;
+    function render(into) {
+      if (!window.google || !google.accounts || !google.accounts.id) return false;
+      if (!gReady) {
+        google.accounts.id.initialize({ client_id: GCID, callback: onGoogle });
+        gReady = true;
+      }
+      into.innerHTML = '';
+      const d = document.createElement('div');
+      d.style.display = 'flex'; d.style.justifyContent = 'center';
+      into.appendChild(d);
+      google.accounts.id.renderButton(d, {
+        theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', width: 340,
+        locale: Q.lang() === 'kz' ? 'kk' : Q.lang(),
+      });
+      return true;
+    }
+    if (!render($('g-wrap-login'))) {
+      let n = 0;
+      const t = setInterval(() => {
+        if (render($('g-wrap-login')) && render($('g-wrap-reg'))) clearInterval(t);
+        if (++n > 30) clearInterval(t);
+      }, 150);
+    } else render($('g-wrap-reg'));
+  }
+
+  Q.mountLangPill(document.body);
+  render();
+
+  (async function boot() {
+    const u = await Q.loadMe();
+    if (u) return location.replace('/app.html');
+    if (resetTok) showView('reset');
+    else if (new URLSearchParams(location.search).get('mode') === 'register') showView('reg');
+    else showView('login');
+    initGoogle();
+  })();
+})();
+</script>
+</body>
+</html>

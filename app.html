@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qujat — документы, налоги, ИИ онлайн</title>
+<meta name="description" content="Бухгалтерия Казахстана онлайн: создавайте счёт, акт, накладную, считайте налоги 2026 и спрашивайте ИИ-помощника — прямо в браузере, бесплатно.">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f9;
+  --bg-soft:#fbfbfc;
+  --card:#ffffff;
+  --surface-2:#fbfbfe;
+  --text:#0d0f14;
+  --text-2:#3d4453;
+  --muted:#5f6573;
+  --muted-2:#7a8090;
+  --accent:#5e17eb;
+  --accent-ink:#5314d4;
+  --accent-strong:#4c12bf;
+  --accent-deep:#4410aa;
+  --accent-soft:#f0ebfd;
+  --accent-soft2:#e3d7fc;
+  --accent-tint:#f7f2ff;
+  --accent2:#0fb886;
+  --accent2-soft:#e6f7f1;
+  --grad:linear-gradient(135deg,#7a3ef0 0%,#5e17eb 52%,#520fdb 100%);
+  --grad-soft:linear-gradient(155deg,#f3edff 0%,#e8ddff 100%);
+  --line:#e9eaef;
+  --line-2:#e1e2e9;
+  --line-soft:#f1f2f5;
+  --danger:#e5484d;
+  --danger-soft:#fdecee;
+  --ok:#0a9d6e;
+  --ok-soft:#e7f7f0;
+  --ok-line:#bfe9d4;
+  --radius:18px;
+  --radius-lg:20px;
+  --radius-sm:13px;
+  --radius-xs:11px;
+  --sh-xs:0 1px 2px rgba(16,18,28,.04), 0 1px 1px rgba(16,18,28,.03);
+  --sh-sm:0 1px 2px rgba(16,18,28,.05), 0 4px 10px rgba(16,18,28,.05);
+  --sh-md:0 2px 4px rgba(16,18,28,.05), 0 10px 26px rgba(40,32,90,.08);
+  --sh-lg:0 6px 14px rgba(40,32,90,.10), 0 20px 44px rgba(40,32,90,.14);
+  --sh-accent:0 4px 12px rgba(94,23,235,.28), 0 12px 30px rgba(94,23,235,.22);
+  --sh-accent-soft:0 2px 8px rgba(94,23,235,.14), 0 10px 28px rgba(94,23,235,.12);
+  --ring:0 0 0 4px rgba(94,23,235,.13);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*::selection{background:var(--accent-soft);color:var(--accent-strong)}
+body{
+  font-family:'Plus Jakarta Sans',-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(120% 70% at 100% -10%,rgba(122,92,255,.07),transparent 55%),
+    radial-gradient(120% 60% at 50% -10%,#ffffff 0%,rgba(255,255,255,0) 55%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--text);
+  line-height:1.5;
+  letter-spacing:-.01em;
+  font-weight:500;
+  padding-bottom:88px;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.wrap{max-width:580px;margin:0 auto;padding:0 18px}
+
+header{
+  position:sticky;top:0;z-index:30;
+  background:rgba(247,248,251,.74);
+  backdrop-filter:saturate(180%) blur(18px);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid var(--line);
+}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{
+  font-size:21px;font-weight:800;letter-spacing:-.03em;
+  display:flex;gap:8px;align-items:center;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.logo svg,.logo img{height:26px;width:auto}
+.ib{
+  height:40px;padding:0 15px;border-radius:13px;
+  background:var(--card);border:1px solid var(--line-2);
+  font-family:inherit;font-weight:700;font-size:13.5px;letter-spacing:.01em;
+  color:var(--text-2);cursor:pointer;
+  box-shadow:var(--sh-xs);
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease),color .18s var(--ease);
+}
+.ib:hover{border-color:#d6d7e0;color:var(--text);box-shadow:var(--sh-sm);transform:translateY(-1px)}
+.ib:active{transform:translateY(0) scale(.97)}
+
+h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-height:1.15}
+.sub{color:var(--muted);font-size:14.5px;font-weight:500;letter-spacing:-.005em;margin-bottom:20px;line-height:1.45}
+
+.card{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:15px 16px;margin-bottom:11px;
+  cursor:pointer;position:relative;
+  box-shadow:var(--sh-xs);
+  transition:transform .2s var(--ease),box-shadow .25s var(--ease),border-color .2s var(--ease);
+}
+.card:hover{
+  border-color:rgba(94,23,235,.28);
+  transform:translateY(-3px);
+  box-shadow:var(--sh-md);
+}
+.card:active{transform:translateY(-1px) scale(.995)}
+.ic{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:23px;
+  background:var(--grad-soft);color:var(--accent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 0 0 1px rgba(94,23,235,.08),0 4px 10px rgba(94,23,235,.10);
+  flex:0 0 auto;
+}
+.card .t{font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.25}
+.card .d{font-size:12.5px;font-weight:500;color:var(--muted);letter-spacing:-.005em;margin-top:2px;line-height:1.35}
+.chev{
+  margin-left:auto;color:var(--muted-2);font-size:20px;font-weight:700;flex:0 0 auto;
+  transition:transform .2s var(--ease),color .2s var(--ease);
+}
+.card:hover .chev{color:var(--accent);transform:translateX(3px)}
+
+.cgh{
+  font-size:11.5px;font-weight:800;color:var(--muted);
+  letter-spacing:.14em;text-transform:uppercase;margin:26px 4px 11px;
+}
+
+.field{margin-bottom:14px}
+label{
+  display:block;font-size:12.5px;font-weight:700;color:var(--text-2);
+  letter-spacing:-.005em;margin:0 0 6px 3px;
+}
+input[type=text],input[type=number],input[type=date],input[type=email],input[type=password]{
+  width:100%;height:48px;
+  border:1px solid var(--line-2);border-radius:13px;
+  padding:0 14px;font-family:inherit;font-size:15px;font-weight:600;letter-spacing:-.01em;
+  background:var(--surface-2);color:var(--text);
+  transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease);
+}
+input::placeholder{color:var(--muted-2);font-weight:500}
+input[type=text]:hover,input[type=number]:hover,input[type=date]:hover,input[type=email]:hover,input[type=password]:hover{border-color:#d6d7e0}
+input:focus{
+  outline:none;border-color:var(--accent);background:var(--card);
+  box-shadow:var(--ring);
+}
+input.bad,input.bad:focus{border-color:var(--danger);background:var(--danger-soft);box-shadow:0 0 0 4px rgba(229,72,77,.13)}
+.ifield{position:relative}
+.ifield>svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted-2);pointer-events:none;transition:color .18s var(--ease)}
+.ifield input{padding-left:42px}
+.ifield:focus-within>svg{color:var(--accent)}
+
+.sec{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:17px 16px;margin-bottom:15px;
+  box-shadow:var(--sh-sm);
+}
+.sec h3{
+  font-size:15px;font-weight:800;letter-spacing:-.02em;
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--text);
+}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+
+.itemrow{display:grid;grid-template-columns:1fr 50px 82px 32px;gap:8px;margin-bottom:9px;align-items:center}
+.itemrow input{height:44px;padding:0 10px;font-size:14px;border-radius:11px}
+.del{
+  height:44px;border:1px solid var(--danger-soft);background:var(--danger-soft);
+  color:var(--danger);border-radius:11px;font-size:17px;cursor:pointer;font-family:inherit;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s var(--ease),transform .12s var(--ease),box-shadow .15s var(--ease);
+}
+.del:hover{background:#fbdbde;box-shadow:0 2px 8px rgba(229,72,77,.18)}
+.del:active{transform:scale(.92)}
+.additem{
+  width:100%;height:46px;
+  border:1.5px dashed rgba(94,23,235,.42);background:var(--grad-soft);color:var(--accent-strong);
+  border-radius:13px;font-family:inherit;font-weight:700;font-size:14px;letter-spacing:-.01em;cursor:pointer;
+  transition:background .18s var(--ease),border-color .18s var(--ease),box-shadow .18s var(--ease),transform .12s var(--ease);
+}
+.additem:hover{border-color:var(--accent);box-shadow:0 6px 16px rgba(94,23,235,.14)}
+.additem:active{transform:scale(.985)}
+.ihead{
+  display:grid;grid-template-columns:1fr 50px 82px 32px;gap:8px;
+  font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted-2);margin-bottom:7px;padding:0 4px;
+}
+
+details summary{
+  cursor:pointer;font-size:13.5px;color:var(--accent);font-weight:700;letter-spacing:-.01em;
+  margin-top:6px;list-style:none;display:inline-flex;align-items:center;gap:5px;
+  transition:color .15s var(--ease);
+}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"\2304";font-size:15px;line-height:1;transition:transform .2s var(--ease)}
+details[open] summary::after{transform:rotate(180deg)}
+details summary:hover{color:var(--accent-strong)}
+
+.total{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:18px;font-weight:800;letter-spacing:-.025em;
+  padding:14px;margin-top:4px;border-radius:14px;
+  background:var(--grad-soft);
+  box-shadow:inset 0 0 0 1px rgba(94,23,235,.10);
+}
+
+.chk{
+  display:flex;align-items:center;gap:10px;
+  font-size:14.5px;font-weight:600;letter-spacing:-.01em;color:var(--text-2);
+  cursor:pointer;padding:7px 3px;
+}
+.chk input{
+  width:21px;height:21px;border-radius:7px;accent-color:var(--accent);cursor:pointer;flex:0 0 auto;
+}
+
+.btn{
+  width:100%;height:54px;
+  background:var(--grad);color:#fff;border:none;border-radius:15px;
+  font-family:inherit;font-size:16px;font-weight:700;letter-spacing:-.01em;cursor:pointer;
+  box-shadow:var(--sh-accent-soft), inset 0 1px 0 rgba(255,255,255,.22);
+  transition:transform .16s var(--ease),box-shadow .22s var(--ease),filter .18s var(--ease);
+}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--sh-accent), inset 0 1px 0 rgba(255,255,255,.25);filter:saturate(1.05)}
+.btn:active{transform:translateY(0) scale(.985);box-shadow:var(--sh-accent-soft)}
+.btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none;filter:grayscale(.12);transform:none}
+.btn.ghost{
+  background:var(--card);color:var(--accent-strong);
+  border:1px solid var(--line-2);
+  box-shadow:var(--sh-xs);
+}
+.btn.ghost:hover{border-color:rgba(94,23,235,.4);background:var(--accent-tint);box-shadow:var(--sh-sm);filter:none;transform:none}
+
+.back{
+  background:none;border:none;color:var(--muted);
+  font-family:inherit;font-size:14.5px;font-weight:700;letter-spacing:-.01em;cursor:pointer;
+  padding:16px 0 6px;display:inline-flex;align-items:center;gap:4px;
+  transition:color .15s var(--ease),transform .15s var(--ease);
+}
+.back:hover{color:var(--accent-strong);transform:translateX(-2px)}
+
+.hidden{display:none}
+
+.note{font-size:12.5px;font-weight:500;color:var(--muted);text-align:center;margin:18px 0;line-height:1.6}
+.note a{color:var(--accent-strong);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(94,23,235,.25)}
+.note a:hover{border-bottom-color:var(--accent)}
+
+.ok{text-align:center;padding:42px 12px;animation:rise .5s var(--ease)}
+.ok .em{
+  font-size:60px;display:inline-flex;align-items:center;justify-content:center;
+  width:104px;height:104px;border-radius:50%;margin-bottom:6px;
+  background:var(--ok-soft);box-shadow:0 10px 28px rgba(10,157,110,.18);
+  animation:pop .5s var(--ease);
+}
+.ok h2{margin:16px 0 6px}
+
+.spin{
+  display:inline-block;width:18px;height:18px;
+  border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;
+  animation:sp .7s linear infinite;vertical-align:-3px;margin-right:9px;
+}
+@keyframes sp{to{transform:rotate(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+.banner{
+  background:linear-gradient(135deg,#eafaf2,var(--ok-soft));
+  border:1px solid var(--ok-line);color:#0a7a52;
+  border-radius:14px;padding:13px 15px;font-size:13px;font-weight:600;letter-spacing:-.005em;line-height:1.5;
+  margin-bottom:18px;box-shadow:0 4px 14px rgba(10,157,110,.08);
+}
+
+.rline{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;
+  padding:13px 4px;border-bottom:1px solid var(--line);
+  font-size:15px;font-weight:500;letter-spacing:-.01em;color:var(--text-2);
+}
+.rline:last-child{border:none}
+.rline b{font-weight:800;color:var(--text);letter-spacing:-.02em}
+
+.chat{display:flex;flex-direction:column;gap:11px;padding:10px 0 14px;min-height:50vh}
+.msg{
+  max-width:86%;padding:12px 15px;border-radius:18px;
+  font-size:14.5px;font-weight:500;letter-spacing:-.005em;line-height:1.55;white-space:pre-wrap;
+  box-shadow:var(--sh-xs);animation:rise .35s var(--ease);
+}
+.msg.u{
+  background:var(--grad);color:#fff;
+  align-self:flex-end;border-bottom-right-radius:6px;
+  box-shadow:var(--sh-accent-soft);
+}
+.msg.a{
+  background:var(--card);border:1px solid var(--line);color:var(--text);
+  align-self:flex-start;border-bottom-left-radius:6px;
+}
+
+.airow{
+  position:fixed;bottom:80px;left:0;right:0;z-index:35;
+  background:rgba(247,248,251,.84);
+  backdrop-filter:saturate(180%) blur(18px);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  border-top:1px solid var(--line);padding:11px 0 12px;
+}
+.airow .wrap{display:flex;gap:9px;align-items:center}
+.airow input{flex:1;height:48px;background:var(--card);box-shadow:var(--sh-xs)}
+.aisend{
+  width:50px;height:48px;border:none;flex:0 0 auto;
+  background:var(--grad);color:#fff;border-radius:13px;font-size:19px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--sh-accent-soft);
+  transition:transform .14s var(--ease),box-shadow .2s var(--ease),filter .18s var(--ease);
+}
+.aisend:hover{transform:translateY(-1px);box-shadow:var(--sh-accent);filter:saturate(1.05)}
+.aisend:active{transform:scale(.93)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{
+  background:var(--card);border:1px solid var(--line-2);border-radius:999px;
+  padding:8px 14px;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:-.005em;
+  cursor:pointer;color:var(--accent-strong);
+  box-shadow:var(--sh-xs);
+  transition:background .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease),transform .12s var(--ease);
+}
+.chip:hover{background:var(--accent-tint);border-color:rgba(94,23,235,.4);box-shadow:var(--sh-sm);transform:translateY(-1px)}
+.chip:active{transform:scale(.95)}
+
+.nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  height:72px;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--line);
+  box-shadow:0 -4px 24px rgba(40,32,90,.06);
+  display:flex;align-items:stretch;
+  padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right));
+}
+.nav button{
+  position:relative;flex:1;background:none;border:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--muted);font-family:inherit;font-size:21px;cursor:pointer;
+  border-radius:14px;
+  transition:color .2s var(--ease),background .2s var(--ease),transform .14s var(--ease);
+}
+.nav button::after{
+  content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%) scaleX(0);
+  width:28px;height:3px;border-radius:0 0 4px 4px;background:var(--grad);
+  transition:transform .26s var(--ease);
+}
+.nav button:active{transform:scale(.93)}
+.nav button.active{color:var(--accent);background:var(--accent-tint)}
+.nav button.active::after{transform:translateX(-50%) scaleX(1)}
+.nav button.active .nl{color:var(--accent-strong)}
+.nav .nl{font-size:10.5px;font-weight:700;letter-spacing:.01em;color:inherit}
+/* ===== Десктоп: төмендегі нав → сол жақ sidebar ===== */
+@media(min-width:900px){
+  body{padding-bottom:0;padding-left:252px}
+  .wrap{max-width:900px}
+  header .wrap, .airow .wrap{max-width:900px}
+  /* карталар — 2 бағанға (бос орынды толтырады, ыңғайлы) */
+  #cats,#calc-list,#conv-list{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}
+  #cats .card,#calc-list .card,#conv-list .card{margin-bottom:0}
+  #conv-list .cgh{grid-column:1/-1}
+  /* форма/нәтиже — оқуға ыңғайлы ені */
+  #form,#result,#calc-form,#acc-auth,#acc-reset,#tab-ai{max-width:660px}
+  #cf-result{margin-top:14px}
+  .nav{
+    flex-direction:column;top:0;bottom:0;left:0;right:auto;
+    width:252px;height:100vh;align-items:stretch;justify-content:flex-start;
+    border-top:none;border-right:1px solid var(--line);
+    box-shadow:1px 0 24px rgba(40,32,90,.05);gap:6px;
+    padding:78px 16px 18px;background:rgba(255,255,255,.94);
+  }
+  .nav button{
+    flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:14px;
+    height:50px;width:100%;border-radius:13px;padding:0 15px;font-size:20px;
+  }
+  .nav button:hover{background:var(--accent-tint)}
+  .nav button::after{display:none}
+  .nav button.active{background:var(--accent-soft)}
+  .nav .nl{font-size:14.5px}
+  .airow{left:252px;bottom:0}
+  #tab-ai{padding-bottom:94px}
+}
+/* ===== SVG иконкалар + қолжетімділік (ui-ux-pro-max) ===== */
+.ic svg{width:24px;height:24px;display:block}
+/* login-gate: кірмегенше тек экран входа */
+body.gated .nav{display:none}
+body.gated header{display:none}
+body.gated{
+  padding:0;
+  background:
+    radial-gradient(40% 50% at 18% 22%,rgba(122,92,255,.85),transparent 60%),
+    radial-gradient(45% 55% at 82% 18%,rgba(90,63,219,.80),transparent 62%),
+    radial-gradient(50% 60% at 78% 85%,rgba(255,138,200,.55),transparent 60%),
+    radial-gradient(55% 65% at 12% 88%,rgba(98,68,236,.70),transparent 62%),
+    radial-gradient(60% 70% at 50% 50%,rgba(255,255,255,.45),transparent 65%),
+    linear-gradient(135deg,#8a5cff 0%,#5e17eb 45%,#520fdb 100%);
+  background-attachment:fixed;
+}
+body.gated .wrap{max-width:452px}
+body.gated #tab-account{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:26px 0}
+body.gated #acc-h,body.gated #acc-intro{display:none}
+body.gated #acc-auth>.sec{
+  background:rgba(255,255,255,.62);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:28px;
+  box-shadow:0 1px 0 0 rgba(255,255,255,.7) inset,0 30px 70px -25px rgba(40,32,90,.55),0 10px 30px -15px rgba(40,32,90,.35);
+  padding:30px 26px 26px;margin:0;
+  animation:cardRise .8s var(--ease) both;
+}
+@keyframes cardRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.acard-top{display:none}
+body.gated .acard-top{display:block}
+.acard-brand{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.acard-mark{width:44px;height:44px;border-radius:13px;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 16px rgba(94,23,235,.42);flex:0 0 auto}
+.acard-mark svg{width:23px;height:23px;color:#fff}
+.acard-word{font-size:21px;font-weight:800;letter-spacing:-.03em;color:#1a1730}
+.acard-logo{height:29px;width:auto;display:block}
+.acard-lang{margin-left:auto;height:34px;padding:0 13px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.95);font-family:inherit;font-weight:700;font-size:12.5px;color:#3d3a52;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(40,32,90,.08);transition:background .18s var(--ease),transform .18s var(--ease)}
+.acard-lang:hover{background:#fff;transform:translateY(-1px)}
+.acard-lang svg{width:14px;height:14px;color:#7a7790}
+.acard-h{font-size:24px;font-weight:800;letter-spacing:-.03em;color:#171430;margin-bottom:6px;line-height:1.15}
+.acard-sub{font-size:13.5px;font-weight:500;color:#5b5870;line-height:1.5;margin-bottom:20px}
+body.gated #acc-auth .ifield input{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.9)}
+body.gated #acc-auth .ifield input:hover{border-color:#fff}
+body.gated #acc-auth .ifield input:focus{background:#fff;border-color:var(--accent)}
+body.gated #acc-auth label{color:#46435c}
+body.gated #acc-auth .ifield>svg{color:#8a87a0}
+body.gated #acc-auth .ifield:focus-within>svg{color:var(--accent)}
+body.gated #acc-auth .note{color:#5b5870}
+body.gated #acc-auth .note a{color:var(--accent-ink);font-weight:700}
+body.gated .g-or{margin:20px 0;color:#5f5c75}
+body.gated .g-or::before,body.gated .g-or::after{background:rgba(91,80,130,.25)}
+.g-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:16px 0}
+#g-signin{display:flex;justify-content:center}
+.g-or::before,.g-or::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ===== Login экранын жетілдіру (glass карта ішінде) ===== */
+body.gated #acc-auth>.sec{padding:32px 28px 28px}
+body.gated .acard-logo{height:31px}
+body.gated .acard-h{font-size:26px;letter-spacing:-.035em;margin-bottom:7px}
+body.gated .acard-sub{font-size:13.5px;margin-bottom:22px}
+body.gated #acc-auth .field{margin-bottom:15px}
+body.gated #acc-auth label{font-size:12px;font-weight:700;letter-spacing:.01em;color:#46435c;margin:0 0 7px 3px}
+body.gated #acc-auth .ifield input{
+  height:52px;border-radius:15px;font-size:15.5px;padding-left:46px;
+  background:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.85);
+  box-shadow:inset 0 1px 2px rgba(40,32,90,.05);
+  transition:border-color .18s var(--ease),box-shadow .2s var(--ease),background .2s var(--ease),transform .18s var(--ease);
+}
+body.gated #acc-auth .ifield input:hover{background:rgba(255,255,255,.78);border-color:#fff}
+body.gated #acc-auth .ifield input:focus{
+  background:#fff;border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(94,23,235,.16),0 8px 20px -10px rgba(94,23,235,.45);
+  transform:translateY(-1px);
+}
+body.gated #acc-auth .ifield>svg{left:16px;width:19px;height:19px}
+body.gated #acc-auth .btn{
+  height:56px;border-radius:16px;font-size:16px;margin-top:4px;
+  background:linear-gradient(135deg,#7a3ef0 0%,#5e17eb 50%,#4c12bf 100%);
+  box-shadow:0 8px 22px -8px rgba(94,23,235,.65),inset 0 1px 0 rgba(255,255,255,.28);
+}
+body.gated #acc-auth .btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 30px -8px rgba(94,23,235,.7),inset 0 1px 0 rgba(255,255,255,.32);
+}
+body.gated #acc-auth .btn:active{transform:translateY(0) scale(.985)}
+body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!important;overflow:hidden}
+.nav .ni{display:flex;align-items:center;justify-content:center;height:24px}
+.nav .ni svg{width:24px;height:24px}
+.nav.nav-6 button .nl{font-size:9.5px}
+@media(min-width:900px){.nav.nav-6 .nl{font-size:13px}}
+
+.adm-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:600px){.adm-stats{grid-template-columns:repeat(3,1fr)}}
+.adm-stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 12px;text-align:center;box-shadow:var(--sh-xs)}
+.adm-stat b{display:block;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1.1}
+.adm-stat span{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:4px;display:block}
+.adm-stat small{display:block;font-size:10.5px;color:var(--accent2);font-weight:700;margin-top:3px}
+.adm-search{width:100%;height:44px;border:1px solid var(--line-2);border-radius:12px;padding:0 14px;font-family:inherit;font-size:14px;background:var(--card);margin-bottom:12px}
+.adm-search:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.adm-user{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--sh-xs)}
+.adm-user-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.adm-user-email{font-weight:700;font-size:14px;word-break:break-all}
+.adm-badge{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.adm-badge.pro{background:var(--accent-soft);color:var(--accent-strong)}
+.adm-badge.free{background:var(--line-soft);color:var(--muted)}
+.adm-badge.admin{background:#fef3c7;color:#b45309}
+.adm-user-meta{font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:10px}
+.adm-user-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.adm-user-actions select{flex:1;min-width:90px;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-family:inherit;font-size:13px;font-weight:600;padding:0 8px}
+.adm-user-actions .btn-mini{height:36px;padding:0 12px;width:auto;font-size:12.5px;border-radius:10px}
+.adm-section{margin-bottom:20px}
+.adm-section h3{font-size:15px;font-weight:800;margin-bottom:10px;color:var(--text-2)}
+.adm-form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:16px;box-shadow:var(--sh-xs)}
+.adm-form .field{margin-bottom:10px}
+.adm-form label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.adm-form input{width:100%;height:42px;border:1px solid var(--line-2);border-radius:10px;padding:0 12px;font-family:inherit;font-size:14px;background:var(--card)}
+.adm-form input:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.adm-del{background:var(--danger-soft)!important;color:var(--danger)!important;border-color:#f3c0c0!important}
+.adm-you{font-size:11px;color:var(--accent);font-weight:700}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<noscript>
+  <div style="max-width:560px;margin:40px auto;padding:24px;font-family:system-ui,sans-serif;
+              background:#fff;border:1px solid #e9eaef;border-radius:16px;color:#0d0f14;line-height:1.6">
+    <h1 style="font-size:20px;margin:0 0 8px">Qujat</h1>
+    <p style="margin:0 0 8px">Для работы приложения нужен включённый JavaScript.</p>
+    <p style="margin:0;color:#5f6573">Включите JavaScript в настройках браузера или откройте бота
+      <a href="https://t.me/Qujatkz_bot" style="color:#5314d4">@Qujatkz_bot</a> в Telegram.</p>
+  </div>
+</noscript>
+<header><div class="wrap">
+  <div class="logo" role="button" tabindex="0" onclick="goHome()" style="cursor:pointer" title="На главную" aria-label="На главную"><img src="qujat-logo.png" alt="Qujat"></div>
+  <button class="ib" id="langbtn" onclick="toggleLang()">🌐 RU</button>
+</div></header>
+
+<div class="wrap">
+  <!-- ===== TAB: DOCUMENTS ===== -->
+  <div id="tab-docs">
+    <div id="home">
+      <h2 id="h-title"></h2><p class="sub" id="h-sub"></p>
+      <div class="banner" id="h-banner"></div>
+      <div id="cats"></div>
+    </div>
+    <div id="form" class="hidden">
+      <button class="back" onclick="goDocsHome()">‹ <span id="f-back"></span></button>
+      <h2 id="f-title"></h2><p class="sub" id="f-sub"></p>
+      <div class="sec">
+        <h3>🏢 <span id="s-seller"></span></h3>
+        <div class="field"><label id="l-sname"></label><input type="text" id="s_name" autocomplete="organization"></div>
+        <div class="row2">
+          <div class="field"><label id="l-sbin"></label><input type="text" id="s_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}"></div>
+          <div class="field"><label id="l-sfio"></label><input type="text" id="s_fio"></div>
+        </div>
+        <details><summary id="s-bank"></summary><div style="margin-top:10px">
+          <div class="field"><label id="l-bank"></label><input type="text" id="s_bank_name"></div>
+          <div class="row2">
+            <div class="field"><label>ИИК (IBAN)</label><input type="text" id="s_iik" maxlength="20" placeholder="KZ..."></div>
+            <div class="field"><label>БИК</label><input type="text" id="s_bik" maxlength="8"></div>
+          </div>
+          <div class="field"><label id="l-kaspi"></label><input type="text" id="s_kaspi_link" placeholder="https://pay.kaspi.kz/pay/..."></div>
+        </div></details>
+      </div>
+      <div class="sec">
+        <h3>👤 <span id="s-buyer"></span></h3>
+        <div class="field"><label id="l-bname"></label><input type="text" id="b_name"></div>
+        <div class="field"><label id="l-bbin"></label><input type="text" id="b_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}"></div>
+      </div>
+      <div class="sec"><div class="row2">
+        <div class="field"><label id="l-num"></label><input type="text" id="d_number" value="1"></div>
+        <div class="field"><label id="l-date"></label><input type="date" id="d_date"></div>
+      </div></div>
+      <div class="sec">
+        <h3>📋 <span id="s-items"></span></h3>
+        <div class="ihead"><span id="ih-name"></span><span id="ih-unit"></span><span id="ih-qty"></span><span></span></div>
+        <div id="items"></div>
+        <button class="additem" onclick="addItem()" id="b-additem"></button>
+        <label class="chk" style="margin-top:10px"><input type="checkbox" id="d_vat"><span id="l-vat"></span></label>
+        <div class="total"><span id="l-total"></span><span id="total">0 ₸</span></div>
+      </div>
+      <button class="btn" id="genbtn" onclick="generate()"></button>
+      <p class="note" id="f-note"></p>
+    </div>
+    <div id="result" class="hidden"><div class="ok">
+      <div class="em">✅</div><h2 id="r-title"></h2><p class="sub" id="r-sub"></p>
+      <a class="btn" id="r-open" target="_blank" style="display:block;text-decoration:none;line-height:50px;margin-bottom:10px"></a>
+      <a class="btn ghost" id="r-download" style="display:block;text-decoration:none;line-height:48px;margin-bottom:10px"></a>
+      <button class="btn ghost" id="r-share" onclick="shareDoc()" style="display:none;margin-bottom:10px"></button>
+      <button class="btn ghost" onclick="goDocsHome()" id="r-new" style="margin-bottom:10px"></button>
+      <button class="btn ghost" onclick="goHome()" id="r-home"></button>
+    </div></div>
+    <!-- динамикалық форма (барлық басқа құжаттар) -->
+    <div id="xform" class="hidden">
+      <button class="back" onclick="goDocsHome()">‹ <span id="xf-back"></span></button>
+      <h2 id="xf-title"></h2>
+      <div class="sec"><h3 id="xf-seller-h"></h3><div id="xf-seller"></div></div>
+      <div class="sec"><div id="xf-fields"></div></div>
+      <button class="btn" id="xf-gen" onclick="genXDoc()"></button>
+      <p class="note" id="xf-note"></p>
+    </div>
+  </div>
+
+  <!-- ===== TAB: CALCULATORS ===== -->
+  <div id="tab-calc" class="hidden">
+    <div id="calc-home">
+      <h2 id="c-title"></h2><p class="sub" id="c-sub"></p>
+      <div id="calc-list"></div>
+    </div>
+    <div id="calc-form" class="hidden">
+      <button class="back" onclick="goCalcHome()">‹ <span id="c-back"></span></button>
+      <h2 id="cf-title"></h2>
+      <div class="sec" id="cf-fields"></div>
+      <button class="btn" id="c-run" onclick="runCalc()"></button>
+      <div class="sec hidden" id="cf-result" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: AI ===== -->
+  <div id="tab-ai" class="hidden">
+    <h2 id="a-title" style="margin-bottom:2px"></h2><p class="sub" id="a-sub"></p>
+    <p class="note" id="a-note" style="text-align:left;margin:-6px 0 10px;color:var(--muted)"></p>
+    <div class="chips" id="a-chips"></div>
+    <div class="chat" id="chat"></div>
+  </div>
+
+  <!-- ===== TAB: CONVERT ===== -->
+  <div id="tab-convert" class="hidden">
+    <h2 id="conv-title"></h2><p class="sub" id="conv-sub"></p>
+    <div id="conv-list"></div>
+    <input type="file" id="conv-input" class="hidden" onchange="onConvFiles()">
+    <p class="note" id="conv-status" style="font-weight:600"></p>
+  </div>
+
+  <!-- ===== TAB: ACCOUNT ===== -->
+  <div id="tab-account" class="hidden">
+    <h2 id="acc-h"></h2><p class="sub" id="acc-intro"></p>
+    <div id="acc-reset" class="hidden">
+      <div class="sec">
+        <h3 id="reset-h"></h3><p class="sub" id="reset-sub"></p>
+        <div class="field"><label id="la-reset"></label><input type="password" id="rs_pass"></div>
+        <button class="btn" id="a-resetbtn" onclick="doReset()"></button>
+      </div>
+    </div>
+    <div id="acc-auth" class="hidden">
+      <div class="sec">
+        <div class="acard-top">
+          <div class="acard-brand">
+            <img class="acard-logo" src="qujat-logo.png" alt="Qujat">
+            <button class="acard-lang" id="acc-langbtn" onclick="toggleLang()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="acc-lang-t">RU</span></button>
+          </div>
+          <h2 class="acard-h" id="acc-card-h"></h2>
+          <p class="acard-sub" id="acc-card-sub"></p>
+        </div>
+        <div id="acc-reg">
+          <div class="field"><label id="la-name"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" id="a_name"></div></div>
+          <div class="field"><label id="la-email-r"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><input type="email" id="ar_email" inputmode="email"></div></div>
+          <div class="field"><label id="la-pass-r"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" id="ar_pass"></div></div>
+          <button class="btn" id="a-regbtn" onclick="doRegister()"></button>
+          <p class="note" id="a-consent" style="font-size:11px;line-height:1.45;margin-top:8px"></p>
+          <p class="note"><a id="a-to-login" style="cursor:pointer" onclick="acctab('login')"></a></p>
+        </div>
+        <div id="acc-login" class="hidden">
+          <div class="field"><label id="la-email-l"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><input type="email" id="al_email" inputmode="email"></div></div>
+          <div class="field"><label id="la-pass-l"></label><div class="ifield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" id="al_pass"></div></div>
+          <button class="btn" id="a-loginbtn" onclick="doLogin()"></button>
+          <p class="note"><a id="a-to-reg" style="cursor:pointer" onclick="acctab('reg')"></a></p>
+          <p class="note"><a id="a-forgot" style="cursor:pointer" onclick="doForgot()"></a></p>
+        </div>
+        <div id="g-btn-wrap" class="hidden">
+          <div class="g-or"><span id="g-or-t"></span></div>
+          <div id="g-signin" style="display:flex;justify-content:center"></div>
+        </div>
+      </div>
+    </div>
+    <div id="acc-user" class="hidden">
+      <div class="sec" style="text-align:center">
+        <div style="font-size:46px">🙂</div>
+        <p class="sub" id="acc-welcome" style="margin:6px 0 2px"></p>
+        <h3 id="acc-name" style="margin:0 0 2px"></h3>
+        <p class="sub" id="acc-email" style="margin-bottom:14px"></p>
+        <button class="btn ghost" onclick="doLogout()" id="a-logout"></button>
+      </div>
+      <div class="sec" id="acc-sub" style="text-align:center"></div>
+      <div class="sec">
+        <h3>📁 <span id="acc-hist-t"></span></h3>
+        <div id="acc-history"></div>
+      </div>
+      <div class="sec" id="acc-assets">
+        <h3>🖋 <span id="acc-assets-t"></span></h3>
+        <p class="sub" id="acc-assets-hint" style="margin-bottom:12px"></p>
+        <div id="assets-rows"></div>
+        <input type="file" id="asset-input" accept="image/*" class="hidden" onchange="onAssetFile()">
+      </div>
+      <div class="sec" id="acc-link">
+        <h3 id="acc-link-t"></h3>
+        <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
+        <div id="acc-link-form">
+          <p class="sub" id="acc-link-hint" style="margin-bottom:8px"></p>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="lt_code" inputmode="numeric" placeholder="000000" style="flex:1">
+            <button class="btn" style="width:auto;padding:0 18px" id="a-linkbtn" onclick="doLinkTg()"></button>
+          </div>
+        </div>
+      </div>
+      <details class="sec">
+        <summary id="acc-chpass-t" style="color:var(--accent);font-weight:700"></summary>
+        <div style="margin-top:12px">
+          <div class="field"><label id="la-old"></label><input type="password" id="cp_old"></div>
+          <div class="field"><label id="la-new"></label><input type="password" id="cp_new"></div>
+          <button class="btn" id="a-chpass" onclick="doChangePass()"></button>
+        </div>
+      </details>
+      <button class="btn ghost" style="color:var(--danger);border-color:#f3c0c0" onclick="doDelete()" id="a-delete"></button>
+    </div>
+    <!-- Pro / жазылым экраны -->
+    <div id="pro" class="hidden">
+      <button class="back" onclick="goAccount()">‹ <span id="pro-back"></span></button>
+      <h2 id="pro-h"></h2><p class="sub" id="pro-sub"></p>
+      <div id="pro-tariffs"></div>
+      <div class="sec">
+        <p class="sub" id="pro-pay-hint" style="margin-bottom:10px"></p>
+        <a class="btn" id="pro-kaspi" target="_blank" style="display:block;text-decoration:none;line-height:50px;margin-bottom:12px"></a>
+        <button class="btn ghost" id="pro-receipt-btn" onclick="pickReceipt()"></button>
+        <input type="file" id="pro-receipt" accept="application/pdf" class="hidden" onchange="onReceiptFile()">
+        <p class="note" id="pro-status" style="font-weight:600;margin-top:8px"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="airow hidden" id="airow"><div class="wrap">
+  <input type="text" id="ai-input" autocomplete="off">
+  <button class="aisend" onclick="sendAI()">➤</button>
+</div></div>
+
+<div class="nav" id="nav"></div>
+
+<script>
+  const API='https://qujat-production.up.railway.app';
+  try{const tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}}catch(e){}
+  const $=id=>document.getElementById(id);
+  /* Нативті iOS (Capacitor) — Apple 3.1.1/3.1.3: ішкі төлем тек Apple IAP арқылы, сыртқы Kaspi-ді ЖАСЫРАМЫЗ */
+  const NATIVE_IOS=!!(window.Capacitor&&typeof window.Capacitor.getPlatform==='function'&&window.Capacitor.getPlatform()==='ios');
+  /* Кез келген нативті қосымша (iOS не Android) — монетизация кейінге қалды, Pro/төлемді жасырамыз */
+  const NATIVE_APP=!!(window.Capacitor&&typeof window.Capacitor.isNativePlatform==='function'&&window.Capacitor.isNativePlatform());
+
+  /* ---- Auth токен (Bearer): Safari/iPhone/Telegram-де cross-site cookie бұғатталғанда ---- */
+  let authToken=localStorage.getItem('qujat_token')||'';
+  function setToken(t){authToken=t||'';if(t){localStorage.setItem('qujat_token',t);}else{localStorage.removeItem('qujat_token');}}
+  function afetch(url,opts){
+    opts=opts||{};
+    if(!('credentials' in opts))opts.credentials='include';
+    const h=Object.assign({},opts.headers||{});
+    if(authToken)h['Authorization']='Bearer '+authToken;
+    opts.headers=h;
+    return fetch(url,opts);
+  }
+
+  const STR={
+    ru:{nav:["Документы","Расчёты","ИИ","Конвертер","Профиль"],
+      htitle:"Создайте документ",hsub:"Бесплатно, прямо в браузере.",
+      hbanner:"✓ Заполните форму — скачайте готовый PDF",
+      back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
+      sname:"Название (ИП/ТОО) *",sbin:"БИН/ИИН",sfio:"ФИО руководителя",bank:"Банковские реквизиты (необязательно)",
+      bankname:"Банк",kaspi:"Ссылка Kaspi (для QR)",bname:"Название клиента",bbin:"БИН/ИИН клиента",
+      num:"№ документа",date:"Дата",ihname:"Наименование",ihunit:"Кол-во",ihqty:"Цена",
+      additem:"+ Добавить позицию",vat:"С НДС 16%",total:"Итого:",gen:"📄 Создать PDF",genwait:"Создаю…",
+      fnote:"Данные поставщика сохранятся в браузере.",itemname:"Наименование",
+      rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"👁 Открыть PDF",rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",rhome:"🏠 На главную",rshare:"📤 Поделиться",
+      errseller:"Укажите название поставщика",erritems:"Добавьте позицию",errnet:"Ошибка сети. Попробуйте ещё раз.",fillreq:"Заполните обязательные поля (отмечены *)",
+      ctitle:"Калькуляторы 2026",csub:"Налоги, зарплата, режимы — по ставкам РК 2026.",crun:"Рассчитать",cresult:"Результат",
+      convtitle:"Конвертер файлов",convsub:"Конвертируйте файлы прямо в браузере, бесплатно.",convwait:"Конвертирую…",convdone:"Готово! Файл скачан.",converr:"Не удалось — проверьте файл.",
+      atitle:"ИИ-помощник",asub:"Спросите про налоги, документы, бухгалтерию РК 2026.",
+      aplaceholder:"Ваш вопрос…",agreet:"Здравствуйте! Я помощник Qujat. Спросите про налоги 2026, документы или бухгалтерию РК.",
+      achips:["Какой налог у ИП?","Когда сдавать 910?","ИП или ТОО?","Ставка НДС 2026?"],
+      ainote:"⚠️ ИИ может ошибаться. Точные данные — на kgd.gov.kz.",
+      accintro:"Войдите — сессия будет работать на любом устройстве (без SMS).",
+      consent:'Регистрируясь, вы принимаете <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">оферту</a> и <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">политику конфиденциальности</a>.',
+      proh:"Qujat Pro",prosub:"Безлимит документов, налоговые формы, ИИ-помощник, печать и подпись — без ограничений.",
+      prolimit:"Лимит бесплатных документов в этом месяце исчерпан. Оформите Pro:",
+      probuy:"💎 Оформить Pro",proextend:"Продлить Pro",prountil:"Активен до",
+      profree:"Бесплатный тариф",prousedl:"Документов в этом месяце:",proleft:"осталось",
+      propayhint:"Выберите тариф, оплатите через Kaspi и загрузите чек — Pro включится автоматически.",
+      prokaspi:"Оплатить через Kaspi",proreceipt:"📎 Загрузить чек Kaspi",prochoose:"Сначала выберите тариф",
+      proverify:"Проверяю чек…",prook:"Готово! Pro активирован 🎉",pronokaspi:"Оплата скоро будет. Напишите в @Qujatkz_bot.",
+      proios:"Подписка Pro оформляется через App Store. Появится в ближайшем обновлении приложения.",
+      accreg:"Регистрация",acclogin:"Вход",accname:"Имя",accemail:"Email",accpass:"Пароль (мин. 6)",
+      accregbtn:"Создать аккаунт",accloginbtn:"Войти",acctoreg:"Нет аккаунта? Регистрация",
+      acctologin:"Уже есть аккаунт? Войти",acclogout:"Выйти",accwelcome:"Вы вошли как",
+      acchist:"История документов",accnohist:"Пока пусто — создайте документ",accrepeat:"Повторить",
+      assetst:"Печать и подпись",assetshint:"Загрузите фото печати и подписи один раз — они автоматически встанут на все PDF-документы.",
+      assetstamp:"Печать",assetsign:"Подпись",assetup:"Загрузить",assetre:"Заменить",assetdel:"Удалить",
+      assetok:"✓ Загружено",assetno:"Не загружено",assetuperr:"Не удалось — нужно чёткое фото на светлом фоне",
+      accchpass:"🔑 Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
+      accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
+      forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
+      resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
+      linktg:"🔗 Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"💎 Premium активен",
+      navadmin:"Админ",admTitle:"Управление Qujat",admSub:"Смотрите кто зарегистрировался, создавайте и удаляйте аккаунты",
+      admSecAdd:"➕ Создать пользователя",admSecUsers:"👥 Кто зарегистрировался",admSecStats:"📊 Статистика",
+      admSecWeb:"🌐 Веб-приложение",admSecTg:"🤖 Telegram-бот",
+      admCreateBtn:"Создать аккаунт",admCreated:"Пользователь создан ✓",
+      admDelete:"Удалить",admDelConfirm:"Удалить {email} и все его данные?",admDeleted:"Удалён ✓",
+      admSelf:"это вы",admRegistered:"Зарегистрировался",
+      admWebUsers:"Пользователи",admWebPrem:"Pro",admWebDocs:"Документы",admWebLinks:"Telegram связан",
+      admKaspi:"Kaspi чеки",admNewToday:"+ сегодня",
+      admTgUsers:"Пользователи",admTgPrem:"Premium",admTgDocs:"Документы",admShop:"Магазин",
+      admSearch:"Поиск email или имени…",admRefresh:"Обновить",admGrant:"+30 дн Pro",admGranted:"Pro выдан ✓",
+      admNoUsers:"Пользователей не найдено",admDocsUsed:"Док. в месяце",admUntil:"Pro до",
+      e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
+      e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
+    kz:{nav:["Құжаттар","Есеп","AI","Конвертер","Профиль"],
+      htitle:"Құжат жасаңыз",hsub:"Тегін, тікелей браузерде.",
+      hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
+      back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
+      sname:"Атауы (ЖК/ТОО) *",sbin:"БИН/ЖСН",sfio:"Басшы аты-жөні",bank:"Банк деректемелері (міндетті емес)",
+      bankname:"Банк",kaspi:"Kaspi сілтемесі (QR)",bname:"Клиент атауы",bbin:"Клиент БИН/ЖСН",
+      num:"Құжат №",date:"Күні",ihname:"Атауы",ihunit:"Саны",ihqty:"Баға",
+      additem:"+ Атау қосу",vat:"ҚҚС 16%-бен",total:"Барлығы:",gen:"📄 PDF жасау",genwait:"Жасалуда…",
+      fnote:"Жеткізуші деректері браузерде сақталады.",itemname:"Атауы",
+      rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"👁 PDF ашу",rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",rhome:"🏠 Басты бет",rshare:"📤 Бөлісу",
+      errseller:"Жеткізуші атауын жазыңыз",erritems:"Атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз.",fillreq:"Міндетті өрістерді толтырыңыз (* белгісі)",
+      ctitle:"Калькуляторлар 2026",csub:"Салық, жалақы, режимдер — 2026 ставкалары.",crun:"Есептеу",cresult:"Нәтиже",
+      convtitle:"Файл конвертер",convsub:"Файлдарды браузерде тегін конвертациялаңыз.",convwait:"Конвертация…",convdone:"Дайын! Файл жүктелді.",converr:"Болмады — файлды тексеріңіз.",
+      atitle:"AI-көмекші",asub:"2026 салық, құжат, бухгалтерия туралы сұраңыз.",
+      aplaceholder:"Сұрағыңыз…",agreet:"Сәлеметсіз бе! Мен Qujat көмекшісімін. 2026 салық, құжат немесе бухгалтерия туралы сұраңыз.",
+      achips:["ИП қандай салық төлейді?","910 қашан тапсырылады?","ИП па, ТОО ма?","2026 ҚҚС ставкасы?"],
+      ainote:"⚠️ AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз.",
+      accintro:"Кіріңіз — сессия кез келген құрылғыда жұмыс істейді (SMS-сіз).",
+      consent:'Тіркелу арқылы сіз <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">офертаны</a> және <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">құпиялылық саясатын</a> қабылдайсыз.',
+      proh:"Qujat Pro",prosub:"Шексіз құжат, салық формалары, AI-көмекші, печать пен қолтаңба — шектеусіз.",
+      prolimit:"Осы айдағы тегін құжат лимиті бітті. Pro рәсімдеңіз:",
+      probuy:"💎 Pro рәсімдеу",proextend:"Pro ұзарту",prountil:"Белсенді, дейін",
+      profree:"Тегін тариф",prousedl:"Осы айдағы құжат:",proleft:"қалды",
+      propayhint:"Тарифті таңдап, Kaspi арқылы төлеп, чекті жүктеңіз — Pro автоматты қосылады.",
+      prokaspi:"Kaspi арқылы төлеу",proreceipt:"📎 Kaspi чегін жүктеу",prochoose:"Алдымен тариф таңдаңыз",
+      proverify:"Чекті тексеру…",prook:"Дайын! Pro қосылды 🎉",pronokaspi:"Төлем жақында. @Qujatkz_bot-қа жазыңыз.",
+      proios:"Pro жазылым App Store арқылы рәсімделеді. Қосымшаның жақын жаңартуында қосылады.",
+      accreg:"Тіркелу",acclogin:"Кіру",accname:"Аты",accemail:"Email",accpass:"Пароль (мин. 6)",
+      accregbtn:"Аккаунт жасау",accloginbtn:"Кіру",acctoreg:"Аккаунт жоқ па? Тіркелу",
+      acctologin:"Аккаунт бар ма? Кіру",acclogout:"Шығу",accwelcome:"Сіз кірдіңіз:",
+      acchist:"Құжат тарихы",accnohist:"Әзірге бос — құжат жасаңыз",accrepeat:"Қайталау",
+      assetst:"Печать пен қолтаңба",assetshint:"Печать пен қолтаңбаның фотосын бір рет жүктеңіз — олар барлық PDF-ке автоматты қойылады.",
+      assetstamp:"Печать",assetsign:"Қолтаңба",assetup:"Жүктеу",assetre:"Ауыстыру",assetdel:"Жою",
+      assetok:"✓ Жүктелді",assetno:"Жүктелмеген",assetuperr:"Болмады — ашық фондағы анық фото керек",
+      accchpass:"🔑 Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
+      accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
+      forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
+      resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
+      linktg:"🔗 Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"💎 Premium белсенді",
+      navadmin:"Админ",admTitle:"Qujat басқару",admSub:"Кім тіркелгенін көріңіз, аккаунт жасаңыз не жойыңыз",
+      admSecAdd:"➕ Пайдаланушы жасау",admSecUsers:"👥 Кім тіркелген",admSecStats:"📊 Статистика",
+      admSecWeb:"🌐 Веб-қосымша",admSecTg:"🤖 Telegram-бот",
+      admCreateBtn:"Аккаунт жасау",admCreated:"Пайдаланушы жасалды ✓",
+      admDelete:"Жою",admDelConfirm:"{email} және барлық деректі жою керек пе?",admDeleted:"Жойылды ✓",
+      admSelf:"сіз",admRegistered:"Тіркелген",
+      admWebUsers:"Пайдаланушылар",admWebPrem:"Pro",admWebDocs:"Құжаттар",admWebLinks:"Telegram байланыс",
+      admKaspi:"Kaspi чектер",admNewToday:"+ бүгін",
+      admTgUsers:"Пайдаланушылар",admTgPrem:"Premium",admTgDocs:"Құжаттар",admShop:"Дүкен",
+      admSearch:"Email немесе атын іздеу…",admRefresh:"Жаңарту",admGrant:"+30 күн Pro",admGranted:"Pro берілді ✓",
+      admNoUsers:"Пайдаланушы табылмады",admDocsUsed:"Айдағы құжат",admUntil:"Pro дейін",
+      e_email:"Дұрыс email жазыңыз",e_pass:"Пароль кемінде 6 таңба",e_name:"Аты кемінде 2 таңба",
+      e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль"}
+  };
+  /* ---------- SVG иконкалар (Lucide стилі — emoji орнына, премиум) ---------- */
+  const ICONS={
+    'file-text':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/>',
+    'file-check':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="m9 15 2 2 4-4"/>',
+    'file-out':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
+    'banknote':'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/>',
+    'package':'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+    'receipt':'<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+    'calc':'<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="18" x2="16.01" y2="18"/>',
+    'message':'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    'refresh':'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/>',
+    'user':'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    'settings':'<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+    'scan':'<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8h8M7 12h10M7 16h6"/>',
+    'table':'<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>',
+    'image':'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+    'copy':'<rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/>',
+    'scissors':'<circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/>',
+    'minimize':'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',
+    'rotate':'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+    'lock':'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    'unlock':'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+    'droplet':'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+    'hash':'<line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>',
+    'trash':'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+    'wallet':'<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h16a1 1 0 0 1 1 1v3"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>',
+    'scale':'<path d="M12 3v18"/><path d="M5 21h14"/><path d="M6 7 3 14h6z"/><path d="M18 7l-3 7h6z"/><path d="M6 7h12"/>',
+    'sun':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/>',
+    'thermo':'<path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>',
+    'alarm':'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/>'
+  };
+  function svg(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||ICONS['file-text'])+'</svg>';}
+  const CALC_ICON={payroll:'wallet',compare:'scale','910':'file-text','300':'receipt',vacation:'sun',sick:'thermo',penalty:'alarm'};
+
+  const CATS=[
+    {key:"invoice",icon:"banknote",ru:["Счёт на оплату","Реквизиты, сумма, Kaspi QR"],kz:["Шот (төлеуге)","Деректеме, сома, QR"]},
+    {key:"act",icon:"file-check",ru:["Акт выполненных работ","Услуги, работы"],kz:["Орындалған жұмыс актісі","Қызмет, жұмыс"]},
+    {key:"waybill",icon:"package",ru:["Накладная","Отгрузка товара"],kz:["Жүкқұжат","Тауар жөнелту"]},
+    {key:"sf",icon:"receipt",ru:["Счёт-фактура","Для плательщиков НДС"],kz:["Шот-фактура","ҚҚС төлеушілерге"]}
+  ];
+  let lang=localStorage.getItem('qujat_weblang'); if(lang!=='kz'&&lang!=='ru') lang=(navigator.language||'').toLowerCase().startsWith('kk')?'kz':'ru';
+  let curDoc=null,lastUrl=null,lastBlob=null,lastFn='qujat.pdf',curTab='docs',calcList=[],curCalc=null,aiHist=[];
+  async function shareDoc(){
+    if(!lastBlob)return;
+    try{
+      const f=new File([lastBlob],lastFn,{type:'application/pdf'});
+      if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'Qujat'});
+      else if(navigator.share)await navigator.share({title:'Qujat',text:lastFn});
+    }catch(e){}
+  }
+  function showShareBtn(){if($('r-share'))$('r-share').style.display=(lastBlob&&navigator.share)?'block':'none';}
+  const S=()=>STR[lang];
+
+  function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
+
+  function renderNav(){
+    const s=S(),icons=["file-text","calc","message","refresh","user"],ids=["docs","calc","ai","convert","account"];
+    $('nav').innerHTML='';$('nav').classList.remove('nav-6');
+    s.nav.forEach((label,i)=>{
+      const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
+      b.innerHTML='<span class="ni">'+svg(icons[i])+'</span><span class="nl">'+label+'</span>';
+      b.onclick=()=>showTab(ids[i]); $('nav').appendChild(b);
+    });
+  }
+  function showTab(t){
+    curTab=t;
+    ['docs','calc','ai','convert','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!==t));
+    $('airow').classList.toggle('hidden',t!=='ai');
+    if(t==='calc'&&!calcList.length) loadCalc();
+    if(t==='ai'&&!aiHist.length) aiGreet();
+    if(t==='convert') renderConvert();
+    if(t==='account') loadMe();
+    renderNav(); window.scrollTo(0,0);
+  }
+
+  /* ---------- DOCUMENTS ---------- */
+  function renderHome(){
+    const s=S();
+    $('h-title').textContent=s.htitle;$('h-sub').textContent=s.hsub;$('h-banner').textContent=s.hbanner;
+    const box=$('cats');box.innerHTML='';
+    CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
+      el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>openForm(c.key);box.appendChild(el);});
+    if(DOC_CATS)DOC_CATS.forEach(cat=>{
+      const h=document.createElement('div');h.className='cgh';h.textContent=cat[lang];box.appendChild(h);
+      (cat.docs||[]).forEach(doc=>{const el=document.createElement('div');el.className='card';
+        el.innerHTML='<div class="ic">'+svg(CAT_ICON[cat.cat]||'file-text')+'</div><div><div class="t">'+doc[lang]+'</div></div><div class="chev">›</div>';
+        el.onclick=()=>openXForm(doc.key);box.appendChild(el);});
+    });
+    else loadSchemas();
+  }
+  function docLabels(){
+    const s=S();$('langbtn').textContent='🌐 '+(lang==='ru'?'RU':'KZ');
+    $('f-back').textContent=s.back;$('s-seller').textContent=s.seller;$('s-buyer').textContent=s.buyer;
+    $('s-items').textContent=s.items;$('s-bank').textContent=s.bank;$('l-sname').textContent=s.sname;
+    $('l-sbin').textContent=s.sbin;$('l-sfio').textContent=s.sfio;$('l-bank').textContent=s.bankname;
+    $('l-kaspi').textContent=s.kaspi;$('l-bname').textContent=s.bname;$('l-bbin').textContent=s.bbin;
+    $('l-num').textContent=s.num;$('l-date').textContent=s.date;$('ih-name').textContent=s.ihname;
+    $('ih-unit').textContent=s.ihunit;$('ih-qty').textContent=s.ihqty;$('b-additem').textContent=s.additem;
+    $('l-vat').textContent=s.vat;$('l-total').textContent=s.total;$('genbtn').textContent=s.gen;
+    $('f-note').textContent=s.fnote;$('r-title').textContent=s.rtitle;$('r-sub').textContent=s.rsub;
+    $('r-open').textContent=s.ropen;$('r-download').textContent=s.rdownload;$('r-new').textContent=s.rnew;$('r-home').textContent=s.rhome;$('r-share').textContent=s.rshare;
+  }
+  function defUnit(){return curDoc==='act'?'усл.':'шт.';}
+  function addItem(name='',qty='1',price=''){
+    const s=S();const row=document.createElement('div');row.className='itemrow';
+    row.innerHTML='<input type="text" placeholder="'+s.itemname+'" value="'+name+'">'+
+      '<input type="number" inputmode="decimal" value="'+qty+'">'+
+      '<input type="number" inputmode="decimal" placeholder="0" value="'+price+'"><button class="del">×</button>';
+    const ins=row.querySelectorAll('input');ins[0].dataset.k='name';ins[1].dataset.k='qty';ins[2].dataset.k='price';
+    ins[1].addEventListener('input',calcTotal);ins[2].addEventListener('input',calcTotal);
+    row.querySelector('.del').onclick=()=>{row.remove();calcTotal();};
+    $('items').appendChild(row);calcTotal();
+  }
+  function calcTotal(){let sum=0;document.querySelectorAll('#items .itemrow').forEach(r=>{
+    const q=parseFloat((r.querySelector('[data-k=qty]').value||'0').replace(',','.'))||0;
+    const p=parseFloat((r.querySelector('[data-k=price]').value||'0').replace(',','.'))||0;sum+=q*p;});
+    $('total').textContent=sum.toLocaleString('ru-RU')+' ₸';}
+  function fillSeller(o){o=o||{};['name','bin','fio','bank_name','iik','bik','kaspi_link'].forEach(k=>{if($('s_'+k))$('s_'+k).value=o[k]||'';});}
+  function openForm(key){
+    curDoc=key;const c=CATS.find(x=>x.key===key);
+    $('f-title').textContent=c[lang][0];$('f-sub').textContent=c[lang][1];
+    fillSeller(JSON.parse(localStorage.getItem('qujat_seller')||'{}'));
+    $('b_name').value='';$('b_bin').value='';$('d_number').value='1';$('d_date').valueAsDate=new Date();
+    $('items').innerHTML='';addItem();$('d_vat').checked=false;
+    $('home').classList.add('hidden');$('result').classList.add('hidden');$('form').classList.remove('hidden');window.scrollTo(0,0);
+    if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{if(d.profile&&Object.keys(d.profile).length)fillSeller(d.profile);}).catch(()=>{});
+  }
+  function openFormWith(p){
+    openForm(p.doc);
+    fillSeller(p.seller||{});
+    $('b_name').value=(p.buyer||{}).name||'';$('b_bin').value=(p.buyer||{}).bin||'';
+    $('d_number').value=p.number||'1';$('d_vat').checked=!!p.vat;
+    if(p.date){const a=p.date.split('.');if(a.length===3)$('d_date').value=a[2]+'-'+a[1]+'-'+a[0];}
+    $('items').innerHTML='';(p.items||[]).forEach(it=>addItem(it.name,it.qty||'1',it.price));if(!(p.items||[]).length)addItem();
+    calcTotal();
+  }
+  function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('xform').classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
+  function goHome(){if(document.body.classList.contains('gated'))return;showTab('docs');goDocsHome();}
+  const val=id=>($(id).value||'').trim();
+  function fmtDate(){const d=$('d_date').value;if(!d)return '';const[y,m,dd]=d.split('-');return dd+'.'+m+'.'+y;}
+  function markBad(id){const el=$(id);if(!el)return;el.classList.add('bad');
+    el.scrollIntoView({behavior:'smooth',block:'center'});try{el.focus();}catch(e){}
+    el.addEventListener('input',function h(){el.classList.remove('bad');el.removeEventListener('input',h);});}
+  async function generate(){
+    const s=S();
+    if(!val('s_name')){markBad('s_name');return;}
+    if(val('s_bin')&&!/^[0-9]{12}$/.test(val('s_bin'))){markBad('s_bin');return;}
+    if(val('b_bin')&&!/^[0-9]{12}$/.test(val('b_bin'))){markBad('b_bin');return;}
+    const items=[];document.querySelectorAll('#items .itemrow').forEach(r=>{
+      const name=r.querySelector('[data-k=name]').value.trim();
+      const qty=r.querySelector('[data-k=qty]').value||'1';const price=r.querySelector('[data-k=price]').value;
+      if(name)items.push({name,unit:defUnit(),qty,price});});
+    if(!items.length){const f=document.querySelector('#items .itemrow [data-k=name]');if(f){f.classList.add('bad');f.scrollIntoView({behavior:'smooth',block:'center'});try{f.focus();}catch(e){}}return;}
+    const seller={name:val('s_name'),bin:val('s_bin'),fio:val('s_fio'),bank_name:val('s_bank_name'),iik:val('s_iik'),bik:val('s_bik'),kaspi_link:val('s_kaspi_link')};
+    localStorage.setItem('qujat_seller',JSON.stringify(seller));
+    const payload={doc:curDoc,number:val('d_number'),date:fmtDate(),vat:$('d_vat').checked,seller,buyer:{name:val('b_name'),bin:val('b_bin')},items};
+    const btn=$('genbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
+    try{
+      const res=await afetch(API+'/api/generate',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      if(res.status===402){openPro(S().prolimit);return;}
+      if(!res.ok)throw new Error('http');
+      const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
+      const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';lastBlob=blob;lastFn=fn;showShareBtn();$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
+      $('form').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
+    }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
+  }
+
+  /* ---------- БАСҚА ҚҰЖАТТАР (схема-негізді динамикалық форма) ---------- */
+  let DOC_SCHEMAS=null,DOC_CATS=null,curXKey=null;
+  const CAT_ICON={cash:'banknote',hr:'user',tax:'receipt',contract:'file-text',warehouse:'package'};
+  async function loadSchemas(){
+    if(DOC_SCHEMAS)return;
+    try{const r=await afetch(API+'/api/doc-schemas');const d=await r.json();
+      DOC_SCHEMAS=d.schemas||{};DOC_CATS=d.cats||[];renderHome();}
+    catch(e){
+      const host=document.getElementById('home');
+      if(host){const lang=(typeof curLang!=='undefined'&&curLang==='kz');
+        const msg=lang?'Деректерді жүктеу мүмкін болмады. Интернетті тексеріп, бетті жаңартыңыз.'
+                      :'Не удалось загрузить данные. Проверьте интернет и обновите страницу.';
+        let b=document.getElementById('load-error');
+        if(!b){b=document.createElement('div');b.id='load-error';b.className='banner';
+          b.style.cssText='background:#fdecee;border:1px solid #f3c0c4;color:#b4232a;margin-top:12px';
+          host.appendChild(b);}
+        b.textContent=msg;}
+    }
+  }
+  function xField(f){
+    const d=document.createElement('div');
+    if(f.type==='items'){
+      d.className='sec';d.style.padding='12px 12px 8px';
+      d.innerHTML='<h3 style="font-size:13.5px;margin-bottom:8px">'+f[lang]+'</h3><div class="xitems" data-k="'+f.key+'"></div>'+
+        '<button type="button" class="additem">+ '+(lang==='ru'?'Добавить строку':'Жол қосу')+'</button>';
+      const wrap=d.querySelector('.xitems'),cols=f.cols||[];
+      function addRow(){const r=document.createElement('div');r.className='xrow';
+        r.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap';
+        r.innerHTML=cols.map(c=>'<input '+(c.type==='number'?'type="number" inputmode="decimal"':c.type==='date'?'type="date"':'type="text"')+' data-ck="'+c.key+'" placeholder="'+c[lang]+'" style="flex:1;min-width:84px;height:42px">').join('')+'<button type="button" class="del">×</button>';
+        r.querySelector('.del').onclick=()=>r.remove();wrap.appendChild(r);}
+      d.querySelector('.additem').onclick=addRow;addRow();
+      return d;
+    }
+    if(f.type==='checkbox'){
+      d.className='field';
+      d.innerHTML='<label class="chk" style="display:flex;align-items:center;gap:9px;cursor:pointer"><input type="checkbox" data-k="'+f.key+'"><span>'+f[lang]+'</span></label>';
+      return d;
+    }
+    d.className='field';
+    const lab='<label>'+f[lang]+(f.required?' *':'')+'</label>';
+    let inp;
+    if(f.type==='textarea')inp='<textarea data-k="'+f.key+'" rows="3" style="width:100%;border:1px solid var(--line-2);border-radius:13px;padding:10px 14px;font-family:inherit;font-size:15px;font-weight:500;background:var(--surface-2);color:var(--text);resize:vertical"></textarea>';
+    else inp='<input type="'+(f.type==='number'?'number':f.type==='date'?'date':'text')+'"'+(f.type==='number'?' inputmode="decimal"':'')+' data-k="'+f.key+'" value="'+(f.default||'')+'">';
+    d.innerHTML=lab+inp;
+    return d;
+  }
+  function openXForm(key){
+    curXKey=key;const sc=DOC_SCHEMAS&&DOC_SCHEMAS[key];if(!sc)return;
+    const s=S();
+    $('xf-title').textContent=sc[lang];$('xf-back').textContent=s.back;
+    $('xf-gen').textContent=s.gen;$('xf-seller-h').textContent=s.seller;
+    $('xf-note').textContent=s.fnote;
+    const sv=JSON.parse(localStorage.getItem('qujat_seller')||'{}');
+    let sf=[['name',s.sname],['bin',s.sbin],['fio',s.sfio],
+            ['accountant',lang==='ru'?'ФИО бухгалтера':'Бухгалтердің аты-жөні']];
+    if(key==='payment')sf=sf.concat([['bank_name',s.bankname],['iik','ИИК (IBAN)'],['bik','БИК'],['kbe','Кбе']]);
+    $('xf-seller').innerHTML=sf.map(([k,l])=>'<div class="field"><label>'+l+'</label><input type="text" data-sk="'+k+'" value="'+(sv[k]||'')+'"></div>').join('');
+    const box=$('xf-fields');box.innerHTML='';
+    sc.fields.forEach(f=>box.appendChild(xField(f)));
+    box.querySelectorAll('input[type=date][data-k=date]').forEach(i=>{if(!i.value)i.valueAsDate=new Date();});
+    $('home').classList.add('hidden');$('form').classList.add('hidden');$('result').classList.add('hidden');
+    $('xform').classList.remove('hidden');window.scrollTo(0,0);
+    if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{
+      const pr=d.profile||{};document.querySelectorAll('#xf-seller [data-sk]').forEach(i=>{if(!i.value&&pr[i.dataset.sk])i.value=pr[i.dataset.sk];});}).catch(()=>{});
+  }
+  async function genXDoc(){
+    const s=S();
+    const seller={};document.querySelectorAll('#xf-seller [data-sk]').forEach(i=>seller[i.dataset.sk]=i.value.trim());
+    if(!seller.name){alert(s.errseller);return;}
+    localStorage.setItem('qujat_seller',JSON.stringify(seller));
+    const vals={};
+    $('xf-fields').querySelectorAll('input[data-k],textarea[data-k],select[data-k]').forEach(i=>{
+      vals[i.dataset.k]=(i.type==='checkbox')?i.checked:i.value;});
+    $('xf-fields').querySelectorAll('.xitems').forEach(w=>{
+      const rows=[];w.querySelectorAll('.xrow').forEach(r=>{const o={};
+        r.querySelectorAll('[data-ck]').forEach(c=>o[c.dataset.ck]=c.value);
+        if(Object.values(o).some(v=>String(v).trim()))rows.push(o);});
+      vals[w.dataset.k]=rows;});
+    const sc=DOC_SCHEMAS[curXKey]||{};let bad=null;
+    (sc.fields||[]).forEach(f=>{
+      if(f.required&&f.type!=='items'&&f.type!=='checkbox'){
+        const el=$('xf-fields').querySelector('[data-k="'+f.key+'"]');
+        const v=vals[f.key];
+        if(v===undefined||String(v).trim()===''){if(!bad)bad=el;if(el)el.style.borderColor='var(--danger)';}
+        else if(el){el.style.borderColor='';}
+      }
+    });
+    if(bad){alert(s.fillreq);bad.scrollIntoView({behavior:'smooth',block:'center'});try{bad.focus();}catch(e){}return;}
+    const btn=$('xf-gen');btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+s.genwait;
+    try{
+      const res=await afetch(API+'/api/gen-doc',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({doc:curXKey,seller,vals})});
+      if(res.status===402){openPro(S().prolimit);return;}
+      if(!res.ok)throw new Error('http');
+      const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
+      const fn=curXKey+'_'+(vals.number||'1')+'.pdf';lastBlob=blob;lastFn=fn;showShareBtn();
+      $('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
+      $('xform').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
+    }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
+  }
+
+  /* ---------- CALCULATORS ---------- */
+  async function loadCalc(){
+    try{const r=await afetch(API+'/api/calc-catalog');calcList=(await r.json()).calc||[];}catch(e){calcList=[];}
+    renderCalcHome();
+  }
+  function renderCalcHome(){
+    const s=S();$('c-title').textContent=s.ctitle;$('c-sub').textContent=s.csub;$('c-back').textContent=s.back;
+    const box=$('calc-list');box.innerHTML='';
+    calcList.forEach(c=>{const el=document.createElement('div');el.className='card';
+      el.innerHTML='<div class="ic">'+svg(CALC_ICON[c.type]||'calc')+'</div><div><div class="t">'+c[lang]+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>openCalc(c);box.appendChild(el);});
+    $('calc-home').classList.remove('hidden');$('calc-form').classList.add('hidden');
+  }
+  function openCalc(c){
+    curCalc=c;$('cf-title').textContent=c[lang];$('c-run').textContent=S().crun;
+    const box=$('cf-fields');box.innerHTML='';
+    c.fields.forEach(f=>{const d=document.createElement('div');d.className='field';
+      if(f.opts){const li=lang==='ru'?1:2;
+        d.innerHTML='<label>'+f[lang]+'</label><select data-k="'+f.k+'" style="width:100%;height:48px;border:1px solid var(--line-2);border-radius:13px;padding:0 14px;font-family:inherit;font-size:15px;font-weight:600;background:var(--surface-2);color:var(--text)">'+
+          f.opts.map(o=>'<option value="'+o[0]+'">'+(o[li]||o[1])+'</option>').join('')+'</select>';
+      }else{
+        d.innerHTML='<label>'+f[lang]+'</label><input type="number" inputmode="decimal" data-k="'+f.k+'">';
+      }
+      box.appendChild(d);});
+    $('cf-result').classList.add('hidden');
+    $('calc-home').classList.add('hidden');$('calc-form').classList.remove('hidden');window.scrollTo(0,0);
+  }
+  function goCalcHome(){$('calc-form').classList.add('hidden');$('calc-home').classList.remove('hidden');window.scrollTo(0,0);}
+  async function runCalc(){
+    const params={};document.querySelectorAll('#cf-fields input,#cf-fields select').forEach(i=>{params[i.dataset.k]=i.value;});
+    const btn=$('c-run');btn.disabled=true;
+    try{
+      const r=await afetch(API+'/api/calc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:curCalc.type,lang,params})});
+      const d=await r.json();const box=$('cf-result');
+      box.innerHTML='<h3 style="margin-bottom:8px">'+S().cresult+'</h3>'+
+        d.lines.map(l=>'<div class="rline"><span>'+l[0]+'</span><b>'+l[1]+'</b></div>').join('')+
+        (d.note?'<p class="note" style="text-align:left;margin:10px 0 0">'+d.note+'</p>':'');
+      box.classList.remove('hidden');
+    }catch(e){alert(S().errnet);}finally{btn.disabled=false;}
+  }
+
+  /* ---------- AI ---------- */
+  function bubble(role,text){const m=document.createElement('div');m.className='msg '+(role==='user'?'u':'a');m.textContent=text;$('chat').appendChild(m);
+    window.scrollTo(0,document.body.scrollHeight);return m;}
+  function aiGreet(){
+    const s=S();$('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('ai-input').placeholder=s.aplaceholder;
+    $('a-note').textContent=s.ainote;
+    $('chat').innerHTML='';aiHist=[];bubble('assistant',s.agreet);
+    const ch=$('a-chips');ch.innerHTML='';
+    s.achips.forEach(q=>{const b=document.createElement('div');b.className='chip';b.textContent=q;b.onclick=()=>{$('ai-input').value=q;sendAI();};ch.appendChild(b);});
+  }
+  async function sendAI(){
+    const inp=$('ai-input');const text=inp.value.trim();if(!text)return;inp.value='';
+    bubble('user',text);aiHist.push({role:'user',content:text});
+    const wait=bubble('assistant','…');
+    try{
+      const r=await afetch(API+'/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,lang,history:aiHist.slice(-6)})});
+      const d=await r.json();wait.textContent=d.reply||S().errnet;aiHist.push({role:'assistant',content:d.reply||''});
+    }catch(e){wait.textContent=S().errnet;}
+    window.scrollTo(0,document.body.scrollHeight);
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===$('ai-input'))sendAI();});
+
+  /* ---------- ACCOUNT (email+пароль) ---------- */
+  let meUser=null;
+  const reEmail=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  function accLabels(){
+    const s=S();
+    $('acc-h').textContent=meUser?(lang==='ru'?'Профиль':'Профиль'):(lang==='ru'?'Вход в Qujat':'Qujat-қа кіру');
+    $('acc-intro').textContent=s.accintro;
+    $('acc-card-sub').textContent=s.accintro;
+    $('acc-lang-t').textContent=lang==='ru'?'RU':'KZ';
+    if($('a-consent'))$('a-consent').innerHTML=s.consent;
+    $('la-name').textContent=s.accname;$('la-email-r').textContent=s.accemail;$('la-pass-r').textContent=s.accpass;
+    $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
+    $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
+    $('a-to-login').textContent=s.acctologin;$('a-to-reg').textContent=s.acctoreg;
+    $('a-logout').textContent=s.acclogout;$('acc-welcome').textContent=s.accwelcome;
+    $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
+    $('acc-assets-t').textContent=s.assetst;$('acc-assets-hint').textContent=s.assetshint;
+    $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
+    $('a-delete').textContent=s.accdelete;$('a-forgot').textContent=s.forgot;
+    $('acc-link-t').textContent=s.linktg;$('acc-link-hint').textContent=s.linkhint;$('a-linkbtn').textContent=s.linkbtn;
+    $('reset-h').textContent=s.resettitle;$('reset-sub').textContent=s.resetsub;
+    $('la-reset').textContent=s.accnew;$('a-resetbtn').textContent=s.resetbtn;
+  }
+  function acctab(w){
+    $('acc-reg').classList.toggle('hidden',w!=='reg');$('acc-login').classList.toggle('hidden',w!=='login');
+    const h=$('acc-card-h');
+    if(h)h.textContent=(w==='login')?(lang==='ru'?'С возвращением':'Қайта келдіңіз'):(lang==='ru'?'Создайте аккаунт':'Аккаунт жасаңыз');
+  }
+  function renderAccount(){
+    accLabels();
+    if(proOpen)return;
+    if(resetTok){$('acc-reset').classList.remove('hidden');$('acc-auth').classList.add('hidden');$('acc-user').classList.add('hidden');return;}
+    $('acc-reset').classList.add('hidden');
+    if(meUser){$('acc-user').classList.remove('hidden');$('acc-auth').classList.add('hidden');
+      $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';
+      $('acc-link').classList.toggle('hidden',NATIVE_APP);   /* Нативті қосымшада (iOS/Android) Telegram/Kaspi сатып алуға бағыттауды жасыру */
+      const linked=!!meUser.telegram_id;
+      $('acc-link-form').classList.toggle('hidden',linked);
+      const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
+      if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
+      loadHistory();loadAssets();loadSub();renderNav();}
+    else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');initGoogle();}
+  }
+  async function loadHistory(){
+    const box=$('acc-history');if(!box)return;
+    try{const r=await afetch(API+'/api/history',{credentials:'include'});const docs=(await r.json()).docs||[];
+      if(!docs.length){box.innerHTML='<p class="sub" style="margin:0">'+S().accnohist+'</p>';return;}
+      box.innerHTML=docs.map(d=>'<div class="rline"><span>'+d.title+'<br><span style="color:var(--muted);font-size:12px">'+d.created+' · '+(d.total||0).toLocaleString('ru-RU')+' ₸</span></span>'+
+        '<a style="cursor:pointer;color:var(--accent);font-weight:700;white-space:nowrap" onclick="repeatDoc('+d.id+')">'+S().accrepeat+'</a></div>').join('');
+    }catch(e){box.innerHTML='';}
+  }
+  /* ----- Печать / қолтаңба ----- */
+  let assetKind=null;
+  async function loadAssets(){
+    const box=$('assets-rows');if(!box)return;const s=S();
+    let st={stamp:false,signature:false};
+    try{st=await (await afetch(API+'/auth/assets',{credentials:'include'})).json();}catch(e){}
+    const row=(kind,label,has)=>'<div class="rline"><span>'+label+'<br><span style="font-size:12px;color:'+(has?'var(--accent2)':'var(--muted)')+'">'+(has?s.assetok:s.assetno)+'</span></span>'+
+      '<span style="display:flex;gap:12px;white-space:nowrap">'+
+      (has?'<a style="cursor:pointer;color:var(--danger);font-weight:700" onclick="delAsset(\''+kind+'\')">'+s.assetdel+'</a>':'')+
+      '<a style="cursor:pointer;color:var(--accent);font-weight:700" onclick="pickAsset(\''+kind+'\')">'+(has?s.assetre:s.assetup)+'</a></span></div>';
+    box.innerHTML=row('stamp',s.assetstamp,!!st.stamp)+row('signature',s.assetsign,!!st.signature);
+  }
+  function pickAsset(k){assetKind=k;const i=$('asset-input');i.value='';i.click();}
+  async function onAssetFile(){
+    const i=$('asset-input');if(!i.files.length||!assetKind)return;const s=S();
+    const fd=new FormData();fd.append('kind',assetKind);fd.append('file',i.files[0]);
+    try{const r=await afetch(API+'/auth/upload-asset',{method:'POST',credentials:'include',body:fd});
+      if(!r.ok){alert(s.assetuperr);return;}await loadAssets();}catch(e){alert(s.errnet);}
+  }
+  async function delAsset(k){
+    try{await afetch(API+'/auth/asset-delete',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:k})});}catch(e){}
+    loadAssets();
+  }
+  async function repeatDoc(id){
+    try{const r=await afetch(API+'/api/history-item?id='+id,{credentials:'include'});const p=(await r.json()).payload;
+      if(!p||!p.doc)return;showTab('docs');
+      if(DOC_SCHEMAS&&DOC_SCHEMAS[p.doc])openXForm(p.doc);else openFormWith(p);}catch(e){}
+  }
+  async function doChangePass(){
+    const s=S(),old=$('cp_old').value,nw=$('cp_new').value;
+    if(nw.length<6)return alert(s.e_pass);
+    const b=$('a-chpass');b.disabled=true;
+    try{const r=await afetch(API+'/auth/change-password',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_password:old,new_password:nw})});
+      if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
+      $('cp_old').value='';$('cp_new').value='';alert(s.accpassok);
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doDelete(){
+    if(!confirm(S().accdelconfirm))return;
+    try{await afetch(API+'/auth/delete',{method:'POST',credentials:'include'});}catch(e){}
+    setToken('');meUser=null;renderAccount();applyGate();
+  }
+  let resetTok=new URLSearchParams(location.search).get('reset')||'';
+  async function doForgot(){
+    const s=S();const email=prompt(s.forgotask,$('al_email').value||'');
+    if(!email||!reEmail.test(email.trim().toLowerCase()))return;
+    try{await afetch(API+'/auth/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.trim().toLowerCase()})});}catch(e){}
+    alert(s.forgotsent);
+  }
+  async function doReset(){
+    const s=S();const pass=$('rs_pass').value;if(pass.length<6)return alert(s.e_pass);
+    const b=$('a-resetbtn');b.disabled=true;
+    try{const r=await afetch(API+'/auth/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:resetTok,new_password:pass})});
+      if(!r.ok){alert(s.resetbad);return;}
+      alert(s.resetok);resetTok='';history.replaceState(null,'',location.pathname);renderAccount();acctab('login');
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doLinkTg(){
+    const s=S();const code=$('lt_code').value.trim();if(!code)return;
+    const b=$('a-linkbtn');b.disabled=true;
+    try{const r=await afetch(API+'/auth/link-telegram',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+      if(!r.ok){alert(s.linkbad);return;}
+      $('lt_code').value='';alert(s.linkok);await loadMe();
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function loadMe(){
+    try{const r=await afetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
+    renderAccount();applyGate();
+  }
+  function applyGate(){
+    if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
+    if(meUser){document.body.classList.remove('gated');if(curTab==='account')showTab('docs');}
+    else{location.replace('/');}
+  }
+  async function doRegister(){
+    const s=S(),name=$('a_name').value.trim(),email=$('ar_email').value.trim().toLowerCase(),pass=$('ar_pass').value;
+    if(name.length<2)return alert(s.e_name);if(!reEmail.test(email))return alert(s.e_email);if(pass.length<6)return alert(s.e_pass);
+    const b=$('a-regbtn');b.disabled=true;
+    try{const r=await afetch(API+'/auth/register-email',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name})});
+      if(r.status===409){alert(s.e_taken);return;}if(!r.ok){alert(s.errnet);return;}
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doLogin(){
+    const s=S(),email=$('al_email').value.trim().toLowerCase(),pass=$('al_pass').value;
+    if(!reEmail.test(email))return alert(s.e_email);if(!pass)return alert(s.e_pass);
+    const b=$('a-loginbtn');b.disabled=true;
+    try{const r=await afetch(API+'/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+      if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
+    }catch(e){alert(s.errnet);}finally{b.disabled=false;}
+  }
+  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;location.replace('/');}
+
+  /* ----- Pro / жазылым (Kaspi + тенге) ----- */
+  let subInfo=null,proTariff=null,proOpen=false;
+  const kzt=v=>Number(v).toLocaleString('ru-RU')+' ₸';
+  async function loadSub(){
+    try{subInfo=await (await afetch(API+'/api/sub-status',{credentials:'include'})).json();}catch(e){subInfo=null;}
+    renderSubBox();
+  }
+  function renderSubBox(){
+    const box=$('acc-sub');if(!box)return;const s=S();
+    if(!subInfo){box.innerHTML='';return;}
+    const m=NATIVE_APP?'0':'12px';
+    if(subInfo.premium){
+      box.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--accent2)">💎 Qujat Pro</div>'+
+        '<div class="sub" style="margin:4px 0 '+m+'">'+s.prountil+' <b>'+(subInfo.until||'')+'</b></div>'+
+        (NATIVE_APP?'':'<button class="btn ghost" onclick="openPro()">'+s.proextend+'</button>');
+    }else{
+      const left=Math.max(0,(subInfo.limit||0)-(subInfo.used||0));
+      box.innerHTML='<div style="font-size:15px;font-weight:700">'+s.profree+'</div>'+
+        '<div class="sub" style="margin:4px 0 '+m+'">'+s.prousedl+' '+(subInfo.used||0)+'/'+(subInfo.limit||0)+' · '+s.proleft+' '+left+'</div>'+
+        (NATIVE_APP?'':'<button class="btn" onclick="openPro()">'+s.probuy+'</button>');
+    }
+  }
+  function renderTariffs(){
+    const box=$('pro-tariffs');if(!box||!subInfo)return;box.innerHTML='';
+    (subInfo.tariffs||[]).forEach(t=>{
+      const el=document.createElement('div');el.className='card';el.style.cursor='pointer';
+      el.dataset.k=t.key;
+      el.innerHTML='<div class="ic">💎</div><div><div class="t">'+t.title+'</div><div class="d">'+kzt(t.kzt)+'</div></div><div class="chev">›</div>';
+      el.onclick=()=>selectTariff(t.key);box.appendChild(el);
+    });
+    if(subInfo.tariffs&&subInfo.tariffs.length)selectTariff(proTariff||subInfo.tariffs[0].key);
+  }
+  function selectTariff(key){
+    proTariff=key;const s=S();
+    document.querySelectorAll('#pro-tariffs .card').forEach(c=>{
+      const on=c.dataset.k===key;c.style.borderColor=on?'var(--accent)':'';c.style.boxShadow=on?'var(--ring)':'';});
+    const t=(subInfo.tariffs||[]).find(x=>x.key===key);
+    $('pro-pay-hint').textContent=s.propayhint;
+    if(NATIVE_IOS){
+      $('pro-kaspi').style.display='none';$('pro-receipt-btn').style.display='none';
+      $('pro-pay-hint').textContent=s.proios;$('pro-status').textContent='';
+      return;
+    }
+    if(subInfo.kaspi_url){
+      $('pro-kaspi').textContent=s.prokaspi+(t?(' · '+kzt(t.kzt)):'');
+      $('pro-kaspi').href=subInfo.kaspi_url;$('pro-kaspi').style.display='block';
+      $('pro-receipt-btn').style.display='block';
+    }else{
+      $('pro-kaspi').style.display='none';$('pro-receipt-btn').style.display='none';
+      $('pro-status').textContent=s.pronokaspi;
+    }
+  }
+  function openPro(msg){
+    const s=S();
+    if(NATIVE_APP){alert(msg||s.prolimit);return;}
+    proOpen=true;
+    if(curTab!=='account'){curTab='account';['docs','calc','ai','convert','account'].forEach(x=>$('tab-'+x).classList.toggle('hidden',x!=='account'));renderNav();}
+    document.body.classList.remove('gated');
+    $('acc-auth').classList.add('hidden');$('acc-user').classList.add('hidden');$('acc-reset').classList.add('hidden');
+    $('acc-h').classList.add('hidden');$('acc-intro').classList.add('hidden');
+    $('pro-h').textContent=s.proh;$('pro-sub').textContent=msg||s.prosub;$('pro-back').textContent=s.back;
+    $('pro-receipt-btn').textContent=s.proreceipt;$('pro-status').textContent='';
+    renderTariffs();
+    $('pro').classList.remove('hidden');window.scrollTo(0,0);
+  }
+  function goAccount(){proOpen=false;$('pro').classList.add('hidden');$('acc-h').classList.remove('hidden');$('acc-intro').classList.remove('hidden');$('acc-user').classList.remove('hidden');loadSub();window.scrollTo(0,0);}
+  function pickReceipt(){if(!proTariff){alert(S().prochoose);return;}const i=$('pro-receipt');i.value='';i.click();}
+  async function onReceiptFile(){
+    const i=$('pro-receipt');if(!i.files.length||!proTariff)return;const s=S();
+    const fd=new FormData();fd.append('tariff',proTariff);fd.append('file',i.files[0]);
+    $('pro-status').textContent='⏳ '+s.proverify;
+    try{
+      const r=await afetch(API+'/api/kaspi-claim',{method:'POST',credentials:'include',body:fd});
+      const d=await r.json();
+      if(d.ok){$('pro-status').textContent='✅ '+s.prook;await loadMe();setTimeout(goAccount,1500);}
+      else{$('pro-status').textContent='❌ '+(d.reason||s.errnet);}
+    }catch(e){$('pro-status').textContent='❌ '+s.errnet;}
+  }
+
+  /* ---------- CONVERTER ---------- */
+  const CONV=[
+    {target:"ocr",icon:"scan",ru:["OCR — скан/фото → текст","Распознать текст (ИИ) → Word"],kz:["OCR — скан/фото → мәтін","Мәтінді тану (AI) → Word"],accept:"application/pdf,image/*",multi:false},
+    {target:"pdf2word",icon:"file-text",ru:["PDF → Word","Редактируемый .docx (текст)"],kz:["PDF → Word",".docx (мәтін)"],accept:"application/pdf",multi:false},
+    {target:"pdf2excel",icon:"table",ru:["PDF → Excel","Текст PDF в таблицу .xlsx"],kz:["PDF → Excel","Кесте .xlsx"],accept:"application/pdf",multi:false},
+    {target:"pdf2jpg",icon:"image",ru:["PDF → JPG","Каждая страница — картинка (zip)"],kz:["PDF → JPG","Әр бет — сурет (zip)"],accept:"application/pdf",multi:false},
+    {target:"word2pdf",icon:"file-out",ru:["Word → PDF",".docx → PDF"],kz:["Word → PDF",".docx → PDF"],accept:".docx",multi:false},
+    {target:"excel2pdf",icon:"file-out",ru:["Excel → PDF","Таблица .xlsx → PDF"],kz:["Excel → PDF","Кесте → PDF"],accept:".xlsx,.xls",multi:false},
+    {target:"merge",icon:"copy",ru:["Объединить PDF","Несколько PDF в один файл"],kz:["PDF біріктіру","Бірнеше PDF-ті бірге"],accept:"application/pdf",multi:true},
+    {target:"splitpdf",icon:"scissors",ru:["Разделить PDF","Каждая страница — отдельный PDF (zip)"],kz:["PDF бөлу","Әр бет бөлек (zip)"],accept:"application/pdf",multi:false},
+    {target:"compresspdf",icon:"minimize",ru:["Сжать PDF","Уменьшить размер файла"],kz:["PDF сығу","Көлемін азайту"],accept:"application/pdf",multi:false},
+    {target:"rotatepdf",icon:"rotate",ru:["Повернуть PDF","На 90° по часовой"],kz:["PDF бұру","90° сағат тілімен"],accept:"application/pdf",multi:false},
+    {target:"protect",icon:"lock",ru:["Поставить пароль на PDF","Защитить PDF"],kz:["PDF-ке пароль қою","Қорғау"],accept:"application/pdf",multi:false,param:"password"},
+    {target:"unlock",icon:"unlock",ru:["Снять пароль с PDF","Убрать защиту"],kz:["PDF паролін алу","Қорғауды алу"],accept:"application/pdf",multi:false,param:"password"},
+    {target:"watermark",icon:"droplet",ru:["Водяной знак на PDF","Текст по диагонали"],kz:["PDF-ке су белгісі","Қиғаш мәтін"],accept:"application/pdf",multi:false,param:"text"},
+    {target:"addpagenum",icon:"hash",ru:["Номера страниц","Добавить нумерацию"],kz:["Бет нөмірлері","Нөмірлеу қосу"],accept:"application/pdf",multi:false},
+    {target:"delpages",icon:"trash",ru:["Удалить страницы","напр. 2,4-5"],kz:["Беттерді өшіру","мыс. 2,4-5"],accept:"application/pdf",multi:false,param:"range"},
+    {target:"images2pdf",icon:"image",ru:["Фото/картинки → PDF","Несколько изображений в один PDF"],kz:["Фото/сурет → PDF","Бір PDF-ке"],accept:"image/*",multi:true},
+    {target:"img2jpg",icon:"image",ru:["Картинка → JPG","PNG, WEBP, BMP… → JPG"],kz:["Сурет → JPG","PNG, WEBP… → JPG"],accept:"image/*",multi:false},
+    {target:"img2png",icon:"image",ru:["Картинка → PNG","JPG, WEBP… → PNG"],kz:["Сурет → PNG","JPG… → PNG"],accept:"image/*",multi:false},
+    {target:"excel2csv",icon:"table",ru:["Excel → CSV","XLSX → CSV"],kz:["Excel → CSV","XLSX → CSV"],accept:".xlsx,.xls",multi:false},
+    {target:"csv2excel",icon:"table",ru:["CSV → Excel","CSV → XLSX"],kz:["CSV → Excel","CSV → XLSX"],accept:".csv,text/csv",multi:false}
+  ];
+  const CONV_EXT={ocr:"docx",pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",protect:"pdf",unlock:"pdf",watermark:"pdf",addpagenum:"pdf",delpages:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
+  let convTarget=null,convParam="";
+  const CGROUPS=[
+    {ru:"Конвертация",kz:"Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"]},
+    {ru:"PDF-инструменты",kz:"PDF құралдары",keys:["merge","splitpdf","compresspdf","rotatepdf","protect","unlock","watermark","addpagenum","delpages"]},
+    {ru:"Изображения",kz:"Суреттер",keys:["images2pdf","img2jpg","img2png"]},
+    {ru:"Таблицы",kz:"Кестелер",keys:["excel2csv","csv2excel"]}
+  ];
+  function convClick(c){
+    convTarget=c;convParam='';
+    if(c.param){
+      const ru=lang==='ru';
+      const msg=c.param==='password'?(ru?'Введите пароль:':'Парольді енгізіңіз:'):
+                c.param==='range'?(ru?'Какие страницы удалить? напр. 2,4-5':'Қай беттерді өшіру? мыс. 2,4-5'):
+                (ru?'Текст водяного знака:':'Су белгісінің мәтіні:');
+      const v=prompt(msg,c.param==='text'?'КОПИЯ':'');
+      if(v===null)return;convParam=v;
+    }
+    const inp=$('conv-input');inp.accept=c.accept;inp.multiple=!!c.multi;inp.value='';inp.click();
+  }
+  function renderConvert(){
+    $('conv-title').textContent=S().convtitle;$('conv-sub').textContent=S().convsub;$('conv-status').textContent='';
+    const box=$('conv-list');box.innerHTML='';
+    CGROUPS.forEach((g,gi)=>{
+      const h=document.createElement('div');h.className='cgh';if(gi===0)h.style.marginTop='4px';h.textContent=g[lang];box.appendChild(h);
+      g.keys.forEach(k=>{const c=CONV.find(x=>x.target===k);if(!c)return;const[t,d]=c[lang];
+        const el=document.createElement('div');el.className='card';
+        el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
+        el.onclick=()=>convClick(c);box.appendChild(el);});
+    });
+  }
+  async function onConvFiles(){
+    const inp=$('conv-input');if(!inp.files.length||!convTarget)return;
+    const s=S();const fd=new FormData();
+    for(const f of inp.files)fd.append('file',f);
+    fd.append('target',convTarget.target);
+    if(convParam)fd.append('param',convParam);
+    $('conv-status').textContent='⏳ '+s.convwait;
+    try{
+      const r=await afetch(API+'/api/convert',{method:'POST',body:fd});
+      if(!r.ok){$('conv-status').textContent='❌ '+s.converr;return;}
+      const blob=await r.blob();const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='qujat_converted.'+CONV_EXT[convTarget.target];
+      document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+      $('conv-status').textContent='✅ '+s.convdone;
+    }catch(e){$('conv-status').textContent='❌ '+s.converr;}
+  }
+
+  /* ---------- Google Sign-In (Gmail) ---------- */
+  let GCID=null,gReady=false;
+  async function initGoogle(){
+    if(NATIVE_IOS)return;   /* Apple 4.8: Google-кірі Sign in with Apple-сіз көрсетілмейді (iOS-та email/пароль ғана) */
+    if(GCID===null){try{const r=await afetch(API+'/auth/config');GCID=(await r.json()).googleClientId||'';}catch(e){GCID='';}}
+    if(!GCID)return;
+    $('g-or-t').textContent=lang==='ru'?'или':'немесе';
+    function render(){
+      if(!window.google||!google.accounts||!google.accounts.id)return false;
+      if(!gReady){google.accounts.id.initialize({client_id:GCID,callback:onGoogle});gReady=true;}
+      const c=$('g-signin');c.innerHTML='';
+      google.accounts.id.renderButton(c,{theme:'outline',size:'large',shape:'pill',text:'continue_with',width:340,locale:lang==='kz'?'kk':'ru'});
+      $('g-btn-wrap').classList.remove('hidden');return true;
+    }
+    if(!render()){let n=0;const t=setInterval(()=>{if(render()||++n>25)clearInterval(t);},150);}
+  }
+  async function onGoogle(resp){
+    try{const r=await afetch(API+'/auth/google',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})});
+      if(r.ok){const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();}else{alert(S().errnet);}
+    }catch(e){alert(S().errnet);}
+  }
+
+  function renderAll(){renderHome();docLabels();renderNav();renderAccount();
+    if(curTab==='calc'&&calcList.length)renderCalcHome();
+    if(curTab==='convert')renderConvert();
+    if(curTab==='ai')aiGreet();}
+  renderAll();
+  (async function boot(){
+    resetTok=new URLSearchParams(location.search).get('reset')||'';
+    if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
+    await loadMe();
+    if(!meUser){location.replace('/');return;}
+    document.body.classList.remove('gated');
+    showTab('docs');
+  })();
+</script>
+<script>
+  // Қолжетімділік: onclick-тегі div-терді клавиатурадан басуға болатын ету (Enter/Space).
+  (function(){
+    function enhance(root){
+      (root.querySelectorAll?root.querySelectorAll('div[onclick]'):[]).forEach(function(el){
+        if(el.getAttribute('role'))return;
+        el.setAttribute('role','button');
+        if(!el.hasAttribute('tabindex'))el.setAttribute('tabindex','0');
+      });
+    }
+    document.addEventListener('keydown',function(e){
+      if(e.key!=='Enter'&&e.key!==' ')return;
+      var el=document.activeElement;
+      if(el&&el.tagName==='DIV'&&el.getAttribute('role')==='button'){
+        e.preventDefault();el.click();
+      }
+    });
+    enhance(document);
+    try{new MutationObserver(function(muts){
+      muts.forEach(function(m){m.addedNodes&&m.addedNodes.forEach(function(n){
+        if(n.nodeType===1)enhance(n);});});
+    }).observe(document.body,{childList:true,subtree:true});}catch(e){}
+  })();
+</script>
+</body>
+</html>
