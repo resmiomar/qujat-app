@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../public-ios.css">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js" async defer></script>
 </head>
 <body>
 <div class="lang-fixed">
@@ -45,12 +46,18 @@
         </div>
         <button type="button" class="btn-primary" id="btn-login"></button>
         <button type="button" class="link-muted link-center" id="btn-forgot"></button>
-        <div class="divider-or"><span id="or-login"></span></div>
-        <div id="g-wrap-login"></div>
-        <button type="button" class="oauth-btn oauth-apple" id="btn-apple-login">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-          Apple
-        </button>
+        <div class="oauth-block" id="oauth-login">
+          <div class="divider-or"><span id="or-login"></span></div>
+          <div id="g-wrap-login" class="g-oauth-slot"></div>
+          <button type="button" class="oauth-btn oauth-google hidden" id="btn-google-login">
+            <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.5-5.2l-6.2-5.3C29.2 35.9 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-7l-6.5 5C9.1 42 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.3C40.9 36.4 45 31 45 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+            <span id="lbl-google-login"></span>
+          </button>
+          <button type="button" class="oauth-btn oauth-apple hidden" id="btn-apple-login">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            <span id="lbl-apple-login"></span>
+          </button>
+        </div>
         <p class="auth-foot"><span id="no-acc"></span> <button type="button" class="link-inline" id="go-register"></button></p>
       </div>
 
@@ -80,12 +87,18 @@
           <span id="consent-text"></span>
         </label>
         <button type="button" class="btn-primary" id="btn-reg-continue"></button>
-        <div class="divider-or"><span id="or-reg"></span></div>
-        <div id="g-wrap-reg"></div>
-        <button type="button" class="oauth-btn oauth-apple" id="btn-apple-reg">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-          Apple
-        </button>
+        <div class="oauth-block" id="oauth-reg">
+          <div class="divider-or"><span id="or-reg"></span></div>
+          <div id="g-wrap-reg" class="g-oauth-slot"></div>
+          <button type="button" class="oauth-btn oauth-google hidden" id="btn-google-reg">
+            <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.5-5.2l-6.2-5.3C29.2 35.9 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-7l-6.5 5C9.1 42 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.3C40.9 36.4 45 31 45 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+            <span id="lbl-google-reg"></span>
+          </button>
+          <button type="button" class="oauth-btn oauth-apple hidden" id="btn-apple-reg">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            <span id="lbl-apple-reg"></span>
+          </button>
+        </div>
         <p class="auth-foot"><span id="has-acc"></span> <button type="button" class="link-inline" id="go-login"></button></p>
       </div>
 
@@ -142,7 +155,9 @@
   let regEmail = '';
   let resetTok = new URLSearchParams(location.search).get('reset') || '';
   let GCID = null;
+  let ACID = null;
   let gReady = false;
+  let appleReady = false;
 
   const views = {
     login: $('view-login'), reset: $('view-reset'), reg: $('view-reg'),
@@ -180,9 +195,11 @@
     $('reset-h').textContent = s.resetTitle;
     $('reset-sub').textContent = s.resetSub;
     $('btn-reset').textContent = s.resetBtn;
+    $('lbl-google-login').textContent = $('lbl-google-reg').textContent = s.oauthGoogle;
+    $('lbl-apple-login').textContent = $('lbl-apple-reg').textContent = s.oauthApple;
   }
 
-  window.onLangChange = () => { render(); initGoogle(); };
+  window.onLangChange = () => { render(); initOAuth(); };
 
   document.querySelectorAll('.inp-toggle').forEach((btn) => {
     btn.onclick = () => {
@@ -317,57 +334,178 @@
   };
 
   document.querySelectorAll('.oauth-apple').forEach((b) => {
-    b.onclick = () => alert(Q.S().appleSoon);
+    b.onclick = () => doAppleSignIn();
   });
+  $('btn-google-login').onclick = () => triggerGoogle();
+  $('btn-google-reg').onclick = () => triggerGoogle();
+
+  async function loadAuthConfig() {
+    if (GCID !== null && ACID !== null) return;
+    try {
+      const r = await Q.afetch(Q.API + '/auth/config');
+      const d = await r.json();
+      GCID = d.googleClientId || '';
+      ACID = d.appleClientId || '';
+    } catch (e) {
+      GCID = GCID ?? '';
+      ACID = ACID ?? '';
+    }
+  }
+
+  function oauthBtnWidth() {
+    const card = $('card');
+    return Math.min(340, Math.max(260, (card ? card.clientWidth : 340) - 56));
+  }
+
+  function setOauthBlockVisible(block, showGoogle, showApple) {
+    if (!block) return;
+    block.classList.toggle('hidden', !showGoogle && !showApple);
+    const divider = block.querySelector('.divider-or');
+    if (divider) divider.classList.toggle('hidden', !showGoogle && !showApple);
+  }
 
   async function onGoogle(resp) {
+    const s = Q.S();
     try {
       const r = await Q.afetch(Q.API + '/auth/google', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ credential: resp.credential }),
       });
-      if (!r.ok) return alert(Q.S().errnet);
+      if (r.status === 400) {
+        const e = await r.json().catch(() => ({}));
+        if (e.error === 'google_not_configured') return alert(s.errGoogle);
+      }
+      if (!r.ok) return alert(s.errGoogle);
       const d = await r.json();
       await afterAuth(d.token);
-    } catch (e) { alert(Q.S().errnet); }
+    } catch (e) { alert(s.errGoogle); }
   }
 
-  async function initGoogle() {
-    if (NATIVE_IOS) {
+  function renderGoogleSlot(into, fallbackBtn) {
+    if (!GCID || NATIVE_IOS) {
+      into.innerHTML = '';
+      fallbackBtn.classList.add('hidden');
+      return false;
+    }
+    if (!window.google || !google.accounts || !google.accounts.id) return false;
+    if (!gReady) {
+      google.accounts.id.initialize({ client_id: GCID, callback: onGoogle, auto_select: false });
+      gReady = true;
+    }
+    into.innerHTML = '';
+    const d = document.createElement('div');
+    d.style.display = 'flex'; d.style.justifyContent = 'center'; d.style.width = '100%';
+    into.appendChild(d);
+    google.accounts.id.renderButton(d, {
+      theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with',
+      width: oauthBtnWidth(), locale: Q.lang() === 'kz' ? 'kk' : Q.lang(),
+    });
+    fallbackBtn.classList.add('hidden');
+    return true;
+  }
+
+  function triggerGoogle() {
+    const s = Q.S();
+    if (!GCID || NATIVE_IOS) return alert(s.errGoogle);
+    if (!gReady || !window.google || !google.accounts || !google.accounts.id) {
+      return alert(s.errGoogle);
+    }
+    google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed()) {
+        const reason = notification.getNotDisplayedReason?.() || '';
+        if (reason === 'unregistered_origin') return alert(s.googleOrigin);
+        return alert(s.errGoogle);
+      }
+      if (notification.isSkippedMoment()) {
+        const reason = notification.getSkippedReason?.() || '';
+        if (reason === 'unregistered_origin') return alert(s.googleOrigin);
+      }
+    });
+  }
+
+  function initAppleAuth() {
+    if (!ACID || !window.AppleID || !AppleID.auth) return false;
+    if (!appleReady) {
+      AppleID.auth.init({
+        clientId: ACID,
+        scope: 'name email',
+        redirectURI: window.location.origin + '/auth/',
+        state: 'qujat-auth',
+        usePopup: true,
+      });
+      appleReady = true;
+    }
+    return true;
+  }
+
+  async function doAppleSignIn() {
+    const s = Q.S();
+    if (!ACID) return alert(s.appleSoon);
+    if (!initAppleAuth()) {
+      let n = 0;
+      await new Promise((resolve) => {
+        const t = setInterval(() => {
+          if (initAppleAuth() || ++n > 40) { clearInterval(t); resolve(); }
+        }, 150);
+      });
+    }
+    if (!appleReady) return alert(s.appleSoon);
+    try {
+      const res = await AppleID.auth.signIn();
+      const id_token = res.authorization.id_token;
+      let name = '';
+      if (res.user && res.user.name) {
+        name = ((res.user.name.firstName || '') + ' ' + (res.user.name.lastName || '')).trim();
+      }
+      const r = await Q.afetch(Q.API + '/auth/apple', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_token, name }),
+      });
+      if (r.status === 400) {
+        const e = await r.json().catch(() => ({}));
+        if (e.error === 'apple_not_configured') return alert(s.appleSoon);
+      }
+      if (!r.ok) return alert(s.errnet);
+      const d = await r.json();
+      await afterAuth(d.token);
+    } catch (e) {
+      if (e && (e.error === 'popup_closed_by_user' || e.error === 'user_cancelled_authorize')) return;
+      alert(s.errnet);
+    }
+  }
+
+  async function initOAuth() {
+    await loadAuthConfig();
+    const showGoogle = !NATIVE_IOS && !!GCID;
+    const showApple = !!ACID;
+    setOauthBlockVisible($('oauth-login'), showGoogle, showApple);
+    setOauthBlockVisible($('oauth-reg'), showGoogle, showApple);
+    $('btn-apple-login').classList.toggle('hidden', !showApple);
+    $('btn-apple-reg').classList.toggle('hidden', !showApple);
+    $('btn-google-login').classList.toggle('hidden', !showGoogle);
+    $('btn-google-reg').classList.toggle('hidden', !showGoogle);
+
+    if (showGoogle) {
+      function tryGoogle() {
+        const ok1 = renderGoogleSlot($('g-wrap-login'), $('btn-google-login'));
+        const ok2 = renderGoogleSlot($('g-wrap-reg'), $('btn-google-reg'));
+        if (!ok1 || !ok2) {
+          $('btn-google-login').classList.remove('hidden');
+          $('btn-google-reg').classList.remove('hidden');
+        }
+        return ok1 && ok2;
+      }
+      if (!tryGoogle()) {
+        let n = 0;
+        const t = setInterval(() => {
+          if (tryGoogle() || ++n > 40) clearInterval(t);
+        }, 150);
+      }
+    } else {
       $('g-wrap-login').innerHTML = '';
       $('g-wrap-reg').innerHTML = '';
-      return;
     }
-    if (GCID === null) {
-      try {
-        const r = await Q.afetch(Q.API + '/auth/config');
-        GCID = (await r.json()).googleClientId || '';
-      } catch (e) { GCID = ''; }
-    }
-    if (!GCID) return;
-    function render(into) {
-      if (!window.google || !google.accounts || !google.accounts.id) return false;
-      if (!gReady) {
-        google.accounts.id.initialize({ client_id: GCID, callback: onGoogle });
-        gReady = true;
-      }
-      into.innerHTML = '';
-      const d = document.createElement('div');
-      d.style.display = 'flex'; d.style.justifyContent = 'center';
-      into.appendChild(d);
-      google.accounts.id.renderButton(d, {
-        theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', width: 340,
-        locale: Q.lang() === 'kz' ? 'kk' : Q.lang(),
-      });
-      return true;
-    }
-    if (!render($('g-wrap-login'))) {
-      let n = 0;
-      const t = setInterval(() => {
-        if (render($('g-wrap-login')) && render($('g-wrap-reg'))) clearInterval(t);
-        if (++n > 30) clearInterval(t);
-      }, 150);
-    } else render($('g-wrap-reg'));
+    if (showApple) initAppleAuth();
   }
 
   Q.mountLangPill(document.body);
@@ -379,7 +517,7 @@
     if (resetTok) showView('reset');
     else if (new URLSearchParams(location.search).get('mode') === 'register') showView('reg');
     else showView('login');
-    initGoogle();
+    initOAuth();
   })();
 })();
 </script>
