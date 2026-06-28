@@ -57,6 +57,8 @@
       googleOrigin: 'Google: добавьте https://app.qujat.digital в Authorized JavaScript origins (Google Cloud Console).',
       appleSoon: 'Sign in with Apple ещё не настроен на сервере.',
       appleNeedSafari: 'Вход через Apple доступен в Safari или в приложении Qujat на iPhone.',
+      appleInvalid: 'Apple: неверный client id или Return URL. Проверьте Services ID digital.qujat.signin в Apple Developer.',
+      appleVerify: 'Apple: не удалось проверить вход. Попробуйте ещё раз или войдите по email.',
     },
     kz: {
       heroTitle: 'Телефондағы бухгалтерия',
@@ -111,6 +113,8 @@
       googleOrigin: 'Google: https://app.qujat.digital доменін Google Cloud Console-ға қосыңыз.',
       appleSoon: 'Apple арқылы кіру серверде бапталмаған.',
       appleNeedSafari: 'Apple арқылы кіру Safari немесе iPhone қосымшасында.',
+      appleInvalid: 'Apple: client id немесе Return URL қате. Apple Developer-де digital.qujat.signin тексеріңіз.',
+      appleVerify: 'Apple: кіру расталмады. Email арқылы кіріп көріңіз.',
     },
     en: {
       heroTitle: 'Accounting in your pocket',
@@ -165,6 +169,8 @@
       googleOrigin: 'Google: add https://app.qujat.digital to Authorized JavaScript origins in Google Cloud Console.',
       appleSoon: 'Sign in with Apple is not configured on the server yet.',
       appleNeedSafari: 'Apple sign-in works in Safari or the Qujat iPhone app.',
+      appleInvalid: 'Apple: invalid client id or Return URL. Check Services ID digital.qujat.signin in Apple Developer.',
+      appleVerify: 'Apple: sign-in verification failed. Try email instead.',
     },
   };
 

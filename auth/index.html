@@ -465,12 +465,15 @@
         const e = await r.json().catch(() => ({}));
         if (e.error === 'apple_not_configured') return alert(s.appleSoon);
       }
+      if (r.status === 401) return alert(s.appleVerify);
       if (!r.ok) return alert(s.errnet);
       const d = await r.json();
       await afterAuth(d.token);
     } catch (e) {
       if (e && (e.error === 'popup_closed_by_user' || e.error === 'user_cancelled_authorize')) return;
-      alert(s.errnet);
+      const raw = (e && (e.error || e.message)) ? String(e.error || e.message) : '';
+      if (/invalid_request|invalid_client|redirect|client id/i.test(raw)) return alert(s.appleInvalid);
+      alert(raw || s.errnet);
     }
   }
 
