@@ -76,7 +76,9 @@ header{
   -webkit-backdrop-filter:saturate(180%) blur(18px);
   border-bottom:1px solid var(--line);
 }
-header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:10px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ib-logout{color:var(--danger);border-color:#f3c0c0;font-weight:700;white-space:nowrap}
 .logo{
   font-size:21px;font-weight:800;letter-spacing:-.03em;
   display:flex;gap:8px;align-items:center;
@@ -522,7 +524,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 </noscript>
 <header><div class="wrap">
   <div class="logo" role="button" tabindex="0" onclick="goHome()" style="cursor:pointer" title="На главную" aria-label="На главную"><img src="qujat-logo.png" alt="Qujat"></div>
-  <button class="ib" id="langbtn" onclick="toggleLang()">🌐 RU</button>
+  <div class="header-actions">
+    <button class="ib ib-logout hidden" id="hdr-logout" type="button" onclick="doLogout()"></button>
+    <button class="ib" id="langbtn" onclick="toggleLang()">🌐 RU</button>
+  </div>
 </div></header>
 
 <div class="wrap">
@@ -702,6 +707,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         </div>
       </details>
       <button class="btn ghost" style="color:var(--danger);border-color:#f3c0c0" onclick="doDelete()" id="a-delete"></button>
+      <button class="btn ghost" style="margin-top:10px;color:var(--danger);border-color:#f3c0c0" onclick="doLogout()" id="a-logout-bottom"></button>
     </div>
     <!-- Pro / жазылым экраны -->
     <div id="pro" class="hidden">
@@ -1198,7 +1204,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
     $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
     $('a-to-login').textContent=s.acctologin;$('a-to-reg').textContent=s.acctoreg;
-    $('a-logout').textContent=s.acclogout;$('acc-welcome').textContent=s.accwelcome;
+    $('a-logout').textContent=s.acclogout;
+    $('a-logout-bottom').textContent=s.acclogout;
+    const hl=$('hdr-logout');if(hl){hl.textContent=s.acclogout;hl.classList.toggle('hidden',!meUser);}
+    $('acc-welcome').textContent=s.accwelcome;
     $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
     $('acc-assets-t').textContent=s.assetst;$('acc-assets-hint').textContent=s.assetshint;
     $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
@@ -1302,7 +1311,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   async function loadMe(){
     try{const r=await afetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
-    renderAccount();applyGate();
+    renderAccount();applyGate();accLabels();
   }
   function applyGate(){
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
