@@ -48,7 +48,6 @@
         <button type="button" class="link-muted link-center" id="btn-forgot"></button>
         <div class="oauth-block" id="oauth-login">
           <div class="divider-or"><span id="or-login"></span></div>
-          <div id="g-wrap-login" class="g-oauth-slot"></div>
           <button type="button" class="oauth-btn oauth-google hidden" id="btn-google-login">
             <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.5-5.2l-6.2-5.3C29.2 35.9 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-7l-6.5 5C9.1 42 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.3C40.9 36.4 45 31 45 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
             <span id="lbl-google-login"></span>
@@ -89,7 +88,6 @@
         <button type="button" class="btn-primary" id="btn-reg-continue"></button>
         <div class="oauth-block" id="oauth-reg">
           <div class="divider-or"><span id="or-reg"></span></div>
-          <div id="g-wrap-reg" class="g-oauth-slot"></div>
           <button type="button" class="oauth-btn oauth-google hidden" id="btn-google-reg">
             <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.5-5.2l-6.2-5.3C29.2 35.9 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-7l-6.5 5C9.1 42 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.3C40.9 36.4 45 31 45 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
             <span id="lbl-google-reg"></span>
@@ -352,9 +350,14 @@
     }
   }
 
-  function oauthBtnWidth() {
-    const card = $('card');
-    return Math.min(340, Math.max(260, (card ? card.clientWidth : 340) - 56));
+  function initGoogleAuth() {
+    if (!GCID || NATIVE_IOS) return false;
+    if (!window.google || !google.accounts || !google.accounts.id) return false;
+    if (!gReady) {
+      google.accounts.id.initialize({ client_id: GCID, callback: onGoogle, auto_select: false });
+      gReady = true;
+    }
+    return true;
   }
 
   function setOauthBlockVisible(block, showGoogle, showApple) {
@@ -381,35 +384,10 @@
     } catch (e) { alert(s.errGoogle); }
   }
 
-  function renderGoogleSlot(into, fallbackBtn) {
-    if (!GCID || NATIVE_IOS) {
-      into.innerHTML = '';
-      fallbackBtn.classList.add('hidden');
-      return false;
-    }
-    if (!window.google || !google.accounts || !google.accounts.id) return false;
-    if (!gReady) {
-      google.accounts.id.initialize({ client_id: GCID, callback: onGoogle, auto_select: false });
-      gReady = true;
-    }
-    into.innerHTML = '';
-    const d = document.createElement('div');
-    d.style.display = 'flex'; d.style.justifyContent = 'center'; d.style.width = '100%';
-    into.appendChild(d);
-    google.accounts.id.renderButton(d, {
-      theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with',
-      width: oauthBtnWidth(), locale: Q.lang() === 'kz' ? 'kk' : Q.lang(),
-    });
-    fallbackBtn.classList.add('hidden');
-    return true;
-  }
-
   function triggerGoogle() {
     const s = Q.S();
     if (!GCID || NATIVE_IOS) return alert(s.errGoogle);
-    if (!gReady || !window.google || !google.accounts || !google.accounts.id) {
-      return alert(s.errGoogle);
-    }
+    if (!initGoogleAuth()) return alert(s.errGoogle);
     google.accounts.id.prompt((notification) => {
       if (notification.isNotDisplayed()) {
         const reason = notification.getNotDisplayedReason?.() || '';
@@ -489,24 +467,12 @@
     $('btn-google-reg').classList.toggle('hidden', !showGoogle);
 
     if (showGoogle) {
-      function tryGoogle() {
-        const ok1 = renderGoogleSlot($('g-wrap-login'), $('btn-google-login'));
-        const ok2 = renderGoogleSlot($('g-wrap-reg'), $('btn-google-reg'));
-        if (!ok1 || !ok2) {
-          $('btn-google-login').classList.remove('hidden');
-          $('btn-google-reg').classList.remove('hidden');
-        }
-        return ok1 && ok2;
-      }
-      if (!tryGoogle()) {
+      if (!initGoogleAuth()) {
         let n = 0;
         const t = setInterval(() => {
-          if (tryGoogle() || ++n > 40) clearInterval(t);
+          if (initGoogleAuth() || ++n > 40) clearInterval(t);
         }, 150);
       }
-    } else {
-      $('g-wrap-login').innerHTML = '';
-      $('g-wrap-reg').innerHTML = '';
     }
     if (showApple) initAppleAuth();
   }
