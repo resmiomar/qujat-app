@@ -1315,8 +1315,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   function applyGate(){
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
-    if(meUser){document.body.classList.remove('gated');if(curTab==='account')showTab('docs');}
-    else{location.replace('/');}
+    if(meUser){document.body.classList.remove('gated');return;}
+    if(NATIVE_APP){document.body.classList.add('gated');if(curTab!=='account')showTab('account');return;}
+    location.replace('/');
   }
   async function doRegister(){
     const s=S(),name=$('a_name').value.trim(),email=$('ar_email').value.trim().toLowerCase(),pass=$('ar_pass').value;
@@ -1336,7 +1337,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;location.replace('/');}
+  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;if(NATIVE_APP){document.body.classList.add('gated');renderAccount();showTab('account');return;}location.replace('/');}
 
   /* ----- Pro / жазылым (Kaspi + тенге) ----- */
   let subInfo=null,proTariff=null,proOpen=false;
@@ -1519,7 +1520,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     resetTok=new URLSearchParams(location.search).get('reset')||'';
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
     await loadMe();
-    if(!meUser){location.replace('/');return;}
+    if(!meUser){
+      if(NATIVE_APP){document.body.classList.add('gated');showTab('account');return;}
+      location.replace('/');
+      return;
+    }
     document.body.classList.remove('gated');
     showTab('docs');
   })();
