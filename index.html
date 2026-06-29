@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Qujat — документы и налоги для ИП и ТОО в Казахстане</title>
 <meta name="description" content="Создавайте счета, акты, накладные и считайте налоги РК за минуту. Qujat помогает ИП и ТОО работать без 1С и бухгалтера на старте.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,18 @@
 
 <div class="ios-shell landing-shell">
   <div class="ios-inner landing-inner">
-    <section class="landing-hero fade-up">
+    <header class="landing-topbar fade-up" aria-label="Qujat navigation">
+      <a class="topbar-brand" href="/" aria-label="Qujat homepage">Qujat</a>
+      <nav class="topbar-nav" aria-label="Main sections">
+        <a href="#features" id="nav-features"></a>
+        <a href="#workflow" id="nav-workflow"></a>
+        <a href="#trust" id="nav-trust"></a>
+      </nav>
+      <button type="button" class="topbar-cta" id="btn-top-cta"></button>
+    </header>
+
+    <main>
+    <section class="landing-hero fade-up" aria-labelledby="hero-title">
       <div class="hero-copy">
         <div class="hero-logo">Qujat</div>
         <div class="hero-kicker" id="hero-kicker"></div>
@@ -54,7 +65,15 @@
 
     <section class="proof-strip fade-up fade-up-d1" id="proof-strip"></section>
 
-    <section class="section-block fade-up fade-up-d2">
+    <section class="audience-card fade-up fade-up-d2" id="audience">
+      <div class="section-head">
+        <span id="audience-kicker"></span>
+        <h2 id="audience-title"></h2>
+      </div>
+      <div class="audience-grid" id="audience-grid"></div>
+    </section>
+
+    <section class="section-block fade-up fade-up-d2" id="features">
       <div class="section-head">
         <span id="features-kicker"></span>
         <h2 id="features-title"></h2>
@@ -62,7 +81,7 @@
       <div class="feature-grid" id="feature-grid"></div>
     </section>
 
-    <section class="workflow-card fade-up fade-up-d2">
+    <section class="workflow-card fade-up fade-up-d2" id="workflow">
       <div>
         <span class="section-kicker" id="workflow-kicker"></span>
         <h2 id="workflow-title"></h2>
@@ -70,7 +89,24 @@
       <div class="steps" id="steps"></div>
     </section>
 
-    <section class="objection-card fade-up fade-up-d3">
+    <section class="compare-card fade-up fade-up-d3">
+      <div class="section-head">
+        <span id="compare-kicker"></span>
+        <h2 id="compare-title"></h2>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-col compare-before">
+          <h3 id="before-title"></h3>
+          <div id="before-list"></div>
+        </div>
+        <div class="compare-col compare-after">
+          <h3 id="after-title"></h3>
+          <div id="after-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="objection-card fade-up fade-up-d3" id="trust">
       <div>
         <span class="section-kicker" id="objection-kicker"></span>
         <h2 id="objection-title"></h2>
@@ -85,6 +121,7 @@
       <button type="button" class="hero-cta" id="btn-bottom-cta"></button>
       <button type="button" class="login-link" id="btn-signin"></button>
     </section>
+    </main>
 
     <footer class="ios-footer fade-up fade-up-d3" id="footer"></footer>
   </div>
@@ -96,6 +133,10 @@
   const Q = window.QujatPublic;
   const COPY = {
     ru: {
+      navFeatures: 'Возможности',
+      navWorkflow: 'Как работает',
+      navTrust: 'Безопасно',
+      navCta: 'Начать',
       kicker: 'Для ИП и ТОО в Казахстане',
       title: 'Документы и налоги без 1С, бухгалтера и лишних таблиц',
       sub: 'Создавайте счета, акты, накладные, считайте налоги 2026 и спрашивайте ИИ-помощника прямо с телефона.',
@@ -113,6 +154,13 @@
       aiLabel: 'ИИ-помощник',
       aiValue: 'Ответы по РК',
       proof: ['Счёт, акт, накладная и договоры', 'Калькуляторы ИП и ТОО на 2026', 'Печать и подпись можно загрузить в профиль'],
+      audienceKicker: 'Кому особенно полезно',
+      audienceTitle: 'Для тех, кто хочет закрывать бухгалтерские задачи быстрее',
+      audience: [
+        ['ИП на упрощёнке', 'Быстро выставлять документы и понимать обязательные платежи.'],
+        ['ТОО и малый бизнес', 'Подготовить базовые документы без отдельной системы.'],
+        ['Фрилансеры и услуги', 'Отправить клиенту аккуратный PDF вместо Word-шаблонов.']
+      ],
       featuresKicker: 'Что внутри',
       featuresTitle: 'Закрывает ежедневные задачи предпринимателя',
       features: [
@@ -128,6 +176,12 @@
         ['2', 'Заполните понятную форму'],
         ['3', 'Скачайте PDF или сохраните историю']
       ],
+      compareKicker: 'До / после',
+      compareTitle: 'Меньше ручной работы, больше порядка',
+      beforeTitle: 'Обычно',
+      afterTitle: 'С Qujat',
+      before: ['Искать шаблон в Word', 'Считать налоги в таблицах', 'Каждый раз вводить реквизиты', 'Спрашивать в чатах без контекста'],
+      after: ['Выбрать документ и скачать PDF', 'Открыть готовый калькулятор', 'Сохранить профиль компании', 'Спросить AI по бухгалтерии РК'],
       objectionKicker: 'Почему можно начать сейчас',
       objectionTitle: 'Без риска и долгой настройки',
       objectionSub: 'Qujat подходит, когда нужно быстро выставить документ, посчитать налог или разобраться в вопросе без сложной системы.',
@@ -138,6 +192,10 @@
       footer: '© 2026 Qujat · Документы, налоги и ИИ для бизнеса РК'
     },
     kz: {
+      navFeatures: 'Мүмкіндіктер',
+      navWorkflow: 'Қалай істейді',
+      navTrust: 'Қауіпсіз',
+      navCta: 'Бастау',
       kicker: 'Қазақстандағы ИП және ТОО үшін',
       title: '1С-сіз, бухгалтерсіз және артық кестесіз құжат пен салық',
       sub: 'Счёт, акт, накладная жасаңыз, 2026 салықтарын есептеңіз және AI-көмекшіден телефоннан сұраңыз.',
@@ -155,6 +213,13 @@
       aiLabel: 'AI-көмекші',
       aiValue: 'ҚР бойынша жауап',
       proof: ['Счёт, акт, накладная және шарттар', '2026 жылға ИП/ТОО калькуляторлары', 'Профильге мөр мен қолтаңба жүктеуге болады'],
+      audienceKicker: 'Кімге пайдалы',
+      audienceTitle: 'Бухгалтерлік жұмысты тез жабуды қалайтындарға',
+      audience: [
+        ['Упрощенкадағы ИП', 'Құжат шығарып, міндетті төлемдерді тез түсіну.'],
+        ['ТОО және шағын бизнес', 'Негізгі құжаттарды ауыр жүйесіз дайындау.'],
+        ['Фриланс және қызмет', 'Клиентке Word орнына ұқыпты PDF жіберу.']
+      ],
       featuresKicker: 'Ішінде не бар',
       featuresTitle: 'Кәсіпкердің күнделікті жұмысын жеңілдетеді',
       features: [
@@ -170,6 +235,12 @@
         ['2', 'Түсінікті форманы толтырыңыз'],
         ['3', 'PDF жүктеңіз немесе тарихта сақтаңыз']
       ],
+      compareKicker: 'Бұрын / кейін',
+      compareTitle: 'Қол жұмысы азайып, тәртіп көбейеді',
+      beforeTitle: 'Әдетте',
+      afterTitle: 'Qujat-пен',
+      before: ['Word шаблон іздеу', 'Салықты кестеде санау', 'Реквизитті қайта-қайта енгізу', 'Контекстсіз чаттан сұрау'],
+      after: ['Құжат таңдап PDF жүктеу', 'Дайын калькулятор ашу', 'Компания профилін сақтау', 'ҚР бухгалтериясы бойынша AI-дан сұрау'],
       objectionKicker: 'Неге қазір бастауға болады',
       objectionTitle: 'Тәуекелсіз және ұзақ баптаусыз',
       objectionSub: 'Qujat құжат шығару, салық есептеу немесе бухгалтерлік сұрақты тез түсіну керек кезде ыңғайлы.',
@@ -180,6 +251,10 @@
       footer: '© 2026 Qujat · ҚР бизнесіне құжат, салық және AI'
     },
     en: {
+      navFeatures: 'Features',
+      navWorkflow: 'How it works',
+      navTrust: 'Trust',
+      navCta: 'Start',
       kicker: 'For sole proprietors and companies in Kazakhstan',
       title: 'Documents and taxes without ERP, accountants, or messy spreadsheets',
       sub: 'Create invoices, acts, waybills, calculate 2026 taxes, and ask the AI assistant from your phone.',
@@ -197,6 +272,13 @@
       aiLabel: 'AI assistant',
       aiValue: 'Kazakhstan answers',
       proof: ['Invoices, acts, waybills, and contracts', '2026 calculators for Kazakhstan businesses', 'Upload stamp and signature in profile'],
+      audienceKicker: 'Best for',
+      audienceTitle: 'Small businesses that want accounting tasks done faster',
+      audience: [
+        ['Sole proprietors', 'Create documents and understand required payments faster.'],
+        ['Small companies', 'Prepare basic paperwork without a heavy system.'],
+        ['Freelancers and services', 'Send a clean PDF instead of editing Word templates.']
+      ],
       featuresKicker: 'What you get',
       featuresTitle: 'Daily paperwork for small business, faster',
       features: [
@@ -212,6 +294,12 @@
         ['2', 'Fill a simple guided form'],
         ['3', 'Download PDF or save history']
       ],
+      compareKicker: 'Before / after',
+      compareTitle: 'Less manual work, more order',
+      beforeTitle: 'Usually',
+      afterTitle: 'With Qujat',
+      before: ['Find a Word template', 'Calculate taxes in spreadsheets', 'Re-enter details every time', 'Ask random chats without context'],
+      after: ['Choose a document and download PDF', 'Use a ready calculator', 'Save company profile once', 'Ask AI about Kazakhstan accounting'],
       objectionKicker: 'Start safely',
       objectionTitle: 'No setup burden',
       objectionSub: 'Qujat is useful when you need a document, tax estimate, or quick accounting explanation without a heavy system.',
@@ -226,6 +314,10 @@
   function render() {
     const s = COPY[Q.lang()] || COPY.ru;
     document.documentElement.lang = Q.lang() === 'kz' ? 'kk' : Q.lang();
+    document.getElementById('nav-features').textContent = s.navFeatures;
+    document.getElementById('nav-workflow').textContent = s.navWorkflow;
+    document.getElementById('nav-trust').textContent = s.navTrust;
+    document.getElementById('btn-top-cta').textContent = s.navCta;
     document.getElementById('hero-kicker').textContent = s.kicker;
     document.getElementById('hero-title').textContent = s.title;
     document.getElementById('hero-sub').textContent = s.sub;
@@ -241,10 +333,16 @@
     document.getElementById('preview-tax-value').textContent = s.taxValue;
     document.getElementById('preview-ai-label').textContent = s.aiLabel;
     document.getElementById('preview-ai-value').textContent = s.aiValue;
+    document.getElementById('audience-kicker').textContent = s.audienceKicker;
+    document.getElementById('audience-title').textContent = s.audienceTitle;
     document.getElementById('features-kicker').textContent = s.featuresKicker;
     document.getElementById('features-title').textContent = s.featuresTitle;
     document.getElementById('workflow-kicker').textContent = s.workflowKicker;
     document.getElementById('workflow-title').textContent = s.workflowTitle;
+    document.getElementById('compare-kicker').textContent = s.compareKicker;
+    document.getElementById('compare-title').textContent = s.compareTitle;
+    document.getElementById('before-title').textContent = s.beforeTitle;
+    document.getElementById('after-title').textContent = s.afterTitle;
     document.getElementById('objection-kicker').textContent = s.objectionKicker;
     document.getElementById('objection-title').textContent = s.objectionTitle;
     document.getElementById('objection-sub').textContent = s.objectionSub;
@@ -255,18 +353,24 @@
 
     document.getElementById('trust-row').innerHTML = s.trusts.map((item) => `<span>${item}</span>`).join('');
     document.getElementById('proof-strip').innerHTML = s.proof.map((item) => `<div>${item}</div>`).join('');
+    document.getElementById('audience-grid').innerHTML = s.audience.map(([title, text]) =>
+      `<article class="audience-item"><h3>${title}</h3><p>${text}</p></article>`
+    ).join('');
     document.getElementById('feature-grid').innerHTML = s.features.map(([title, text]) =>
       `<article class="feature-card"><h3>${title}</h3><p>${text}</p></article>`
     ).join('');
     document.getElementById('steps').innerHTML = s.steps.map(([num, text]) =>
       `<div class="step"><strong>${num}</strong><span>${text}</span></div>`
     ).join('');
+    document.getElementById('before-list').innerHTML = s.before.map((item) => `<span>${item}</span>`).join('');
+    document.getElementById('after-list').innerHTML = s.after.map((item) => `<span>${item}</span>`).join('');
     document.getElementById('objection-list').innerHTML = s.objections.map((item) => `<span>${item}</span>`).join('');
   }
 
   window.onLangChange = render;
 
   document.getElementById('btn-cta').onclick = () => { location.href = '/app.html'; };
+  document.getElementById('btn-top-cta').onclick = () => { location.href = '/app.html'; };
   document.getElementById('btn-signup').onclick = () => { location.href = '/auth/?mode=register'; };
   document.getElementById('btn-bottom-cta').onclick = () => { location.href = '/app.html'; };
   document.getElementById('btn-signin').onclick = () => { location.href = '/auth/'; };
