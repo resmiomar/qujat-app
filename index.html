@@ -23,8 +23,10 @@
       <a class="topbar-brand" href="/" aria-label="Qujat homepage">Qujat</a>
       <nav class="topbar-nav" aria-label="Main sections">
         <a href="#features" id="nav-features"></a>
-        <a href="#workflow" id="nav-workflow"></a>
-        <a href="#trust" id="nav-trust"></a>
+        <a href="#documents" id="nav-docs"></a>
+        <a href="#taxes" id="nav-taxes"></a>
+        <a href="#price" id="nav-price"></a>
+        <a href="#faq" id="nav-faq"></a>
       </nav>
       <button type="button" class="topbar-cta" id="btn-top-cta"></button>
     </header>
@@ -44,6 +46,7 @@
           <button type="button" class="hero-secondary" id="btn-signup"></button>
         </div>
         <div class="trust-row" id="trust-row"></div>
+        <div class="hero-metrics" id="hero-metrics"></div>
       </div>
       <div class="product-preview" aria-label="Qujat preview">
         <div class="preview-top">
@@ -59,11 +62,14 @@
           <div><span id="preview-tax-label"></span><strong id="preview-tax-value"></strong></div>
           <div><span id="preview-ai-label"></span><strong id="preview-ai-value"></strong></div>
         </div>
+        <div class="preview-list" id="preview-list"></div>
         <div class="preview-bar"><span></span></div>
       </div>
     </section>
 
     <section class="proof-strip fade-up fade-up-d1" id="proof-strip"></section>
+
+    <div id="sales-sections"></div>
 
     <section class="audience-card fade-up fade-up-d2" id="audience">
       <div class="section-head">
@@ -134,17 +140,22 @@
   const COPY = {
     ru: {
       navFeatures: 'Возможности',
+      navDocs: 'Документы',
+      navTaxes: 'Налоги',
+      navPrice: 'Цена',
+      navFaq: 'FAQ',
       navWorkflow: 'Как работает',
       navTrust: 'Безопасно',
       navCta: 'Начать',
       kicker: 'Для ИП и ТОО в Казахстане',
-      title: 'Документы и налоги без 1С, бухгалтера и лишних таблиц',
-      sub: 'Создавайте счета, акты, накладные, считайте налоги 2026 и спрашивайте ИИ-помощника прямо с телефона.',
-      cta: 'Попробовать бесплатно',
-      ctaSub: 'Создать PDF за минуту',
+      title: 'Закройте документы, налоги и вопросы по бухгалтерии за 10 минут в день',
+      sub: 'Qujat помогает предпринимателям в Казахстане выставлять счета, акты и накладные, считать платежи на 2026 год и получать подсказки AI без 1С на старте.',
+      cta: 'Создать первый документ',
+      ctaSub: 'Бесплатно · PDF сразу',
       signup: 'Зарегистрироваться',
       signin: 'Войти в аккаунт',
-      trusts: ['Бесплатный старт', 'PDF сразу', 'Русский / қазақша'],
+      trusts: ['Без банковской карты', 'PDF сразу', 'Русский / қазақша'],
+      metrics: [['1 мин', 'на первый PDF'], ['2026', 'актуальные калькуляторы'], ['3 языка', 'RU · KZ · EN']],
       status: 'готово за 1 мин',
       docType: 'Счёт на оплату',
       docTitle: 'PDF для клиента',
@@ -153,7 +164,45 @@
       taxValue: 'ИПН · СН · ОСМС',
       aiLabel: 'ИИ-помощник',
       aiValue: 'Ответы по РК',
-      proof: ['Счёт, акт, накладная и договоры', 'Калькуляторы ИП и ТОО на 2026', 'Печать и подпись можно загрузить в профиль'],
+      previewList: ['Реквизиты компании сохраняются', 'Печать и подпись можно загрузить', 'История документов под рукой'],
+      proof: ['Не надо собирать шаблоны по чатам', 'Не надо каждый раз вводить реквизиты', 'Не надо держать формулы в Excel'],
+      painKicker: 'Проблема',
+      painTitle: 'У предпринимателя нет времени разбираться в бухгалтерии весь день',
+      painSub: 'Когда клиент просит документ, налоговый срок близко, а бухгалтер занят, нужен быстрый инструмент, который закрывает базовые задачи без лишней системы.',
+      pains: [
+        ['Документ нужен сейчас', 'Счёт, акт или накладная должны уйти клиенту сегодня, а шаблон опять нужно править вручную.'],
+        ['Суммы по налогам непонятны', 'ИПН, СН, ОСМС, НДС и режимы путают, если считать всё в разных таблицах.'],
+        ['Реквизиты теряются', 'Компания, печать, подпись и данные покупателя каждый раз вводятся заново.']
+      ],
+      docsKicker: 'Документы',
+      docsTitle: 'Готовьте базовый пакет документов без Word-шаблонов',
+      docsSub: 'Qujat делает форму понятной: продавец, покупатель, позиции, итоговая сумма — затем аккуратный PDF для клиента.',
+      docs: ['Счёт на оплату', 'Акт выполненных работ', 'Накладная', 'Договоры', 'Профиль компании', 'Печать и подпись'],
+      taxesKicker: 'Налоги и расчёты',
+      taxesTitle: 'Быстро понять суммы до оплаты',
+      taxesSub: 'Калькуляторы помогают предпринимателю заранее увидеть ориентир по платежам и не держать формулы в голове.',
+      taxes: [
+        ['ИП на упрощёнке', 'Быстрый ориентир по обязательным платежам.'],
+        ['Социальные платежи', 'ИПН, СН, ОПВ, СО, ОСМС в одном месте.'],
+        ['НДС и режимы', 'Отдельные расчёты для ситуаций, где важно не ошибиться.']
+      ],
+      aiKicker: 'AI-помощник',
+      aiTitle: 'Спрашивайте простыми словами, а не бухгалтерскими терминами',
+      aiSub: 'Когда не знаете, какой документ нужен или что означает требование, AI-помощник объясняет понятным языком по контексту Казахстана.',
+      aiPrompts: ['Какой документ отправить клиенту после услуги?', 'Какие платежи есть у ИП на упрощёнке?', 'Что указать в счёте на оплату?'],
+      priceKicker: 'Старт',
+      priceTitle: 'Начать можно бесплатно',
+      priceSub: 'Главная цель Qujat — быстро дать предпринимателю готовый документ и понимание по налогам без долгой настройки.',
+      priceItems: ['Создание аккаунта бесплатно', 'PDF можно получить сразу', 'Профиль компании сохраняет реквизиты', 'Нет скрытых платежей в iOS-приложении'],
+      priceCta: 'Начать бесплатно',
+      faqKicker: 'Ответы на сомнения',
+      faqTitle: 'Перед стартом',
+      faq: [
+        ['Это заменяет бухгалтера?', 'Нет. Qujat закрывает ежедневные базовые задачи: документы, расчёты, подсказки. Для сложных ситуаций лучше консультироваться со специалистом.'],
+        ['Можно пользоваться с телефона?', 'Да. Страница, формы и PDF-сценарии проверяются на телефоне, планшете и desktop.'],
+        ['Нужно ли сразу платить?', 'Нет. Можно начать бесплатно, создать аккаунт и попробовать первый сценарий.'],
+        ['Для кого продукт?', 'Для ИП, ТОО, фрилансеров, услуг и малого бизнеса в Казахстане, кому нужно быстро закрывать документы и расчёты.']
+      ],
       audienceKicker: 'Кому особенно полезно',
       audienceTitle: 'Для тех, кто хочет закрывать бухгалтерские задачи быстрее',
       audience: [
@@ -193,17 +242,22 @@
     },
     kz: {
       navFeatures: 'Мүмкіндіктер',
+      navDocs: 'Құжаттар',
+      navTaxes: 'Салық',
+      navPrice: 'Баға',
+      navFaq: 'FAQ',
       navWorkflow: 'Қалай істейді',
       navTrust: 'Қауіпсіз',
       navCta: 'Бастау',
       kicker: 'Қазақстандағы ИП және ТОО үшін',
-      title: '1С-сіз, бухгалтерсіз және артық кестесіз құжат пен салық',
-      sub: 'Счёт, акт, накладная жасаңыз, 2026 салықтарын есептеңіз және AI-көмекшіден телефоннан сұраңыз.',
-      cta: 'Тегін қолданып көру',
-      ctaSub: 'PDF бір минутта',
+      title: 'Құжат, салық және бухгалтерлік сұрақты күніне 10 минутта жабыңыз',
+      sub: 'Qujat Қазақстан кәсіпкерлеріне счёт, акт, накладная жасауға, 2026 төлемдерін есептеуге және 1С-сіз AI-дан түсінікті жауап алуға көмектеседі.',
+      cta: 'Бірінші құжатты жасау',
+      ctaSub: 'Тегін · PDF бірден',
       signup: 'Тіркелу',
       signin: 'Аккаунтқа кіру',
-      trusts: ['Тегін бастау', 'PDF бірден', 'Русский / қазақша'],
+      trusts: ['Карта қажет емес', 'PDF бірден', 'Русский / қазақша'],
+      metrics: [['1 мин', 'бірінші PDF'], ['2026', 'калькуляторлар'], ['3 тіл', 'RU · KZ · EN']],
       status: '1 минутта дайын',
       docType: 'Төлем шоты',
       docTitle: 'Клиентке дайын PDF',
@@ -212,7 +266,45 @@
       taxValue: 'ИПН · СН · ОСМС',
       aiLabel: 'AI-көмекші',
       aiValue: 'ҚР бойынша жауап',
-      proof: ['Счёт, акт, накладная және шарттар', '2026 жылға ИП/ТОО калькуляторлары', 'Профильге мөр мен қолтаңба жүктеуге болады'],
+      previewList: ['Компания реквизиті сақталады', 'Мөр мен қолтаңба жүктеуге болады', 'Құжат тарихы қол астында'],
+      proof: ['Чаттан шаблон іздеудің қажеті жоқ', 'Реквизитті қайта енгізбейсіз', 'Формуланы Excel-де ұстамайсыз'],
+      painKicker: 'Мәселе',
+      painTitle: 'Кәсіпкердің күні бойы бухгалтериямен отыруға уақыты жоқ',
+      painSub: 'Клиент құжат сұрағанда, салық мерзімі жақындағанда немесе бухгалтер бос болмағанда, базалық жұмысты тез жабатын құрал керек.',
+      pains: [
+        ['Құжат дәл қазір керек', 'Счёт, акт немесе накладная клиентке бүгін жіберілуі керек, ал Word шаблон тағы қолмен түзетіледі.'],
+        ['Салық сомасы түсініксіз', 'ИПН, СН, ОСМС, НДС және режимдерді әр кестеде санау шатастырады.'],
+        ['Реквизит жоғалады', 'Компания, мөр, қолтаңба және сатып алушы деректері қайта-қайта енгізіледі.']
+      ],
+      docsKicker: 'Құжаттар',
+      docsTitle: 'Word шаблонсыз базалық құжаттарды дайындаңыз',
+      docsSub: 'Qujat форманы түсінікті етеді: сатушы, сатып алушы, позициялар, қорытынды сома — содан кейін клиентке дайын PDF.',
+      docs: ['Төлем шоты', 'Орындалған жұмыс акті', 'Накладная', 'Шарттар', 'Компания профилі', 'Мөр және қолтаңба'],
+      taxesKicker: 'Салық және есеп',
+      taxesTitle: 'Төлем сомасын алдын ала тез түсіну',
+      taxesSub: 'Калькуляторлар кәсіпкерге төлемдер бойынша бағыт береді және формуланы есте сақтауды қажет етпейді.',
+      taxes: [
+        ['Упрощенкадағы ИП', 'Міндетті төлемдер бойынша тез бағыт.'],
+        ['Әлеуметтік төлемдер', 'ИПН, СН, ОПВ, СО, ОСМС бір жерде.'],
+        ['НДС және режимдер', 'Қате жібермеу маңызды болатын бөлек есептер.']
+      ],
+      aiKicker: 'AI-көмекші',
+      aiTitle: 'Бухгалтерлік терминсіз, қарапайым тілмен сұраңыз',
+      aiSub: 'Қандай құжат керек екенін немесе талап нені білдіретінін білмесеңіз, AI Қазақстан контекстінде түсінікті жауап береді.',
+      aiPrompts: ['Қызметтен кейін клиентке қандай құжат жіберемін?', 'Упрощенкадағы ИП қандай төлемдер төлейді?', 'Төлем шотында не жазылады?'],
+      priceKicker: 'Бастау',
+      priceTitle: 'Тегін бастауға болады',
+      priceSub: 'Qujat мақсаты — кәсіпкерге ұзақ баптаусыз дайын құжат пен салық бойынша түсінік беру.',
+      priceItems: ['Аккаунт жасау тегін', 'PDF бірден алуға болады', 'Компания профилі реквизитті сақтайды', 'iOS-қосымшада жасырын төлем жоқ'],
+      priceCta: 'Тегін бастау',
+      faqKicker: 'Сұрақтар',
+      faqTitle: 'Бастамас бұрын',
+      faq: [
+        ['Бұл бухгалтерді алмастыра ма?', 'Жоқ. Qujat күнделікті базалық жұмысты жабады: құжат, есеп, түсіндірме. Күрделі жағдайда маманмен кеңескен дұрыс.'],
+        ['Телефоннан қолдануға бола ма?', 'Иә. Бет, формалар және PDF сценарийлері телефон, планшет және desktop үшін тексеріледі.'],
+        ['Бірден төлеу керек пе?', 'Жоқ. Тегін бастап, аккаунт жасап, бірінші сценарийді көре аласыз.'],
+        ['Кімге арналған?', 'Қазақстандағы ИП, ТОО, фриланс, қызмет көрсету және шағын бизнеске арналған.']
+      ],
       audienceKicker: 'Кімге пайдалы',
       audienceTitle: 'Бухгалтерлік жұмысты тез жабуды қалайтындарға',
       audience: [
@@ -252,17 +344,22 @@
     },
     en: {
       navFeatures: 'Features',
+      navDocs: 'Docs',
+      navTaxes: 'Taxes',
+      navPrice: 'Price',
+      navFaq: 'FAQ',
       navWorkflow: 'How it works',
       navTrust: 'Trust',
       navCta: 'Start',
       kicker: 'For sole proprietors and companies in Kazakhstan',
-      title: 'Documents and taxes without ERP, accountants, or messy spreadsheets',
-      sub: 'Create invoices, acts, waybills, calculate 2026 taxes, and ask the AI assistant from your phone.',
-      cta: 'Try free',
-      ctaSub: 'Create a PDF in one minute',
+      title: 'Handle documents, taxes, and accounting questions in 10 minutes a day',
+      sub: 'Qujat helps Kazakhstan entrepreneurs create invoices, acts, waybills, estimate 2026 payments, and ask AI for plain-language guidance without starting with heavy ERP.',
+      cta: 'Create first document',
+      ctaSub: 'Free · instant PDF',
       signup: 'Create account',
       signin: 'Sign in',
-      trusts: ['Free to start', 'Instant PDF', 'Russian / Kazakh'],
+      trusts: ['No card required', 'Instant PDF', 'Russian / Kazakh'],
+      metrics: [['1 min', 'to first PDF'], ['2026', 'tax calculators'], ['3 langs', 'RU · KZ · EN']],
       status: 'ready in 1 min',
       docType: 'Invoice',
       docTitle: 'Client-ready PDF',
@@ -271,7 +368,45 @@
       taxValue: 'PIT · social · health',
       aiLabel: 'AI assistant',
       aiValue: 'Kazakhstan answers',
-      proof: ['Invoices, acts, waybills, and contracts', '2026 calculators for Kazakhstan businesses', 'Upload stamp and signature in profile'],
+      previewList: ['Company details stay saved', 'Upload stamp and signature', 'Document history stays nearby'],
+      proof: ['No hunting for templates in chats', 'No retyping company details', 'No formulas scattered in Excel'],
+      painKicker: 'The problem',
+      painTitle: 'Small business owners do not have the whole day for accounting',
+      painSub: 'When a client asks for a document, a tax deadline is close, or your accountant is busy, you need a fast tool for everyday paperwork.',
+      pains: [
+        ['A document is needed now', 'An invoice, act, or waybill must go out today, but the template still needs manual editing.'],
+        ['Tax amounts are unclear', 'PIT, social payments, health payments, VAT, and regimes get messy across spreadsheets.'],
+        ['Company details are repeated', 'Company data, stamp, signature, and buyer details are entered again and again.']
+      ],
+      docsKicker: 'Documents',
+      docsTitle: 'Prepare core paperwork without Word templates',
+      docsSub: 'Qujat keeps the flow simple: seller, buyer, items, total amount, then a clean PDF for your client.',
+      docs: ['Invoice', 'Completion act', 'Waybill', 'Contracts', 'Company profile', 'Stamp and signature'],
+      taxesKicker: 'Taxes and estimates',
+      taxesTitle: 'Understand payment amounts before paying',
+      taxesSub: 'Calculators help entrepreneurs get a practical estimate without keeping formulas in their head.',
+      taxes: [
+        ['Simplified sole proprietor', 'Quick estimate for required payments.'],
+        ['Social payments', 'PIT, social tax, pension, social insurance, health insurance in one place.'],
+        ['VAT and regimes', 'Separate estimates for cases where accuracy matters.']
+      ],
+      aiKicker: 'AI assistant',
+      aiTitle: 'Ask in plain language, not accounting jargon',
+      aiSub: 'When you are unsure which document is needed or what a requirement means, AI explains it in the Kazakhstan context.',
+      aiPrompts: ['Which document should I send after a service?', 'What payments does a simplified sole proprietor have?', 'What should be included in an invoice?'],
+      priceKicker: 'Start',
+      priceTitle: 'You can start free',
+      priceSub: 'Qujat is built to give entrepreneurs a finished document and tax clarity without long setup.',
+      priceItems: ['Free account creation', 'PDF available immediately', 'Company profile saves details', 'No hidden payments in the iOS app'],
+      priceCta: 'Start free',
+      faqKicker: 'Questions',
+      faqTitle: 'Before you start',
+      faq: [
+        ['Does this replace an accountant?', 'No. Qujat covers everyday basic tasks: documents, estimates, and explanations. For complex cases, consult a specialist.'],
+        ['Can I use it from a phone?', 'Yes. The page, forms, and PDF flows are checked for phone, tablet, and desktop.'],
+        ['Do I need to pay immediately?', 'No. You can start free, create an account, and try the first flow.'],
+        ['Who is it for?', 'Sole proprietors, small companies, freelancers, service businesses, and Kazakhstan entrepreneurs who need faster paperwork.']
+      ],
       audienceKicker: 'Best for',
       audienceTitle: 'Small businesses that want accounting tasks done faster',
       audience: [
@@ -311,12 +446,80 @@
     }
   };
 
+  function cards(items) {
+    return items.map(([title, text]) => `<article><h3>${title}</h3><p>${text}</p></article>`).join('');
+  }
+
+  function chips(items) {
+    return items.map((item) => `<span>${item}</span>`).join('');
+  }
+
+  function renderSalesSections(s) {
+    return `
+      <section class="sales-section pain-section fade-up fade-up-d2" id="problems">
+        <div class="sales-copy">
+          <span class="section-kicker">${s.painKicker}</span>
+          <h2>${s.painTitle}</h2>
+          <p>${s.painSub}</p>
+        </div>
+        <div class="pain-grid">${cards(s.pains)}</div>
+      </section>
+
+      <section class="sales-section product-split fade-up fade-up-d2" id="documents">
+        <div class="sales-copy">
+          <span class="section-kicker">${s.docsKicker}</span>
+          <h2>${s.docsTitle}</h2>
+          <p>${s.docsSub}</p>
+        </div>
+        <div class="doc-chip-grid">${chips(s.docs)}</div>
+      </section>
+
+      <section class="sales-section tax-section fade-up fade-up-d2" id="taxes">
+        <div class="section-head">
+          <span>${s.taxesKicker}</span>
+          <h2>${s.taxesTitle}</h2>
+        </div>
+        <p class="section-lead">${s.taxesSub}</p>
+        <div class="tax-grid">${cards(s.taxes)}</div>
+      </section>
+
+      <section class="sales-section ai-section fade-up fade-up-d3">
+        <div class="sales-copy">
+          <span class="section-kicker">${s.aiKicker}</span>
+          <h2>${s.aiTitle}</h2>
+          <p>${s.aiSub}</p>
+        </div>
+        <div class="prompt-stack">${s.aiPrompts.map((item) => `<span>${item}</span>`).join('')}</div>
+      </section>
+
+      <section class="price-section fade-up fade-up-d3" id="price">
+        <div>
+          <span class="section-kicker">${s.priceKicker}</span>
+          <h2>${s.priceTitle}</h2>
+          <p>${s.priceSub}</p>
+          <button type="button" class="hero-cta price-cta" id="btn-price-cta">${s.priceCta}</button>
+        </div>
+        <div class="price-list">${chips(s.priceItems)}</div>
+      </section>
+
+      <section class="faq-section fade-up fade-up-d3" id="faq">
+        <div class="section-head">
+          <span>${s.faqKicker}</span>
+          <h2>${s.faqTitle}</h2>
+        </div>
+        <div class="faq-grid">${s.faq.map(([q, a]) => `<article><h3>${q}</h3><p>${a}</p></article>`).join('')}</div>
+      </section>
+    `;
+  }
+
   function render() {
     const s = COPY[Q.lang()] || COPY.ru;
     document.documentElement.lang = Q.lang() === 'kz' ? 'kk' : Q.lang();
     document.getElementById('nav-features').textContent = s.navFeatures;
-    document.getElementById('nav-workflow').textContent = s.navWorkflow;
-    document.getElementById('nav-trust').textContent = s.navTrust;
+    document.getElementById('nav-docs').textContent = s.navDocs;
+    document.getElementById('nav-taxes').textContent = s.navTaxes;
+    document.getElementById('nav-price').textContent = s.navPrice;
+    document.getElementById('nav-faq').textContent = s.navFaq;
     document.getElementById('btn-top-cta').textContent = s.navCta;
     document.getElementById('hero-kicker').textContent = s.kicker;
     document.getElementById('hero-title').textContent = s.title;
@@ -352,7 +555,11 @@
     document.getElementById('footer').textContent = s.footer;
 
     document.getElementById('trust-row').innerHTML = s.trusts.map((item) => `<span>${item}</span>`).join('');
+    document.getElementById('hero-metrics').innerHTML = s.metrics.map(([num, label]) => `<div><strong>${num}</strong><span>${label}</span></div>`).join('');
+    document.getElementById('preview-list').innerHTML = chips(s.previewList);
     document.getElementById('proof-strip').innerHTML = s.proof.map((item) => `<div>${item}</div>`).join('');
+    document.getElementById('sales-sections').innerHTML = renderSalesSections(s);
+    document.getElementById('btn-price-cta').onclick = () => { location.href = '/app.html'; };
     document.getElementById('audience-grid').innerHTML = s.audience.map(([title, text]) =>
       `<article class="audience-item"><h3>${title}</h3><p>${text}</p></article>`
     ).join('');
