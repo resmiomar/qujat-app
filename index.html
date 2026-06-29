@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<title>Qujat — бухгалтерия РК</title>
-<meta name="description" content="Документы, налоги и ИИ-помощник для ИП и ТОО в Казахстане.">
+<title>Qujat — документы и налоги для ИП и ТОО в Казахстане</title>
+<meta name="description" content="Создавайте счета, акты, накладные и считайте налоги РК за минуту. Qujat помогает ИП и ТОО работать без 1С и бухгалтера на старте.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="public-ios.css">
@@ -17,38 +17,74 @@
   </div>
 </div>
 
-<div class="ios-shell">
-  <div class="ios-inner">
-    <section class="hero-card fade-up">
-      <div class="hero-logo">Qujat</div>
-      <h1 class="hero-title" id="hero-title"></h1>
-      <p class="hero-sub" id="hero-sub"></p>
+<div class="ios-shell landing-shell">
+  <div class="ios-inner landing-inner">
+    <section class="landing-hero fade-up">
+      <div class="hero-copy">
+        <div class="hero-logo">Qujat</div>
+        <div class="hero-kicker" id="hero-kicker"></div>
+        <h1 class="hero-title" id="hero-title"></h1>
+        <p class="hero-sub" id="hero-sub"></p>
+        <div class="hero-actions">
+          <button type="button" class="hero-cta" id="btn-cta">
+            <span id="cta-title"></span>
+            <small id="cta-sub"></small>
+          </button>
+          <button type="button" class="hero-secondary" id="btn-signup"></button>
+        </div>
+        <div class="trust-row" id="trust-row"></div>
+      </div>
+      <div class="product-preview" aria-label="Qujat preview">
+        <div class="preview-top">
+          <span>Qujat</span>
+          <strong id="preview-status"></strong>
+        </div>
+        <div class="doc-card">
+          <span id="preview-doc-type"></span>
+          <strong id="preview-doc-title"></strong>
+          <small id="preview-doc-sub"></small>
+        </div>
+        <div class="preview-grid">
+          <div><span id="preview-tax-label"></span><strong id="preview-tax-value"></strong></div>
+          <div><span id="preview-ai-label"></span><strong id="preview-ai-value"></strong></div>
+        </div>
+        <div class="preview-bar"><span></span></div>
+      </div>
     </section>
 
-    <button type="button" class="action-card primary fade-up fade-up-d1" id="btn-cta">
-      <div class="ac-body">
-        <div class="ac-title" id="cta-title"></div>
-        <div class="ac-sub" id="cta-sub"></div>
-      </div>
-      <span class="chev" aria-hidden="true">›</span>
-    </button>
+    <section class="proof-strip fade-up fade-up-d1" id="proof-strip"></section>
 
-    <div class="card-stack fade-up fade-up-d2">
-      <button type="button" class="action-card" id="btn-signin">
-        <div class="ac-body">
-          <div class="ac-title dark" id="signin-title"></div>
-          <div class="ac-sub" id="signin-sub"></div>
-        </div>
-        <span class="chev" aria-hidden="true">›</span>
-      </button>
-      <button type="button" class="action-card" id="btn-signup">
-        <div class="ac-body">
-          <div class="ac-title dark" id="signup-title"></div>
-          <div class="ac-sub" id="signup-sub"></div>
-        </div>
-        <span class="chev" aria-hidden="true">›</span>
-      </button>
-    </div>
+    <section class="section-block fade-up fade-up-d2">
+      <div class="section-head">
+        <span id="features-kicker"></span>
+        <h2 id="features-title"></h2>
+      </div>
+      <div class="feature-grid" id="feature-grid"></div>
+    </section>
+
+    <section class="workflow-card fade-up fade-up-d2">
+      <div>
+        <span class="section-kicker" id="workflow-kicker"></span>
+        <h2 id="workflow-title"></h2>
+      </div>
+      <div class="steps" id="steps"></div>
+    </section>
+
+    <section class="objection-card fade-up fade-up-d3">
+      <div>
+        <span class="section-kicker" id="objection-kicker"></span>
+        <h2 id="objection-title"></h2>
+        <p id="objection-sub"></p>
+      </div>
+      <div class="objection-list" id="objection-list"></div>
+    </section>
+
+    <section class="bottom-cta fade-up fade-up-d3">
+      <h2 id="bottom-title"></h2>
+      <p id="bottom-sub"></p>
+      <button type="button" class="hero-cta" id="btn-bottom-cta"></button>
+      <button type="button" class="login-link" id="btn-signin"></button>
+    </section>
 
     <footer class="ios-footer fade-up fade-up-d3" id="footer"></footer>
   </div>
@@ -58,25 +94,182 @@
 <script>
 (function () {
   const Q = window.QujatPublic;
+  const COPY = {
+    ru: {
+      kicker: 'Для ИП и ТОО в Казахстане',
+      title: 'Документы и налоги без 1С, бухгалтера и лишних таблиц',
+      sub: 'Создавайте счета, акты, накладные, считайте налоги 2026 и спрашивайте ИИ-помощника прямо с телефона.',
+      cta: 'Попробовать бесплатно',
+      ctaSub: 'Создать PDF за минуту',
+      signup: 'Зарегистрироваться',
+      signin: 'Войти в аккаунт',
+      trusts: ['Бесплатный старт', 'PDF сразу', 'Русский / қазақша'],
+      status: 'готово за 1 мин',
+      docType: 'Счёт на оплату',
+      docTitle: 'PDF для клиента',
+      docSub: 'С реквизитами, товарами и итоговой суммой',
+      taxLabel: 'Налоги 2026',
+      taxValue: 'ИПН · СН · ОСМС',
+      aiLabel: 'ИИ-помощник',
+      aiValue: 'Ответы по РК',
+      proof: ['Счёт, акт, накладная и договоры', 'Калькуляторы ИП и ТОО на 2026', 'Печать и подпись можно загрузить в профиль'],
+      featuresKicker: 'Что внутри',
+      featuresTitle: 'Закрывает ежедневные задачи предпринимателя',
+      features: [
+        ['Документы за минуту', 'Заполните продавца, покупателя и позиции — Qujat соберёт аккуратный PDF.'],
+        ['Налоги без формул', 'Калькуляторы помогают быстро понять суммы по ИПН, соцплатежам, НДС и режимам.'],
+        ['ИИ по бухгалтерии РК', 'Можно спросить простыми словами: что платить, какой документ нужен, как оформить.'],
+        ['Профиль компании', 'Сохраните реквизиты, печать и подпись, чтобы не вводить одно и то же каждый раз.']
+      ],
+      workflowKicker: 'Как это работает',
+      workflowTitle: 'От задачи до готового файла — 3 коротких шага',
+      steps: [
+        ['1', 'Выберите документ или расчёт'],
+        ['2', 'Заполните понятную форму'],
+        ['3', 'Скачайте PDF или сохраните историю']
+      ],
+      objectionKicker: 'Почему можно начать сейчас',
+      objectionTitle: 'Без риска и долгой настройки',
+      objectionSub: 'Qujat подходит, когда нужно быстро выставить документ, посчитать налог или разобраться в вопросе без сложной системы.',
+      objections: ['Бесплатный доступ для старта', 'Работает в браузере и на телефоне', 'Аккаунт можно удалить в профиле', 'Нет скрытых платежей в iOS-приложении'],
+      bottomTitle: 'Сделайте первый документ сегодня',
+      bottomSub: 'Откройте Qujat, выберите документ и получите готовый PDF для клиента.',
+      bottomCta: 'Создать документ бесплатно',
+      footer: '© 2026 Qujat · Документы, налоги и ИИ для бизнеса РК'
+    },
+    kz: {
+      kicker: 'Қазақстандағы ИП және ТОО үшін',
+      title: '1С-сіз, бухгалтерсіз және артық кестесіз құжат пен салық',
+      sub: 'Счёт, акт, накладная жасаңыз, 2026 салықтарын есептеңіз және AI-көмекшіден телефоннан сұраңыз.',
+      cta: 'Тегін қолданып көру',
+      ctaSub: 'PDF бір минутта',
+      signup: 'Тіркелу',
+      signin: 'Аккаунтқа кіру',
+      trusts: ['Тегін бастау', 'PDF бірден', 'Русский / қазақша'],
+      status: '1 минутта дайын',
+      docType: 'Төлем шоты',
+      docTitle: 'Клиентке дайын PDF',
+      docSub: 'Реквизит, тауарлар және қорытынды сомамен',
+      taxLabel: '2026 салық',
+      taxValue: 'ИПН · СН · ОСМС',
+      aiLabel: 'AI-көмекші',
+      aiValue: 'ҚР бойынша жауап',
+      proof: ['Счёт, акт, накладная және шарттар', '2026 жылға ИП/ТОО калькуляторлары', 'Профильге мөр мен қолтаңба жүктеуге болады'],
+      featuresKicker: 'Ішінде не бар',
+      featuresTitle: 'Кәсіпкердің күнделікті жұмысын жеңілдетеді',
+      features: [
+        ['Құжат бір минутта', 'Сатушы, сатып алушы және позицияларды толтырыңыз — Qujat PDF дайындайды.'],
+        ['Формуласыз салық', 'Калькуляторлар ИПН, соцтөлем, НДС және режимдер бойынша соманы тез көрсетеді.'],
+        ['ҚР бухгалтериясы бойынша AI', 'Қарапайым тілмен сұраңыз: не төлеу керек, қандай құжат керек, қалай рәсімдеу керек.'],
+        ['Компания профилі', 'Реквизит, мөр және қолтаңбаны сақтап, қайта-қайта енгізбейсіз.']
+      ],
+      workflowKicker: 'Қалай жұмыс істейді',
+      workflowTitle: 'Міндеттен дайын файлға дейін — 3 қысқа қадам',
+      steps: [
+        ['1', 'Құжатты немесе есептеуді таңдаңыз'],
+        ['2', 'Түсінікті форманы толтырыңыз'],
+        ['3', 'PDF жүктеңіз немесе тарихта сақтаңыз']
+      ],
+      objectionKicker: 'Неге қазір бастауға болады',
+      objectionTitle: 'Тәуекелсіз және ұзақ баптаусыз',
+      objectionSub: 'Qujat құжат шығару, салық есептеу немесе бухгалтерлік сұрақты тез түсіну керек кезде ыңғайлы.',
+      objections: ['Бастау тегін', 'Браузерде және телефонда жұмыс істейді', 'Аккаунтты профильден өшіруге болады', 'iOS-қосымшада жасырын төлем жоқ'],
+      bottomTitle: 'Бірінші құжатты бүгін жасаңыз',
+      bottomSub: 'Qujat ашыңыз, құжат таңдаңыз және клиентке дайын PDF алыңыз.',
+      bottomCta: 'Құжатты тегін жасау',
+      footer: '© 2026 Qujat · ҚР бизнесіне құжат, салық және AI'
+    },
+    en: {
+      kicker: 'For sole proprietors and companies in Kazakhstan',
+      title: 'Documents and taxes without ERP, accountants, or messy spreadsheets',
+      sub: 'Create invoices, acts, waybills, calculate 2026 taxes, and ask the AI assistant from your phone.',
+      cta: 'Try free',
+      ctaSub: 'Create a PDF in one minute',
+      signup: 'Create account',
+      signin: 'Sign in',
+      trusts: ['Free to start', 'Instant PDF', 'Russian / Kazakh'],
+      status: 'ready in 1 min',
+      docType: 'Invoice',
+      docTitle: 'Client-ready PDF',
+      docSub: 'With company details, items, and totals',
+      taxLabel: '2026 taxes',
+      taxValue: 'PIT · social · health',
+      aiLabel: 'AI assistant',
+      aiValue: 'Kazakhstan answers',
+      proof: ['Invoices, acts, waybills, and contracts', '2026 calculators for Kazakhstan businesses', 'Upload stamp and signature in profile'],
+      featuresKicker: 'What you get',
+      featuresTitle: 'Daily paperwork for small business, faster',
+      features: [
+        ['Documents in minutes', 'Fill seller, buyer, and items — Qujat generates a clean PDF.'],
+        ['Taxes without formulas', 'Calculators help estimate key payments and regimes quickly.'],
+        ['Kazakhstan accounting AI', 'Ask in plain language what to pay, what document you need, and how to prepare it.'],
+        ['Company profile', 'Save company details, stamp, and signature to avoid repeated typing.']
+      ],
+      workflowKicker: 'How it works',
+      workflowTitle: 'From task to finished file in 3 steps',
+      steps: [
+        ['1', 'Choose a document or calculator'],
+        ['2', 'Fill a simple guided form'],
+        ['3', 'Download PDF or save history']
+      ],
+      objectionKicker: 'Start safely',
+      objectionTitle: 'No setup burden',
+      objectionSub: 'Qujat is useful when you need a document, tax estimate, or quick accounting explanation without a heavy system.',
+      objections: ['Free access to start', 'Works in browser and on phone', 'Delete account from profile', 'No hidden payments in the iOS app'],
+      bottomTitle: 'Create your first document today',
+      bottomSub: 'Open Qujat, choose a document, and get a client-ready PDF.',
+      bottomCta: 'Create document free',
+      footer: '© 2026 Qujat · Documents, taxes, and AI for Kazakhstan business'
+    }
+  };
 
   function render() {
-    const s = Q.S();
-    document.getElementById('hero-title').textContent = s.heroTitle;
-    document.getElementById('hero-sub').textContent = s.heroSub;
-    document.getElementById('cta-title').textContent = s.ctaTitle;
+    const s = COPY[Q.lang()] || COPY.ru;
+    document.documentElement.lang = Q.lang() === 'kz' ? 'kk' : Q.lang();
+    document.getElementById('hero-kicker').textContent = s.kicker;
+    document.getElementById('hero-title').textContent = s.title;
+    document.getElementById('hero-sub').textContent = s.sub;
+    document.getElementById('cta-title').textContent = s.cta;
     document.getElementById('cta-sub').textContent = s.ctaSub;
-    document.getElementById('signin-title').textContent = s.signInTitle;
-    document.getElementById('signin-sub').textContent = s.signInSub;
-    document.getElementById('signup-title').textContent = s.signUpTitle;
-    document.getElementById('signup-sub').textContent = s.signUpSub;
+    document.getElementById('btn-signup').textContent = s.signup;
+    document.getElementById('btn-signin').textContent = s.signin;
+    document.getElementById('preview-status').textContent = s.status;
+    document.getElementById('preview-doc-type').textContent = s.docType;
+    document.getElementById('preview-doc-title').textContent = s.docTitle;
+    document.getElementById('preview-doc-sub').textContent = s.docSub;
+    document.getElementById('preview-tax-label').textContent = s.taxLabel;
+    document.getElementById('preview-tax-value').textContent = s.taxValue;
+    document.getElementById('preview-ai-label').textContent = s.aiLabel;
+    document.getElementById('preview-ai-value').textContent = s.aiValue;
+    document.getElementById('features-kicker').textContent = s.featuresKicker;
+    document.getElementById('features-title').textContent = s.featuresTitle;
+    document.getElementById('workflow-kicker').textContent = s.workflowKicker;
+    document.getElementById('workflow-title').textContent = s.workflowTitle;
+    document.getElementById('objection-kicker').textContent = s.objectionKicker;
+    document.getElementById('objection-title').textContent = s.objectionTitle;
+    document.getElementById('objection-sub').textContent = s.objectionSub;
+    document.getElementById('bottom-title').textContent = s.bottomTitle;
+    document.getElementById('bottom-sub').textContent = s.bottomSub;
+    document.getElementById('btn-bottom-cta').textContent = s.bottomCta;
     document.getElementById('footer').textContent = s.footer;
+
+    document.getElementById('trust-row').innerHTML = s.trusts.map((item) => `<span>${item}</span>`).join('');
+    document.getElementById('proof-strip').innerHTML = s.proof.map((item) => `<div>${item}</div>`).join('');
+    document.getElementById('feature-grid').innerHTML = s.features.map(([title, text]) =>
+      `<article class="feature-card"><h3>${title}</h3><p>${text}</p></article>`
+    ).join('');
+    document.getElementById('steps').innerHTML = s.steps.map(([num, text]) =>
+      `<div class="step"><strong>${num}</strong><span>${text}</span></div>`
+    ).join('');
+    document.getElementById('objection-list').innerHTML = s.objections.map((item) => `<span>${item}</span>`).join('');
   }
 
   window.onLangChange = render;
 
   document.getElementById('btn-cta').onclick = () => { location.href = '/app.html'; };
-  document.getElementById('btn-signin').onclick = () => { location.href = '/auth/'; };
   document.getElementById('btn-signup').onclick = () => { location.href = '/auth/?mode=register'; };
+  document.getElementById('btn-bottom-cta').onclick = () => { location.href = '/app.html'; };
+  document.getElementById('btn-signin').onclick = () => { location.href = '/auth/'; };
 
   Q.mountLangPill(document.body);
   render();
