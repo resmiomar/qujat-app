@@ -1234,7 +1234,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
       if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
       loadHistory();loadAssets();loadSub();renderNav();}
-    else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab('reg');initGoogle();}
+    else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab(NATIVE_APP?'login':'reg');initGoogle();}
   }
   async function loadHistory(){
     const box=$('acc-history');if(!box)return;
