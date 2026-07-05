@@ -112,6 +112,9 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
   box-shadow:var(--sh-md);
 }
 .card:active{transform:translateY(-1px) scale(.995)}
+/* Блок-панель (Учёт, Админ бөлімдері — тік орналасу) */
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--sh-xs)}
+.pcard>h3{font-size:15px;font-weight:800;letter-spacing:-.01em;color:var(--text);margin-bottom:10px}
 .ic{
   width:48px;height:48px;border-radius:14px;
   display:flex;align-items:center;justify-content:center;font-size:23px;
@@ -754,7 +757,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 
     <div id="fin-alert" class="hidden" style="border-radius:14px;padding:12px 14px;margin-bottom:12px;font-weight:700;font-size:14px"></div>
 
-    <div class="card">
+    <div class="pcard">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="co-h"></h3>
       <select id="co-select" onchange="switchCompany(this.value)" style="width:100%;height:44px;border:1px solid var(--line,#e6e4f0);border-radius:11px;padding:0 12px;font-family:inherit;font-size:14px"></select>
       <div style="display:flex;gap:8px;margin-top:8px">
@@ -763,18 +766,18 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       </div>
     </div>
 
-    <div class="card">
+    <div class="pcard">
       <div class="fin-sum" id="fin-summary"></div>
       <input type="month" id="fin-month" class="fin-month" onchange="loadFinance()">
       <button class="btn ghost" id="fin-export-btn" style="margin-top:8px" onclick="finExport()"></button>
     </div>
 
-    <div class="card" id="mytax-card" style="border:1.5px solid var(--accent,#5810E8)">
+    <div class="pcard" id="mytax-card" style="border:1.5px solid var(--accent,#5810E8)">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="mytax-h"></h3>
       <div id="mytax-body"></div>
     </div>
 
-    <div class="card">
+    <div class="pcard">
       <div class="fin-kind">
         <button id="fin-k-in" class="fin-kbtn on-in" onclick="finKind('in')"></button>
         <button id="fin-k-out" class="fin-kbtn" onclick="finKind('out')"></button>
@@ -785,7 +788,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <button class="btn" id="fin-save" onclick="finAdd()"></button>
     </div>
 
-    <div class="card">
+    <div class="pcard">
       <button class="btn ghost" id="fin-import-btn" onclick="finImportPick()"></button>
       <input type="file" id="fin-import-file" accept=".csv,.xlsx,.pdf" class="hidden" onchange="onFinImportFile()">
       <p class="note" id="fin-import-hint" style="margin-top:8px"></p>
@@ -795,25 +798,25 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <h3 class="fin-h" id="fin-list-h"></h3>
     <div id="fin-rows"></div>
 
-    <div class="card fin-thr">
+    <div class="pcard fin-thr">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:4px" id="fin-thr-h"></h3>
       <div class="fin-bar"><div id="fin-bar-fill" style="width:0%"></div></div>
       <p class="sub" id="fin-thr-txt" style="margin:0"></p>
     </div>
 
-    <div class="card">
+    <div class="pcard">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="fin-reg-h"></h3>
       <select id="fin-regime" onchange="setRegime(this.value)"></select>
       <p class="note" id="fin-reg-hint" style="margin-top:8px"></p>
     </div>
 
-    <div class="card">
+    <div class="pcard">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:6px" id="fin-cal-h"></h3>
       <div id="fin-cal"></div>
       <button class="btn ghost" id="push-btn" style="margin-top:10px" onclick="enablePush()"></button>
     </div>
 
-    <div class="card">
+    <div class="pcard">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="emp-h"></h3>
       <div style="display:flex;gap:8px;margin-bottom:8px">
         <input type="text" id="emp-name" style="flex:2;height:42px;border:1px solid var(--line,#e6e4f0);border-radius:11px;padding:0 12px;font-family:inherit;font-size:14px">
@@ -831,7 +834,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <p class="sub" id="adm-you" style="margin-top:-6px"></p>
     <div class="adm-section">
       <h3 id="adm-sec-add"></h3>
-      <div class="card adm-form">
+      <div class="pcard adm-form">
         <div class="field"><label id="adm-l-name"></label><input type="text" id="adm-name"></div>
         <div class="field"><label id="adm-l-email"></label><input type="email" id="adm-email" inputmode="email" autocomplete="off"></div>
         <div class="field"><label id="adm-l-pass"></label><input type="password" id="adm-pass" autocomplete="new-password"></div>
