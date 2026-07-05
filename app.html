@@ -894,7 +894,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finImport:"📥 Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
       finImportFound:"Найдено операций:",finImportAdd:"Добавить все",finImportNone:"Не удалось распознать операции. Лучше всего работает выписка в Excel или CSV.",finImportDone:"Добавлено операций:",finExportBtn:"⬇ Экспорт в Excel",
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Удалить",coAddPrompt:"Название компании или клиента:",coDelConfirm:"Удалить эту компанию и все её операции?",
-      empH:"Зарплата сотрудников",empName:"ФИО сотрудника",empSalary:"Оклад ₸",empAdd:"+ Добавить сотрудника",empNet:"на руки",empEmpty:"Добавьте сотрудников — посчитаем зарплату и налоги.",empGross:"Фонд оплаты труда",empPay:"К выплате на руки",empTaxes:"Налоги и взносы (в бюджет)",empCost:"Затраты работодателя",
+      empH:"Зарплата сотрудников",empName:"ФИО сотрудника",empSalary:"Оклад ₸",empAdd:"+ Добавить сотрудника",empNet:"на руки",empEmpty:"Добавьте сотрудников — посчитаем зарплату и налоги.",empGross:"Фонд оплаты труда",empPay:"К выплате на руки",empTaxes:"Налоги и взносы (в бюджет)",empCost:"Затраты работодателя",empDoc:"Договор",empEsutd:"⚠️ Трудовые договоры нужно зарегистрировать в ЕСУТД в течение 5 рабочих дней после приёма:",
       mytaxH:"Мой налог",mytaxNoReg:"Выберите налоговый режим ниже — и увидите налог за текущий период.",mytaxPeriod:"Период",mytaxH1:"1 полугодие",mytaxH2:"2 полугодие",mytaxInc:"Доход за период",mytaxTax:"К уплате",mytaxOther:"В этом режиме сдаётся форма {form}. Точную сумму рассчитайте в калькуляторе.",mytaxDlR:"Сдача до",mytaxDlP:"уплата до",mytaxFile:"Сдать в кабинете salyk →",mytaxForm910:"Заполнить декларацию 910 →",
       htitle:"Создайте документ",hsub:"Бесплатно, прямо в браузере.",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
@@ -959,7 +959,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finImport:"📥 Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
       finImportFound:"Табылған операция:",finImportAdd:"Барлығын қосу",finImportNone:"Операцияларды тани алмадым. Excel не CSV выписка ең дұрыс жұмыс істейді.",finImportDone:"Қосылған операция:",finExportBtn:"⬇ Excel-ге экспорт",
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Жою",coAddPrompt:"Компания не клиент атауы:",coDelConfirm:"Осы компанияны және барлық операциясын жою?",
-      empH:"Қызметкерлер жалақысы",empName:"Қызметкер аты-жөні",empSalary:"Оклад ₸",empAdd:"+ Қызметкер қосу",empNet:"қолға",empEmpty:"Қызметкер қосыңыз — жалақы мен салықты есептейміз.",empGross:"Еңбекақы қоры",empPay:"Қолға төлеуге",empTaxes:"Салық пен жарналар (бюджетке)",empCost:"Жұмыс беруші шығыны",
+      empH:"Қызметкерлер жалақысы",empName:"Қызметкер аты-жөні",empSalary:"Оклад ₸",empAdd:"+ Қызметкер қосу",empNet:"қолға",empEmpty:"Қызметкер қосыңыз — жалақы мен салықты есептейміз.",empGross:"Еңбекақы қоры",empPay:"Қолға төлеуге",empTaxes:"Салық пен жарналар (бюджетке)",empCost:"Жұмыс беруші шығыны",empDoc:"Шарт",empEsutd:"⚠️ Еңбек шарттарын ЕСУТД жүйесінде қабылдаудан кейін 5 жұмыс күні ішінде тіркеу қажет:",
       mytaxH:"Менің салығым",mytaxNoReg:"Төменнен салық режимін таңдаңыз — сонда ағымдағы кезеңдегі салықты көресіз.",mytaxPeriod:"Кезең",mytaxH1:"1-жартыжылдық",mytaxH2:"2-жартыжылдық",mytaxInc:"Кезеңдегі кіріс",mytaxTax:"Төлеуге",mytaxOther:"Бұл режимде {form} форма тапсырылады. Нақты соманы калькулятордан есептеңіз.",mytaxDlR:"Тапсыру",mytaxDlP:"төлеу",mytaxFile:"salyk кабинетінде тапсыру →",mytaxForm910:"910 декларациясын толтыру →",
       htitle:"Құжат жасаңыз",hsub:"Тегін, тікелей браузерде.",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
@@ -1815,13 +1815,22 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     }catch(e){}
   }
 
+  let empData=[];
   async function loadEmployees(){
     const s=S();const box=$('emp-list');if(!box)return;
-    try{const d=await (await afetch(API+'/api/employees')).json();const es=d.employees||[];const t=d.totals||{};
+    try{const d=await (await afetch(API+'/api/employees')).json();const es=d.employees||[];const t=d.totals||{};empData=es;
       if(!es.length){box.innerHTML='<p class="sub">'+s.empEmpty+'</p>';$('emp-totals').innerHTML='';return;}
-      box.innerHTML=es.map(function(e){return '<div class="fin-row"><div><b>'+e.name+'</b><div class="meta">'+finM(e.salary)+' ₸ · '+s.empNet+' '+finM(e.net)+' ₸</div></div><button class="fin-x" onclick="delEmployee('+e.id+')">✕</button></div>';}).join('');
-      $('emp-totals').innerHTML='<div class="fin-cal-i"><span>'+s.empGross+'</span><b>'+finM(t.gross)+' ₸</b></div><div class="fin-cal-i"><span>'+s.empPay+'</span><b>'+finM(t.net)+' ₸</b></div><div class="fin-cal-i"><span>'+s.empTaxes+'</span><b>'+finM(t.taxes_total)+' ₸</b></div><div class="fin-cal-i"><span>'+s.empCost+'</span><b style="color:var(--accent,#5810E8)">'+finM(t.employer_cost)+' ₸</b></div>';
+      box.innerHTML=es.map(function(e){return '<div class="fin-row"><div><b>'+e.name+'</b><div class="meta">'+finM(e.salary)+' ₸ · '+s.empNet+' '+finM(e.net)+' ₸</div></div><div style="display:flex;align-items:center;gap:6px"><button class="btn btn-mini" onclick="makeLabor('+e.id+')">'+s.empDoc+'</button><button class="fin-x" onclick="delEmployee('+e.id+')">✕</button></div></div>';}).join('');
+      $('emp-totals').innerHTML='<div class="fin-cal-i"><span>'+s.empGross+'</span><b>'+finM(t.gross)+' ₸</b></div><div class="fin-cal-i"><span>'+s.empPay+'</span><b>'+finM(t.net)+' ₸</b></div><div class="fin-cal-i"><span>'+s.empTaxes+'</span><b>'+finM(t.taxes_total)+' ₸</b></div><div class="fin-cal-i"><span>'+s.empCost+'</span><b style="color:var(--accent,#5810E8)">'+finM(t.employer_cost)+' ₸</b></div><div class="note" style="margin-top:10px;background:var(--bg,#f4f2fb);border-radius:10px;padding:10px;font-size:12.5px">'+s.empEsutd+' <a href="https://enbek.kz" target="_blank" rel="noopener" style="color:var(--accent,#5810E8);font-weight:700;white-space:nowrap">enbek.kz →</a></div>';
     }catch(e){}
+  }
+  function makeLabor(id){
+    const e=(empData||[]).find(function(x){return x.id===id;});if(!e)return;
+    showTab('docs');
+    if(!(DOC_SCHEMAS&&DOC_SCHEMAS['labor']))return;
+    openXForm('labor');
+    function set(k,v){const el=document.querySelector('#xf-fields [data-k="'+k+'"]');if(el&&v!=null&&(el.value===''||el.value==='0'))el.value=v;}
+    set('employee_fio',e.name);set('employee_iin',e.iin);set('salary',Math.round(e.salary||0));
   }
   async function addEmployee(){
     const s=S(),name=$('emp-name').value.trim(),salary=parseFloat($('emp-salary').value);
