@@ -768,6 +768,13 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <button class="btn" id="fin-save" onclick="finAdd()"></button>
     </div>
 
+    <div class="card">
+      <button class="btn ghost" id="fin-import-btn" onclick="finImportPick()"></button>
+      <input type="file" id="fin-import-file" accept=".csv,.xlsx,.pdf" class="hidden" onchange="onFinImportFile()">
+      <p class="note" id="fin-import-hint" style="margin-top:8px"></p>
+      <div id="fin-import-preview" class="hidden" style="margin-top:12px"></div>
+    </div>
+
     <h3 class="fin-h" id="fin-list-h"></h3>
     <div id="fin-rows"></div>
 
@@ -858,6 +865,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",
       finReg:"Мой налоговый режим",finRegHint:"Выберите режим — календарь и подсказки станут точнее.",
       regime910:"Упрощёнка (ф.910)",regime911:"Патент (ф.911)",regimeour:"Общеустановленный",regimenone:"Не выбран",
+      finImport:"📥 Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
+      finImportFound:"Найдено операций:",finImportAdd:"Добавить все",finImportNone:"Не удалось распознать операции. Лучше всего работает выписка в Excel или CSV.",finImportDone:"Добавлено операций:",
       htitle:"Создайте документ",hsub:"Бесплатно, прямо в браузере.",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -918,6 +927,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",
       finReg:"Салық режимім",finRegHint:"Режимді таңдаңыз — күнтізбе мен кеңестер дәлірек болады.",
       regime910:"Оңайлатылған (910)",regime911:"Патент (911)",regimeour:"Жалпыға бірдей",regimenone:"Таңдалмаған",
+      finImport:"📥 Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
+      finImportFound:"Табылған операция:",finImportAdd:"Барлығын қосу",finImportNone:"Операцияларды тани алмадым. Excel не CSV выписка ең дұрыс жұмыс істейді.",finImportDone:"Қосылған операция:",
       htitle:"Құжат жасаңыз",hsub:"Тегін, тікелей браузерде.",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1701,6 +1712,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('fin-amount').placeholder=s.finAmount;$('fin-cat').placeholder=s.finCat;$('fin-note').placeholder=s.finNote;
     $('fin-save').textContent=s.finSave;$('fin-list-h').textContent=s.finList;
     $('fin-thr-h').textContent=s.finThr;$('fin-reg-h').textContent=s.finReg;$('fin-reg-hint').textContent=s.finRegHint;$('fin-cal-h').textContent=s.finCal;
+    if($('fin-import-btn')){$('fin-import-btn').textContent=s.finImport;$('fin-import-hint').textContent=s.finImportHint;}
     const sel=$('fin-regime');if(sel){const cur=sel.value;sel.innerHTML=[['','regimenone'],['910','regime910'],['911','regime911'],['our','regimeour']].map(function(a){return '<option value="'+a[0]+'">'+s[a[1]]+'</option>';}).join('');sel.value=cur;}
   }
   async function loadFinance(){
@@ -1741,6 +1753,31 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       if(!d.items||!d.items.length){box.innerHTML='<p class="sub">'+s.finCalEmpty+'</p>';return;}
       box.innerHTML=d.items.slice(0,8).map(function(i){const dt=i.date.split('-').reverse().join('.');return '<div class="fin-cal-i"><span>'+i.desc+'</span><b>'+dt+' · '+i.days_left+' '+s.finDays+'</b></div>';}).join('');
     }catch(e){}
+  }
+
+  let finImportItems=[];
+  function finImportPick(){$('fin-import-file').click();}
+  async function onFinImportFile(){
+    const f=$('fin-import-file').files[0];if(!f)return;const s=S();
+    const btn=$('fin-import-btn');btn.disabled=true;btn.textContent='⏳ …';
+    try{
+      const fd=new FormData();fd.append('file',f);
+      const d=await (await afetch(API+'/api/fin/import',{method:'POST',body:fd})).json();
+      finImportItems=d.items||[];const box=$('fin-import-preview');box.className='';
+      if(!finImportItems.length){box.innerHTML='<p class="sub">'+s.finImportNone+'</p>';}
+      else{
+        const rows=finImportItems.slice(0,12).map(function(t){return '<div class="fin-cal-i"><span>'+t.date+' · '+(t.category||'')+'</span><b style="color:'+(t.kind==='in'?'#0a9d6e':'#e5484d')+'">'+(t.kind==='in'?'+':'−')+finM(t.amount)+' ₸</b></div>';}).join('');
+        box.innerHTML='<p class="sub" style="font-weight:700">'+s.finImportFound+' '+finImportItems.length+'</p>'+rows+(finImportItems.length>12?'<p class="sub">…+'+(finImportItems.length-12)+'</p>':'')+'<button class="btn" style="margin-top:10px" onclick="finImportCommit()">'+s.finImportAdd+' ('+finImportItems.length+')</button>';
+      }
+    }catch(e){alert(s.errnet);}finally{btn.disabled=false;$('fin-import-btn').textContent=s.finImport;$('fin-import-file').value='';}
+  }
+  async function finImportCommit(){
+    const s=S();
+    try{
+      const d=await (await afetch(API+'/api/fin/import-commit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:finImportItems})})).json();
+      alert(s.finImportDone+' '+(d.added||0));
+      $('fin-import-preview').className='hidden';$('fin-import-preview').innerHTML='';finImportItems=[];loadFinance();
+    }catch(e){alert(s.errnet);}
   }
 
   function renderAll(){renderHome();docLabels();renderNav();renderAccount();renderAdminLabels();renderFinanceLabels();
