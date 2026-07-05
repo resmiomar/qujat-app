@@ -1826,6 +1826,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(key)});
       const j=sub.toJSON();
       await afetch(API+'/api/push/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:j.endpoint,keys:j.keys})});
+      try{await afetch(API+'/api/push/test',{method:'POST'});}catch(_){}
       alert(s.pushOn);
     }catch(e){alert(s.errnet);}
   }
