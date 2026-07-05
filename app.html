@@ -757,6 +757,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <input type="month" id="fin-month" class="fin-month" onchange="loadFinance()">
     </div>
 
+    <div class="card" id="mytax-card" style="border:1.5px solid var(--accent,#5810E8)">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="mytax-h"></h3>
+      <div id="mytax-body"></div>
+    </div>
+
     <div class="card">
       <div class="fin-kind">
         <button id="fin-k-in" class="fin-kbtn on-in" onclick="finKind('in')"></button>
@@ -867,6 +872,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       regime910:"Упрощёнка (ф.910)",regime911:"Патент (ф.911)",regimeour:"Общеустановленный",regimenone:"Не выбран",
       finImport:"📥 Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
       finImportFound:"Найдено операций:",finImportAdd:"Добавить все",finImportNone:"Не удалось распознать операции. Лучше всего работает выписка в Excel или CSV.",finImportDone:"Добавлено операций:",
+      mytaxH:"Мой налог",mytaxNoReg:"Выберите налоговый режим ниже — и увидите налог за текущий период.",mytaxPeriod:"Период",mytaxH1:"1 полугодие",mytaxH2:"2 полугодие",mytaxInc:"Доход за период",mytaxTax:"К уплате",mytaxOther:"В этом режиме сдаётся форма {form}. Точную сумму рассчитайте в калькуляторе.",mytaxDlR:"Сдача до",mytaxDlP:"уплата до",mytaxFile:"Сдать в кабинете salyk →",
       htitle:"Создайте документ",hsub:"Бесплатно, прямо в браузере.",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -929,6 +935,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       regime910:"Оңайлатылған (910)",regime911:"Патент (911)",regimeour:"Жалпыға бірдей",regimenone:"Таңдалмаған",
       finImport:"📥 Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
       finImportFound:"Табылған операция:",finImportAdd:"Барлығын қосу",finImportNone:"Операцияларды тани алмадым. Excel не CSV выписка ең дұрыс жұмыс істейді.",finImportDone:"Қосылған операция:",
+      mytaxH:"Менің салығым",mytaxNoReg:"Төменнен салық режимін таңдаңыз — сонда ағымдағы кезеңдегі салықты көресіз.",mytaxPeriod:"Кезең",mytaxH1:"1-жартыжылдық",mytaxH2:"2-жартыжылдық",mytaxInc:"Кезеңдегі кіріс",mytaxTax:"Төлеуге",mytaxOther:"Бұл режимде {form} форма тапсырылады. Нақты соманы калькулятордан есептеңіз.",mytaxDlR:"Тапсыру",mytaxDlP:"төлеу",mytaxFile:"salyk кабинетінде тапсыру →",
       htitle:"Құжат жасаңыз",hsub:"Тегін, тікелей браузерде.",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1726,7 +1733,21 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       if(!d.rows||!d.rows.length){box.innerHTML='<p class="sub">'+s.finEmpty+'</p>';}
       else{box.innerHTML=d.rows.map(function(r){return '<div class="fin-row"><div><b>'+(r.category||'—')+'</b><div class="meta">'+r.date+(r.note?' · '+r.note:'')+'</div></div><div style="display:flex;align-items:center;gap:6px"><span class="amt '+r.kind+'">'+(r.kind==='in'?'+':'−')+finM(r.amount)+' ₸</span><button class="fin-x" onclick="finDelete('+r.id+')">✕</button></div></div>';}).join('');}
     }catch(e){}
-    loadInsights();loadRegime();loadTaxCalendar();
+    loadInsights();loadRegime();loadTaxCalendar();loadMyTax();
+  }
+  async function loadMyTax(){
+    const s=S();const box=$('mytax-body');if(!box)return;$('mytax-h').textContent=s.mytaxH;
+    try{const d=await (await afetch(API+'/api/mytax')).json();
+      if(!d.regime){box.innerHTML='<p class="sub">'+s.mytaxNoReg+'</p>';return;}
+      const period=(d.half===1?s.mytaxH1:s.mytaxH2)+' '+d.year;
+      let h='<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="sub">'+s.mytaxPeriod+'</span><b>'+period+'</b></div>';
+      h+='<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="sub">'+s.mytaxInc+'</span><b>'+finM(d.income)+' ₸</b></div>';
+      if(d.tax!=null){h+='<div style="background:var(--bg,#f4f2fb);border-radius:12px;padding:12px;margin:8px 0"><div class="sub">'+s.mytaxTax+' ('+Math.round(d.rate*100)+'%, ф.'+d.form+')</div><div style="font-size:26px;font-weight:800;color:var(--accent,#5810E8)">'+finM(d.tax)+' ₸</div></div>';}
+      else{h+='<p class="sub" style="margin:6px 0">'+s.mytaxOther.replace('{form}',d.form||'')+'</p>';}
+      h+='<div class="sub" style="margin:6px 0">'+s.mytaxDlR+' <b>'+d.deadline_report+'</b> · '+s.mytaxDlP+' <b>'+d.deadline_pay+'</b></div>';
+      h+='<a class="btn" href="https://cabinet.salyk.gov.kz" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;line-height:46px">'+s.mytaxFile+'</a>';
+      box.innerHTML=h;
+    }catch(e){box.innerHTML='';}
   }
   async function finAdd(){
     const s=S(),amount=parseFloat($('fin-amount').value);
