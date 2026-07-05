@@ -522,12 +522,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <a href="https://t.me/Qujatkz_bot" style="color:#5314d4">@Qujatkz_bot</a> в Telegram.</p>
   </div>
 </noscript>
-<header><div class="wrap">
+<header><div class="wrap" style="justify-content:center">
   <div class="logo" role="button" tabindex="0" onclick="goHome()" style="cursor:pointer" title="На главную" aria-label="На главную"><img src="qujat-logo.png" alt="Qujat"></div>
-  <div class="header-actions">
-    <button class="ib ib-logout hidden" id="hdr-logout" type="button" onclick="doLogout()"></button>
-    <button class="ib" id="langbtn" onclick="toggleLang()">🌐 RU</button>
-  </div>
 </div></header>
 
 <div class="wrap">
@@ -671,11 +667,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     </div>
     <div id="acc-user" class="hidden">
       <div class="sec" style="text-align:center">
-        <div style="font-size:46px">🙂</div>
-        <p class="sub" id="acc-welcome" style="margin:6px 0 2px"></p>
-        <h3 id="acc-name" style="margin:0 0 2px"></h3>
-        <p class="sub" id="acc-email" style="margin-bottom:14px"></p>
-        <button class="btn ghost" onclick="doLogout()" id="a-logout"></button>
+        <p class="sub" id="acc-welcome" style="margin:0 0 2px"></p>
+        <h3 id="acc-name" style="margin:0 0 3px"></h3>
+        <p class="sub" id="acc-email" style="margin-bottom:12px"></p>
+        <button class="ib" id="acc-lang2" onclick="toggleLang()" style="height:34px;padding:0 16px;border-radius:10px;font-weight:700">🌐 <span id="acc-lang2-t">RU</span></button>
       </div>
       <div class="sec" id="acc-sub" style="text-align:center"></div>
       <div class="sec">
@@ -707,9 +702,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
           <button class="btn" id="a-chpass" onclick="doChangePass()"></button>
         </div>
       </details>
-      <button class="btn ghost hidden" id="a-admin" onclick="showTab('admin')" style="margin-bottom:10px"></button>
-      <button class="btn ghost" style="color:var(--danger);border-color:#f3c0c0" onclick="doDelete()" id="a-delete"></button>
-      <button class="btn ghost" style="margin-top:10px;color:var(--danger);border-color:#f3c0c0" onclick="doLogout()" id="a-logout-bottom"></button>
+      <button class="btn ghost hidden" id="a-admin" onclick="showTab('admin')" style="margin-bottom:14px"></button>
+      <div style="display:flex;gap:20px;justify-content:center;margin-top:6px">
+        <button onclick="doLogout()" id="a-logout-bottom" style="background:none;border:none;color:var(--muted,#8a87a0);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px"></button>
+        <button onclick="doDelete()" id="a-delete" style="background:none;border:none;color:var(--danger,#e5484d);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px"></button>
+      </div>
     </div>
     <!-- Pro / жазылым экраны -->
     <div id="pro" class="hidden">
@@ -729,18 +726,20 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   <!-- ===== TAB: УЧЁТ (финансы + налоги) ===== -->
   <div id="tab-finance" class="hidden">
     <style>
-      .fin-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
-      .fin-sum>div{text-align:center;padding:10px 6px;border-radius:12px;background:var(--bg,#f4f2fb)}
-      .fin-sum b{display:block;font-size:17px;font-weight:800;letter-spacing:-.3px}
-      .fin-sum span{font-size:11px;color:var(--muted,#7a7a8c);font-weight:600}
+      .fin-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+      .fin-sum>div{text-align:center;padding:10px 4px;border-radius:12px;background:var(--bg,#f4f2fb);min-width:0}
+      .fin-sum b{display:block;font-size:14px;font-weight:800;letter-spacing:-.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .fin-sum span{font-size:10.5px;color:var(--muted,#7a7a8c);font-weight:600}
       .fin-sum .in b{color:#0a9d6e}.fin-sum .out b{color:#e5484d}.fin-sum .pr b{color:var(--accent,#5810E8)}
       .fin-month{width:100%;height:40px;border:1px solid var(--line,#e6e4f0);border-radius:10px;padding:0 12px;font-family:inherit}
       .fin-kind{display:flex;gap:8px;margin-bottom:10px}
       .fin-kbtn{flex:1;height:42px;border:1.5px solid var(--line,#e6e4f0);border-radius:11px;background:#fff;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
       .fin-kbtn.on-in{background:#e7f7f1;border-color:#0a9d6e;color:#0a9d6e}
       .fin-kbtn.on-out{background:#fdecee;border-color:#e5484d;color:#e5484d}
-      .fin-row{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid var(--line,#e6e4f0);border-radius:12px;padding:11px 13px;margin-bottom:8px}
-      .fin-row .amt{font-weight:800;white-space:nowrap}
+      .fin-row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fff;border:1px solid var(--line,#e6e4f0);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+      .fin-row>div:first-child{min-width:0;flex:1}
+      .fin-row b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+      .fin-row .amt{font-weight:800;white-space:nowrap;font-size:13.5px}
       .fin-row .amt.in{color:#0a9d6e}.fin-row .amt.out{color:#e5484d}
       .fin-row .meta{font-size:12px;color:var(--muted,#7a7a8c)}
       .fin-x{border:none;background:none;color:#e5484d;font-size:18px;cursor:pointer;padding:0 4px}
@@ -887,7 +886,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
 
   const STR={
-    ru:{nav:["Документы","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"OCR, PDF ↔ Word/Excel, сжатие, объединение — 20 операций",admBtn:"🛠 Админ-панель",
+    ru:{nav:["Главная","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"OCR, PDF ↔ Word/Excel, сжатие, объединение — 20 операций",admBtn:"🛠 Админ-панель",
       finTitle:"Учёт финансов",finSub:"Доходы, расходы и налоговый контроль",
       finIncome:"Доходы",finExpense:"Расходы",finProfit:"Прибыль",
       finAddIn:"+ Доход",finAddOut:"− Расход",finAmount:"Сумма ₸",finCat:"Категория",finNote:"Примечание (необяз.)",finSave:"Добавить операцию",
@@ -952,7 +951,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       admNoUsers:"Пользователей не найдено",admDocsUsed:"Док. в месяце",admUntil:"Pro до",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
-    kz:{nav:["Құжаттар","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"OCR, PDF ↔ Word/Excel, сығу, біріктіру — 20 операция",admBtn:"🛠 Админ-панель",
+    kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"OCR, PDF ↔ Word/Excel, сығу, біріктіру — 20 операция",admBtn:"🛠 Админ-панель",
       finTitle:"Қаржы есебі",finSub:"Кіріс, шығыс және салық бақылауы",
       finIncome:"Кіріс",finExpense:"Шығыс",finProfit:"Пайда",
       finAddIn:"+ Кіріс",finAddOut:"− Шығыс",finAmount:"Сома ₸",finCat:"Санат",finNote:"Ескертпе (міндетті емес)",finSave:"Операция қосу",
@@ -1115,7 +1114,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     else loadSchemas();
   }
   function docLabels(){
-    const s=S();$('langbtn').textContent='🌐 '+(lang==='ru'?'RU':'KZ');
+    const s=S();const _lb=$('langbtn');if(_lb)_lb.textContent='🌐 '+(lang==='ru'?'RU':'KZ');
     $('f-back').textContent=s.back;$('s-seller').textContent=s.seller;$('s-buyer').textContent=s.buyer;
     $('s-items').textContent=s.items;$('s-bank').textContent=s.bank;$('l-sname').textContent=s.sname;
     $('l-sbin').textContent=s.sbin;$('l-sfio').textContent=s.sfio;$('l-bank').textContent=s.bankname;
@@ -1368,7 +1367,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
     $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
     $('a-to-login').textContent=s.acctologin;$('a-to-reg').textContent=s.acctoreg;
-    $('a-logout').textContent=s.acclogout;
+    const _al2=$('acc-lang2-t');if(_al2)_al2.textContent=lang==='ru'?'RU':'KZ';
     $('a-logout-bottom').textContent=s.acclogout;
     if($('a-admin'))$('a-admin').textContent=s.admBtn;
     const hl=$('hdr-logout');if(hl){hl.textContent=s.acclogout;hl.classList.toggle('hidden',!meUser);}
