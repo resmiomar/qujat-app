@@ -810,6 +810,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <div class="card">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:6px" id="fin-cal-h"></h3>
       <div id="fin-cal"></div>
+      <button class="btn ghost" id="push-btn" style="margin-top:10px" onclick="enablePush()"></button>
     </div>
 
     <div class="card">
@@ -890,7 +891,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finAddIn:"+ Доход",finAddOut:"− Расход",finAmount:"Сумма ₸",finCat:"Категория",finNote:"Примечание (необяз.)",finSave:"Добавить операцию",
       finEmpty:"Пока нет операций. Добавьте доход или расход.",finDelC:"Удалить операцию?",finList:"Операции",
       finThr:"Порог НДС",finThrSub:"Годовой доход к порогу обязательной регистрации по НДС",finThrOver:"Порог превышен — нужна регистрация по НДС!",finThrLeft:"До порога НДС осталось",
-      finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",finToday:"сегодня!",
+      finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",finToday:"сегодня!",pushBtn:"🔔 Включить уведомления о сроках",pushOn:"Уведомления включены ✓",pushDenied:"Уведомления заблокированы в браузере.",pushUnsupported:"Ваш браузер не поддерживает push-уведомления.",pushNotConfigured:"Push пока не настроен на сервере.",
       finReg:"Мой налоговый режим",finRegHint:"Выберите режим — календарь и подсказки станут точнее.",
       regime910:"Упрощёнка (ф.910)",regime911:"Патент (ф.911)",regimeour:"Общеустановленный",regimenone:"Не выбран",
       finImport:"📥 Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
@@ -955,7 +956,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finAddIn:"+ Кіріс",finAddOut:"− Шығыс",finAmount:"Сома ₸",finCat:"Санат",finNote:"Ескертпе (міндетті емес)",finSave:"Операция қосу",
       finEmpty:"Әзірге операция жоқ. Кіріс не шығыс қосыңыз.",finDelC:"Операцияны жою?",finList:"Операциялар",
       finThr:"ҚҚС шегі",finThrSub:"Жылдық кіріс — ҚҚС-қа міндетті тіркелу шегіне қатысты",finThrOver:"Шектен асты — ҚҚС-қа тіркелу қажет!",finThrLeft:"ҚҚС шегіне дейін қалды",
-      finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",finToday:"бүгін!",
+      finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",finToday:"бүгін!",pushBtn:"🔔 Мерзім хабарламаларын қосу",pushOn:"Хабарламалар қосылды ✓",pushDenied:"Хабарламалар браузерде бұғатталған.",pushUnsupported:"Браузеріңіз push-хабарламаны қолдамайды.",pushNotConfigured:"Push әлі бапталмаған (серверде кілт жоқ).",
       finReg:"Салық режимім",finRegHint:"Режимді таңдаңыз — күнтізбе мен кеңестер дәлірек болады.",
       regime910:"Оңайлатылған (910)",regime911:"Патент (911)",regimeour:"Жалпыға бірдей",regimenone:"Таңдалмаған",
       finImport:"📥 Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
@@ -1750,6 +1751,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if($('fin-export-btn'))$('fin-export-btn').textContent=s.finExportBtn;
     if($('co-h')){$('co-h').textContent=s.coH;$('co-add').textContent=s.coAdd;$('co-del').textContent=s.coDel;}
     if($('emp-h')){$('emp-h').textContent=s.empH;$('emp-add').textContent=s.empAdd;$('emp-name').placeholder=s.empName;$('emp-salary').placeholder=s.empSalary;}
+    if($('push-btn'))$('push-btn').textContent=s.pushBtn;
     const sel=$('fin-regime');if(sel){const cur=sel.value;sel.innerHTML=[['','regimenone'],['910','regime910'],['911','regime911'],['our','regimeour']].map(function(a){return '<option value="'+a[0]+'">'+s[a[1]]+'</option>';}).join('');sel.value=cur;}
   }
   async function loadFinance(){
@@ -1810,6 +1812,23 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   async function loadRegime(){try{const d=await (await afetch(API+'/api/regime')).json();const sel=$('fin-regime');if(sel)sel.value=d.regime||'';}catch(e){}}
   async function setRegime(v){try{await afetch(API+'/api/regime',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({regime:v})});loadTaxCalendar();}catch(e){}}
+  function b64ToU8(s){const pad='='.repeat((4-s.length%4)%4);const b=(s+pad).replace(/-/g,'+').replace(/_/g,'/');const raw=atob(b);const u=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);return u;}
+  async function enablePush(){
+    const s=S();
+    if(!('serviceWorker' in navigator)||!('PushManager' in window)){alert(s.pushUnsupported);return;}
+    try{
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted'){alert(s.pushDenied);return;}
+      const key=(await (await afetch(API+'/api/push/public-key')).json()).key;
+      if(!key){alert(s.pushNotConfigured);return;}
+      const reg=await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+      const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(key)});
+      const j=sub.toJSON();
+      await afetch(API+'/api/push/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:j.endpoint,keys:j.keys})});
+      alert(s.pushOn);
+    }catch(e){alert(s.errnet);}
+  }
   function finUrgColor(dl){return dl<=1?'#e5484d':(dl<=3?'#f5a623':(dl<=7?'#d4a017':'var(--accent,#5810E8)'));}
   async function loadTaxCalendar(){
     const s=S();try{const d=await (await afetch(API+'/api/tax-calendar')).json();const box=$('fin-cal');if(!box)return;
