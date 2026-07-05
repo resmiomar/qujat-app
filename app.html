@@ -752,6 +752,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     </style>
     <h2 id="fin-title"></h2><p class="sub" id="fin-sub"></p>
 
+    <div id="fin-alert" class="hidden" style="border-radius:14px;padding:12px 14px;margin-bottom:12px;font-weight:700;font-size:14px"></div>
+
     <div class="card">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="co-h"></h3>
       <select id="co-select" onchange="switchCompany(this.value)" style="width:100%;height:44px;border:1px solid var(--line,#e6e4f0);border-radius:11px;padding:0 12px;font-family:inherit;font-size:14px"></select>
@@ -888,7 +890,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finAddIn:"+ Доход",finAddOut:"− Расход",finAmount:"Сумма ₸",finCat:"Категория",finNote:"Примечание (необяз.)",finSave:"Добавить операцию",
       finEmpty:"Пока нет операций. Добавьте доход или расход.",finDelC:"Удалить операцию?",finList:"Операции",
       finThr:"Порог НДС",finThrSub:"Годовой доход к порогу обязательной регистрации по НДС",finThrOver:"Порог превышен — нужна регистрация по НДС!",finThrLeft:"До порога НДС осталось",
-      finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",
+      finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",finToday:"сегодня!",
       finReg:"Мой налоговый режим",finRegHint:"Выберите режим — календарь и подсказки станут точнее.",
       regime910:"Упрощёнка (ф.910)",regime911:"Патент (ф.911)",regimeour:"Общеустановленный",regimenone:"Не выбран",
       finImport:"📥 Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
@@ -953,7 +955,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       finAddIn:"+ Кіріс",finAddOut:"− Шығыс",finAmount:"Сома ₸",finCat:"Санат",finNote:"Ескертпе (міндетті емес)",finSave:"Операция қосу",
       finEmpty:"Әзірге операция жоқ. Кіріс не шығыс қосыңыз.",finDelC:"Операцияны жою?",finList:"Операциялар",
       finThr:"ҚҚС шегі",finThrSub:"Жылдық кіріс — ҚҚС-қа міндетті тіркелу шегіне қатысты",finThrOver:"Шектен асты — ҚҚС-қа тіркелу қажет!",finThrLeft:"ҚҚС шегіне дейін қалды",
-      finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",
+      finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",finToday:"бүгін!",
       finReg:"Салық режимім",finRegHint:"Режимді таңдаңыз — күнтізбе мен кеңестер дәлірек болады.",
       regime910:"Оңайлатылған (910)",regime911:"Патент (911)",regimeour:"Жалпыға бірдей",regimenone:"Таңдалмаған",
       finImport:"📥 Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
@@ -1808,10 +1810,15 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   async function loadRegime(){try{const d=await (await afetch(API+'/api/regime')).json();const sel=$('fin-regime');if(sel)sel.value=d.regime||'';}catch(e){}}
   async function setRegime(v){try{await afetch(API+'/api/regime',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({regime:v})});loadTaxCalendar();}catch(e){}}
+  function finUrgColor(dl){return dl<=1?'#e5484d':(dl<=3?'#f5a623':(dl<=7?'#d4a017':'var(--accent,#5810E8)'));}
   async function loadTaxCalendar(){
     const s=S();try{const d=await (await afetch(API+'/api/tax-calendar')).json();const box=$('fin-cal');if(!box)return;
-      if(!d.items||!d.items.length){box.innerHTML='<p class="sub">'+s.finCalEmpty+'</p>';return;}
-      box.innerHTML=d.items.slice(0,8).map(function(i){const dt=i.date.split('-').reverse().join('.');return '<div class="fin-cal-i"><span>'+i.desc+'</span><b>'+dt+' · '+i.days_left+' '+s.finDays+'</b></div>';}).join('');
+      const items=d.items||[];
+      const al=$('fin-alert');
+      const urgent=items.filter(function(i){return i.days_left<=7;}).sort(function(a,b){return a.days_left-b.days_left;})[0];
+      if(al){if(urgent){const c=finUrgColor(urgent.days_left);al.style.background=c+'1f';al.style.color=c;al.style.border='1px solid '+c+'55';al.innerHTML='🔔 '+urgent.desc+' — '+(urgent.days_left<=0?s.finToday:(urgent.days_left+' '+s.finDays));al.className='';}else{al.className='hidden';}}
+      if(!items.length){box.innerHTML='<p class="sub">'+s.finCalEmpty+'</p>';return;}
+      box.innerHTML=items.slice(0,8).map(function(i){const dt=i.date.split('-').reverse().join('.');return '<div class="fin-cal-i"><span>'+i.desc+'</span><b style="color:'+finUrgColor(i.days_left)+'">'+dt+' · '+i.days_left+' '+s.finDays+'</b></div>';}).join('');
     }catch(e){}
   }
 
