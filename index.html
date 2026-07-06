@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Qujat — вход</title>
 <meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=/app.html">
+<meta http-equiv="refresh" content="0; url=/auth/">
 <link rel="icon" href="/qujat-logo.png">
 <style>
   html,body{height:100%;margin:0}
@@ -20,10 +20,10 @@
 <body>
   <div class="wm">QUJAT</div>
   <div class="sp"></div>
-  <a href="/app.html">Войти →</a>
+  <a href="/auth/">Войти →</a>
   <script>
     // Аппқа бірден бағыттаймыз (query/hash сақталады — reset-токен, deep-link, kb=1 жұмыс істеуі үшін).
-    location.replace('/app.html' + location.search + location.hash);
+    location.replace('/auth/' + location.search + location.hash);
   </script>
 </body>
 </html>

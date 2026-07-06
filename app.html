@@ -1554,8 +1554,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function applyGate(){
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
     if(meUser){document.body.classList.remove('gated');return;}
-    // Кірмеген қолданушы (веб + натив): бірден кіру/тіркелу экраны — «продающее» лендингке бағыттамаймыз.
-    document.body.classList.add('gated');if(curTab!=='account')showTab('account');
+    // Веб: толық кіру беті /auth/ (email + Google + Apple, «продающее» лендингсіз). Натив: ішкі gate.
+    if(NATIVE_APP){document.body.classList.add('gated');if(curTab!=='account')showTab('account');return;}
+    location.replace('/auth/');
   }
   async function doRegister(){
     const s=S(),name=$('a_name').value.trim(),email=$('ar_email').value.trim().toLowerCase(),pass=$('ar_pass').value;
@@ -1575,7 +1576,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('docs');
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;document.body.classList.add('gated');renderAccount();showTab('account');}
+  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;if(NATIVE_APP){document.body.classList.add('gated');renderAccount();showTab('account');return;}location.replace('/auth/');}
 
   /* ----- Pro / жазылым (Kaspi + тенге) ----- */
   let subInfo=null,proTariff=null,proOpen=false;
@@ -2004,7 +2005,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
     await loadMe();
     if(!meUser){
-      document.body.classList.add('gated');showTab('account');return;
+      if(NATIVE_APP){document.body.classList.add('gated');showTab('account');return;}
+      location.replace('/auth/');
+      return;
     }
     document.body.classList.remove('gated');
     showTab('docs');
