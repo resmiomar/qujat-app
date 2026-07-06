@@ -1554,8 +1554,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function applyGate(){
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
     if(meUser){document.body.classList.remove('gated');return;}
-    if(NATIVE_APP){document.body.classList.add('gated');if(curTab!=='account')showTab('account');return;}
-    location.replace('/');
+    // Кірмеген қолданушы (веб + натив): бірден кіру/тіркелу экраны — «продающее» лендингке бағыттамаймыз.
+    document.body.classList.add('gated');if(curTab!=='account')showTab('account');
   }
   async function doRegister(){
     const s=S(),name=$('a_name').value.trim(),email=$('ar_email').value.trim().toLowerCase(),pass=$('ar_pass').value;
@@ -1563,7 +1563,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const b=$('a-regbtn');b.disabled=true;
     try{const r=await afetch(API+'/auth/register-email',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name})});
       if(r.status===409){alert(s.e_taken);return;}if(!r.ok){alert(s.errnet);return;}
-      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('docs');
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function doLogin(){
@@ -1572,10 +1572,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const b=$('a-loginbtn');b.disabled=true;
     try{const r=await afetch(API+'/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
       if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
-      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('docs');
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
-  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;if(NATIVE_APP){document.body.classList.add('gated');renderAccount();showTab('account');return;}location.replace('/');}
+  async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;document.body.classList.add('gated');renderAccount();showTab('account');}
 
   /* ----- Pro / жазылым (Kaspi + тенге) ----- */
   let subInfo=null,proTariff=null,proOpen=false;
@@ -1745,7 +1745,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   async function onGoogle(resp){
     try{const r=await afetch(API+'/auth/google',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})});
-      if(r.ok){const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();}else{alert(S().errnet);}
+      if(r.ok){const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('docs');}else{alert(S().errnet);}
     }catch(e){alert(S().errnet);}
   }
 
@@ -2004,9 +2004,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
     await loadMe();
     if(!meUser){
-      if(NATIVE_APP){document.body.classList.add('gated');showTab('account');return;}
-      location.replace('/');
-      return;
+      document.body.classList.add('gated');showTab('account');return;
     }
     document.body.classList.remove('gated');
     showTab('docs');
