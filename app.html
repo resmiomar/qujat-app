@@ -135,6 +135,24 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
   letter-spacing:.14em;text-transform:uppercase;margin:26px 4px 11px;
 }
 
+/* Басты бет (dashboard) */
+.hgreet{font-size:26px;font-weight:800;letter-spacing:-.03em;color:var(--text);margin:2px 0 3px;line-height:1.15}
+.hsnap{display:flex;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px 4px;margin:16px 0 2px;box-shadow:var(--sh-xs)}
+.hsnap>div{flex:1;text-align:center;padding:0 8px;min-width:0}
+.hsnap>div+div{border-left:1px solid var(--line-soft)}
+.hsnap b{display:block;font-size:16px;font-weight:800;letter-spacing:-.02em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hsnap .up b{color:var(--accent-strong)}
+.hsnap span{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sec-h{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin:24px 4px 12px}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.qa{display:flex;flex-direction:column;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px;cursor:pointer;box-shadow:var(--sh-xs);transition:transform .2s var(--ease),box-shadow .25s var(--ease),border-color .2s var(--ease)}
+.qa:hover{border-color:rgba(94,23,235,.28);transform:translateY(-3px);box-shadow:var(--sh-md)}
+.qa:active{transform:translateY(-1px) scale(.995)}
+.qa .qic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--grad-soft);color:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 0 0 1px rgba(94,23,235,.08),0 4px 10px rgba(94,23,235,.10)}
+.qa .qic svg{width:22px;height:22px}
+.qa .qt{font-size:14.5px;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.2}
+.qa .qd{font-size:11.5px;font-weight:500;color:var(--muted);margin-top:-5px;line-height:1.3}
+
 .field{margin-bottom:14px}
 label{
   display:block;font-size:12.5px;font-weight:700;color:var(--text-2);
@@ -168,6 +186,14 @@ input.bad,input.bad:focus{border-color:var(--danger);background:var(--danger-sof
   font-size:15px;font-weight:800;letter-spacing:-.02em;
   margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--text);
 }
+/* Бүктелетін профиль бөлімдері (аккордеон) */
+.afold>summary{list-style:none;cursor:pointer;font-size:15px;font-weight:800;letter-spacing:-.02em;color:var(--text);display:flex;align-items:center;gap:9px;user-select:none}
+.afold>summary::-webkit-details-marker{display:none}
+.afold>summary::after{content:none;display:none}
+.afold>summary .fchev{margin-left:auto;color:var(--muted-2);font-size:20px;font-weight:700;transition:transform .22s var(--ease)}
+.afold[open]>summary .fchev{transform:rotate(90deg);color:var(--accent)}
+.afold[open]>summary{margin-bottom:14px}
+.afold[open]{border-color:rgba(94,23,235,.25)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 
 .itemrow{display:grid;grid-template-columns:1fr 50px 82px 32px;gap:8px;margin-bottom:9px;align-items:center}
@@ -532,8 +558,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   <!-- ===== TAB: DOCUMENTS ===== -->
   <div id="tab-docs">
     <div id="home">
-      <h2 id="h-title"></h2><p class="sub" id="h-sub"></p>
-      <div class="banner" id="h-banner"></div>
+      <h2 class="hgreet" id="h-greet"></h2><p class="sub" id="h-sub"></p>
+      <div class="hsnap" id="h-snap" style="display:none"></div>
+      <div class="sec-h" id="h-qa-h"></div>
+      <div class="qa-grid" id="h-qa"></div>
+      <div class="sec-h" id="h-docs-h"></div>
       <div id="cats"></div>
       <div id="home-tools"></div>
     </div>
@@ -671,22 +700,24 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <div class="sec" style="text-align:center">
         <p class="sub" id="acc-welcome" style="margin:0 0 2px"></p>
         <h3 id="acc-name" style="margin:0 0 3px"></h3>
-        <p class="sub" id="acc-email" style="margin-bottom:12px"></p>
-        <button class="ib" id="acc-lang2" onclick="toggleLang()" style="height:34px;padding:0 16px;border-radius:10px;font-weight:700">🌐 <span id="acc-lang2-t">RU</span></button>
+        <p class="sub" id="acc-email" style="margin:0"></p>
       </div>
       <div class="sec" id="acc-sub" style="text-align:center"></div>
-      <div class="sec">
-        <h3>📁 <span id="acc-hist-t"></span></h3>
+
+      <details class="sec afold">
+        <summary>📁 <span id="acc-hist-t"></span><span class="fchev">›</span></summary>
         <div id="acc-history"></div>
-      </div>
-      <div class="sec" id="acc-assets">
-        <h3>🖋 <span id="acc-assets-t"></span></h3>
+      </details>
+
+      <details class="sec afold" id="acc-assets">
+        <summary>🖋 <span id="acc-assets-t"></span><span class="fchev">›</span></summary>
         <p class="sub" id="acc-assets-hint" style="margin-bottom:12px"></p>
         <div id="assets-rows"></div>
         <input type="file" id="asset-input" accept="image/*" class="hidden" onchange="onAssetFile()">
-      </div>
-      <div class="sec" id="acc-link">
-        <h3 id="acc-link-t"></h3>
+      </details>
+
+      <details class="sec afold" id="acc-link">
+        <summary><span id="acc-link-t"></span><span class="fchev">›</span></summary>
         <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
         <div id="acc-link-form">
           <p class="sub" id="acc-link-hint" style="margin-bottom:8px"></p>
@@ -695,19 +726,23 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
             <button class="btn" style="width:auto;padding:0 18px" id="a-linkbtn" onclick="doLinkTg()"></button>
           </div>
         </div>
-      </div>
-      <details class="sec">
-        <summary id="acc-chpass-t" style="color:var(--accent);font-weight:700"></summary>
-        <div style="margin-top:12px">
-          <div class="field"><label id="la-old"></label><input type="password" id="cp_old"></div>
-          <div class="field"><label id="la-new"></label><input type="password" id="cp_new"></div>
-          <button class="btn" id="a-chpass" onclick="doChangePass()"></button>
-        </div>
       </details>
+
+      <details class="sec afold">
+        <summary>🔑 <span id="acc-chpass-t"></span><span class="fchev">›</span></summary>
+        <div class="field"><label id="la-old"></label><input type="password" id="cp_old"></div>
+        <div class="field"><label id="la-new"></label><input type="password" id="cp_new"></div>
+        <button class="btn" id="a-chpass" onclick="doChangePass()"></button>
+      </details>
+
+      <div class="sec" onclick="toggleLang()" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <span style="font-weight:800;font-size:15px">🌐 <span id="acc-lang-lbl"></span></span>
+        <span class="ib" style="height:34px;padding:0 15px;pointer-events:none;font-weight:800"><span id="acc-lang2-t">RU</span></span>
+      </div>
       <button class="btn ghost hidden" id="a-admin" onclick="showTab('admin')" style="margin-bottom:14px"></button>
-      <div style="display:flex;gap:20px;justify-content:center;margin-top:6px">
-        <button onclick="doLogout()" id="a-logout-bottom" style="background:none;border:none;color:var(--muted,#8a87a0);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px"></button>
-        <button onclick="doDelete()" id="a-delete" style="background:none;border:none;color:var(--danger,#e5484d);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px"></button>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button onclick="doLogout()" id="a-logout-bottom" style="flex:1;height:46px;border:1px solid var(--line-2);border-radius:13px;background:var(--card);color:var(--muted);font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;transition:all .18s"></button>
+        <button onclick="doDelete()" id="a-delete" style="flex:1;height:46px;border:1px solid #f3c9cb;border-radius:13px;background:var(--danger-soft);color:var(--danger);font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;transition:all .18s"></button>
       </div>
     </div>
     <!-- Pro / жазылым экраны -->
@@ -902,8 +937,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Удалить",coAddPrompt:"Название компании или клиента:",coDelConfirm:"Удалить эту компанию и все её операции?",
       empH:"Зарплата сотрудников",empName:"ФИО сотрудника",empSalary:"Оклад ₸",empAdd:"+ Добавить сотрудника",empNet:"на руки",empEmpty:"Добавьте сотрудников — посчитаем зарплату и налоги.",empGross:"Фонд оплаты труда",empPay:"К выплате на руки",empTaxes:"Налоги и взносы (в бюджет)",empCost:"Затраты работодателя",empDoc:"Договор",empEsutd:"⚠️ Трудовые договоры нужно зарегистрировать в ЕСУТД в течение 5 рабочих дней после приёма:",
       mytaxH:"Мой налог",mytaxNoReg:"Выберите налоговый режим ниже — и увидите налог за текущий период.",mytaxPeriod:"Период",mytaxH1:"1 полугодие",mytaxH2:"2 полугодие",mytaxInc:"Доход за период",mytaxTax:"К уплате",mytaxOther:"В этом режиме сдаётся форма {form}. Точную сумму рассчитайте в калькуляторе.",mytaxDlR:"Сдача до",mytaxDlP:"уплата до",mytaxFile:"Сдать в кабинете salyk →",mytaxForm910:"Заполнить декларацию 910 →",
-      htitle:"Создайте документ",hsub:"Бесплатно, прямо в браузере.",
+      htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
+      hgreet:"Здравствуйте",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Бухгалтер-консультант",
+      hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
       sname:"Название (ИП/ТОО) *",sbin:"БИН/ИИН",sfio:"ФИО руководителя",bank:"Банковские реквизиты (необязательно)",
       bankname:"Банк",kaspi:"Ссылка Kaspi (для QR)",bname:"Название клиента",bbin:"БИН/ИИН клиента",
@@ -935,7 +973,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       assetst:"Печать и подпись",assetshint:"Загрузите фото печати и подписи один раз — они автоматически встанут на все PDF-документы.",
       assetstamp:"Печать",assetsign:"Подпись",assetup:"Загрузить",assetre:"Заменить",assetdel:"Удалить",
       assetok:"✓ Загружено",assetno:"Не загружено",assetuperr:"Не удалось — нужно чёткое фото на светлом фоне",
-      accchpass:"🔑 Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
+      accchpass:"Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
       accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
@@ -967,8 +1005,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Жою",coAddPrompt:"Компания не клиент атауы:",coDelConfirm:"Осы компанияны және барлық операциясын жою?",
       empH:"Қызметкерлер жалақысы",empName:"Қызметкер аты-жөні",empSalary:"Оклад ₸",empAdd:"+ Қызметкер қосу",empNet:"қолға",empEmpty:"Қызметкер қосыңыз — жалақы мен салықты есептейміз.",empGross:"Еңбекақы қоры",empPay:"Қолға төлеуге",empTaxes:"Салық пен жарналар (бюджетке)",empCost:"Жұмыс беруші шығыны",empDoc:"Шарт",empEsutd:"⚠️ Еңбек шарттарын ЕСУТД жүйесінде қабылдаудан кейін 5 жұмыс күні ішінде тіркеу қажет:",
       mytaxH:"Менің салығым",mytaxNoReg:"Төменнен салық режимін таңдаңыз — сонда ағымдағы кезеңдегі салықты көресіз.",mytaxPeriod:"Кезең",mytaxH1:"1-жартыжылдық",mytaxH2:"2-жартыжылдық",mytaxInc:"Кезеңдегі кіріс",mytaxTax:"Төлеуге",mytaxOther:"Бұл режимде {form} форма тапсырылады. Нақты соманы калькулятордан есептеңіз.",mytaxDlR:"Тапсыру",mytaxDlP:"төлеу",mytaxFile:"salyk кабинетінде тапсыру →",mytaxForm910:"910 декларациясын толтыру →",
-      htitle:"Құжат жасаңыз",hsub:"Тегін, тікелей браузерде.",
+      htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
+      hgreet:"Сәлеметсіз бе",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Бухгалтер-кеңесші",
+      hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
       sname:"Атауы (ЖК/ТОО) *",sbin:"БИН/ЖСН",sfio:"Басшы аты-жөні",bank:"Банк деректемелері (міндетті емес)",
       bankname:"Банк",kaspi:"Kaspi сілтемесі (QR)",bname:"Клиент атауы",bbin:"Клиент БИН/ЖСН",
@@ -1000,7 +1041,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       assetst:"Печать пен қолтаңба",assetshint:"Печать пен қолтаңбаның фотосын бір рет жүктеңіз — олар барлық PDF-ке автоматты қойылады.",
       assetstamp:"Печать",assetsign:"Қолтаңба",assetup:"Жүктеу",assetre:"Ауыстыру",assetdel:"Жою",
       assetok:"✓ Жүктелді",assetno:"Жүктелмеген",assetuperr:"Болмады — ашық фондағы анық фото керек",
-      accchpass:"🔑 Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
+      accchpass:"Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
       accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
@@ -1099,9 +1140,37 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
 
   /* ---------- DOCUMENTS ---------- */
+  let _homeFin=null,_homeCal=null;
+  function renderSnap(){
+    const s=S();const el=$('h-snap');if(!el)return;
+    if(_homeFin===null){el.style.display='none';return;}
+    const inc=_homeFin.income||0,pr=_homeFin.profit||0;
+    let dueB=s.hsnapNone,dueL=s.hsnapDue;
+    if(_homeCal&&_homeCal.items&&_homeCal.items.length){const it=_homeCal.items[0];
+      dueB=(it.days_left!=null?it.days_left+' '+s.hsnapDays:'—');dueL=it.desc||s.hsnapDue;}
+    el.style.display='flex';
+    el.innerHTML='<div class="up"><b>'+finM(inc)+'</b><span>'+s.hsnapInc+'</span></div>'
+      +'<div><b>'+finM(pr)+'</b><span>'+s.hsnapProfit+'</span></div>'
+      +'<div><b>'+dueB+'</b><span>'+dueL+'</span></div>';
+  }
+  function fetchHomeSnap(){
+    fetch('/api/fin').then(r=>r.json()).then(d=>{_homeFin=d||{};renderSnap();}).catch(()=>{});
+    fetch('/api/tax-calendar').then(r=>r.json()).then(d=>{_homeCal=d||{};renderSnap();}).catch(()=>{});
+  }
   function renderHome(){
     const s=S();
-    $('h-title').textContent=s.htitle;$('h-sub').textContent=s.hsub;$('h-banner').textContent=s.hbanner;
+    const nm=(typeof meUser!=='undefined'&&meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';
+    $('h-greet').textContent=s.hgreet+nm+' 👋';$('h-sub').textContent=s.hsub;
+    $('h-qa-h').textContent=s.qaTitle;$('h-docs-h').textContent=s.hdocsTitle;
+    const qa=$('h-qa');if(qa){
+      const acts=[
+        {ic:'file-text',t:s.qaDoc,d:s.qaDocD,fn:"document.getElementById('h-docs-h').scrollIntoView({behavior:'smooth',block:'start'})"},
+        {ic:'banknote',t:s.navfin,d:s.qaFinD,fn:"showTab('finance')"},
+        {ic:'calc',t:s.nav[1],d:s.qaCalcD,fn:"showTab('calc')"},
+        {ic:'message',t:s.nav[2],d:s.qaAiD,fn:"showTab('ai')"}];
+      qa.innerHTML=acts.map(a=>'<div class="qa" onclick="'+a.fn+'"><div class="qic">'+svg(a.ic)+'</div><div><div class="qt">'+a.t+'</div><div class="qd">'+a.d+'</div></div></div>').join('');
+    }
+    renderSnap();if(_homeFin===null)fetchHomeSnap();
     const ht=$('home-tools');if(ht)ht.innerHTML='<div class="card" onclick="showTab(\'convert\')" style="cursor:pointer"><div class="ic">'+svg('refresh')+'</div><div><div class="t">'+s.nav[3]+'</div><div class="d">'+s.convHomeD+'</div></div><div class="chev">›</div></div>';
     const box=$('cats');box.innerHTML='';
     CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
@@ -1370,6 +1439,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
     $('a-to-login').textContent=s.acctologin;$('a-to-reg').textContent=s.acctoreg;
     const _al2=$('acc-lang2-t');if(_al2)_al2.textContent=lang==='ru'?'RU':'KZ';
+    const _all=$('acc-lang-lbl');if(_all)_all.textContent=lang==='ru'?'Язык интерфейса':'Интерфейс тілі';
     $('a-logout-bottom').textContent=s.acclogout;
     if($('a-admin'))$('a-admin').textContent=s.admBtn;
     const hl=$('hdr-logout');if(hl){hl.textContent=s.acclogout;hl.classList.toggle('hidden',!meUser);}
@@ -1479,6 +1549,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   async function loadMe(){
     try{const r=await afetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
     renderAccount();applyGate();accLabels();
+    const hg=$('h-greet');if(hg){const nm=(meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';hg.textContent=S().hgreet+nm+' 👋';}
   }
   function applyGate(){
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
