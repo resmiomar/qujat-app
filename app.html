@@ -969,6 +969,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       consent:'Регистрируясь, вы принимаете <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">оферту</a> и <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">политику конфиденциальности</a>.',
       proh:"Qujat Pro",prosub:"Безлимит документов, налоговые формы, ИИ-помощник, печать и подпись — без ограничений.",
       prolimit:"Лимит бесплатных документов в этом месяце исчерпан. Оформите Pro:",
+      prioslim:"Лимит бесплатных документов в этом месяце исчерпан.",
       probuy:"💎 Оформить Pro",proextend:"Продлить Pro",prountil:"Активен до",
       profree:"Бесплатный тариф",prousedl:"Документов в этом месяце:",proleft:"осталось",
       propayhint:"Выберите тариф, оплатите через Kaspi и загрузите чек — Pro включится автоматически.",
@@ -1037,6 +1038,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       consent:'Тіркелу арқылы сіз <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">офертаны</a> және <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">құпиялылық саясатын</a> қабылдайсыз.',
       proh:"Qujat Pro",prosub:"Шексіз құжат, салық формалары, AI-көмекші, печать пен қолтаңба — шектеусіз.",
       prolimit:"Осы айдағы тегін құжат лимиті бітті. Pro рәсімдеңіз:",
+      prioslim:"Осы айдағы тегін құжат лимиті бітті.",
       probuy:"💎 Pro рәсімдеу",proextend:"Pro ұзарту",prountil:"Белсенді, дейін",
       profree:"Тегін тариф",prousedl:"Осы айдағы құжат:",proleft:"қалды",
       propayhint:"Тарифті таңдап, Kaspi арқылы төлеп, чекті жүктеңіз — Pro автоматты қосылады.",
@@ -1596,6 +1598,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   function renderSubBox(){
     const box=$('acc-sub');if(!box)return;const s=S();
+    // Apple 3.1.1: iOS қосымшасында жазылым/төлем бөлімі КӨРСЕТІЛМЕЙДІ (Pro веб/Telegram арқылы сатылады)
+    if(NATIVE_IOS){box.style.display='none';box.innerHTML='';return;}
+    box.style.display='';
     if(!subInfo){box.innerHTML='';return;}
     const m=NATIVE_APP?'0':'12px';
     if(subInfo.premium){
@@ -1641,6 +1646,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   function openPro(msg){
     const s=S();
+    if(NATIVE_IOS){alert(s.prioslim);return;}   // Apple 3.1.1: Pro-ны ұсынбаймыз, тек нейтрал лимит хабары
     if(NATIVE_APP){alert(msg||s.prolimit);return;}
     proOpen=true;
     if(curTab!=='account'){curTab='account';['docs','finance','calc','ai','convert','account','admin'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!=='account');});renderNav();}
