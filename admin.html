@@ -10,19 +10,19 @@
 <style>
 :root{
   --bg:#f5f6f9;--card:#fff;--text:#0d0f14;--muted:#5f6573;--line:#e9eaef;--line-2:#e1e2e9;
-  --accent:#5b54e6;--accent-soft:#efeefc;--accent-strong:#4a43d6;--danger:#e5484d;--danger-soft:#fdecee;
-  --ok:#0a9d6e;--sh-xs:0 1px 2px rgba(16,18,28,.05);--ring:0 0 0 4px rgba(91,84,230,.13);
+  --accent:#5e17eb;--accent-soft:#f0ebfd;--accent-strong:#4c12bf;--danger:#e5484d;--danger-soft:#fdecee;
+  --ok:#0a9d6e;--sh-xs:0 1px 2px rgba(16,18,28,.05);--ring:0 0 0 4px rgba(94,23,235,.13);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:40px}
 .wrap{max-width:640px;margin:0 auto;padding:0 18px}
 header{position:sticky;top:0;z-index:10;background:rgba(247,248,251,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 header .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
-.logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,#7a5cff,#5a3fdb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,#7a3ef0,#520fdb);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ib{height:36px;padding:0 12px;border-radius:10px;background:var(--card);border:1px solid var(--line-2);font-family:inherit;font-weight:700;font-size:12px;cursor:pointer}
 h2{font-size:24px;font-weight:800;margin:20px 0 6px}
 .sub{color:var(--muted);font-size:14px;margin-bottom:16px}
-.btn{display:block;width:100%;height:48px;border:none;border-radius:13px;background:linear-gradient(135deg,#7a5cff,#5a3fdb);color:#fff;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;box-shadow:var(--sh-xs)}
+.btn{display:block;width:100%;height:48px;border:none;border-radius:13px;background:linear-gradient(135deg,#7a3ef0,#520fdb);color:#fff;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;box-shadow:var(--sh-xs)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
 .btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line-2)}
 .btn-mini{height:36px;padding:0 12px;width:auto;font-size:12.5px;border-radius:10px;display:inline-block;line-height:36px;text-align:center}
@@ -128,8 +128,8 @@ const STR={
   ru:{loginH:'Вход в админ-панель',loginSub:'Только для администратора Qujat',loginBtn:'Войти',logout:'Выйти',
     noAdmin:'Доступ запрещён. Этот сайт только для администратора.',
     admTitle:'Управление Qujat',admSub:'Кто зарегистрировался — создавайте и удаляйте аккаунты',
-    admYou:'Вы вошли как',admSecAdd:'➕ Создать пользователя',admSecUsers:'👥 Кто зарегистрировался',
-    admSecStats:'📊 Статистика',admSecWeb:'🌐 Веб',admSecTg:'🤖 Telegram',
+    admYou:'Вы вошли как',admSecAdd:'Создать пользователя',admSecUsers:'Кто зарегистрировался',
+    admSecStats:'Статистика',admSecWeb:'Веб',admSecTg:'Telegram',
     accname:'Имя',accemail:'Email',accpass:'Пароль (мин. 6)',admCreateBtn:'Создать аккаунт',
     admCreated:'Пользователь создан ✓',admDelete:'Удалить',admDelConfirm:'Удалить {email} и все данные?',
     admDeleted:'Удалён ✓',admSelf:'это вы',admRegistered:'Зарегистрировался',admRefresh:'Обновить',
@@ -143,8 +143,8 @@ const STR={
   kz:{loginH:'Админ-панельге кіру',loginSub:'Тек Qujat әкімшісі үшін',loginBtn:'Кіру',logout:'Шығу',
     noAdmin:'Рұқсат жоқ. Бұл сайт тек әкімшіге арналған.',
     admTitle:'Qujat басқару',admSub:'Кім тіркелген — аккаунт жасаңыз не жойыңыз',
-    admYou:'Сіз кірдіңіз:',admSecAdd:'➕ Пайдаланушы жасау',admSecUsers:'👥 Кім тіркелген',
-    admSecStats:'📊 Статистика',admSecWeb:'🌐 Веб',admSecTg:'🤖 Telegram',
+    admYou:'Сіз кірдіңіз:',admSecAdd:'Пайдаланушы жасау',admSecUsers:'Кім тіркелген',
+    admSecStats:'Статистика',admSecWeb:'Веб',admSecTg:'Telegram',
     accname:'Аты',accemail:'Email',accpass:'Пароль (мин. 6)',admCreateBtn:'Аккаунт жасау',
     admCreated:'Пайдаланушы жасалды ✓',admDelete:'Жою',admDelConfirm:'{email} және барлық деректі жою керек пе?',
     admDeleted:'Жойылды ✓',admSelf:'сіз',admRegistered:'Тіркелген',admRefresh:'Жаңарту',

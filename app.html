@@ -115,7 +115,8 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
 /* Блок-панель (Учёт, Админ бөлімдері — тік орналасу) */
 .pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--sh-xs)}
 .pcard>h3{font-size:15px;font-weight:800;letter-spacing:-.01em;color:var(--text);margin-bottom:10px}
-.cp-row{padding:11px 13px;border-radius:12px;font-size:14px;margin-bottom:7px;line-height:1.38}
+.cp-row{padding:11px 13px;border-radius:12px;font-size:14px;margin-bottom:7px;line-height:1.38;display:flex;align-items:center;gap:8px}
+.cp-row .iic{margin-top:0}
 .cp-green{background:#eaf7ee;color:#1a7f37;border:1px solid #c3e9cf}
 .cp-red{background:var(--danger-soft,#fdecee);color:var(--danger,#e5484d);border:1px solid #f3c9cb}
 .cp-wait{background:var(--accent-soft,#f0ebfd);color:var(--accent-strong,#4a11c0);border:1px solid #e3d7fc}
@@ -200,6 +201,7 @@ input.bad,input.bad:focus{border-color:var(--danger);background:var(--danger-sof
 .afold[open]>summary{margin-bottom:14px}
 .afold[open]{border-color:rgba(94,23,235,.25)}
 .fic{width:19px;height:19px;color:var(--accent);flex:none}
+.iic{width:18px;height:18px;flex:none;vertical-align:-4px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 
 .itemrow{display:grid;grid-template-columns:1fr 50px 82px 32px;gap:8px;margin-bottom:9px;align-items:center}
@@ -595,7 +597,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <button class="back" onclick="goDocsHome()">‹ <span id="f-back"></span></button>
       <h2 id="f-title"></h2><p class="sub" id="f-sub"></p>
       <div class="sec">
-        <h3>🏢 <span id="s-seller"></span></h3>
+        <h3><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><line x1="8" y1="6" x2="8" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="16" y1="6" x2="16" y2="6.01"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/></svg><span id="s-seller"></span></h3>
         <div class="field"><label id="l-sname"></label><input type="text" id="s_name" autocomplete="organization"></div>
         <div class="row2">
           <div class="field"><label id="l-sbin"></label><input type="text" id="s_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}"></div>
@@ -611,7 +613,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         </div></details>
       </div>
       <div class="sec">
-        <h3>👤 <span id="s-buyer"></span></h3>
+        <h3><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="s-buyer"></span></h3>
         <div class="field"><label id="l-bname"></label><input type="text" id="b_name"></div>
         <div class="field"><label id="l-bbin"></label><input type="text" id="b_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}"></div>
       </div>
@@ -620,7 +622,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         <div class="field"><label id="l-date"></label><input type="date" id="d_date"></div>
       </div></div>
       <div class="sec">
-        <h3>📋 <span id="s-items"></span></h3>
+        <h3><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg><span id="s-items"></span></h3>
         <div class="ihead"><span id="ih-name"></span><span id="ih-unit"></span><span id="ih-qty"></span><span></span></div>
         <div id="items"></div>
         <button class="additem" onclick="addItem()" id="b-additem"></button>
@@ -631,7 +633,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <p class="note" id="f-note"></p>
     </div>
     <div id="result" class="hidden"><div class="ok">
-      <div class="em">✅</div><h2 id="r-title"></h2><p class="sub" id="r-sub"></p>
+      <div class="em"><svg style="width:56px;height:56px;color:var(--accent2)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h2 id="r-title"></h2><p class="sub" id="r-sub"></p>
       <a class="btn" id="r-open" target="_blank" style="display:block;text-decoration:none;line-height:50px;margin-bottom:10px"></a>
       <a class="btn ghost" id="r-download" style="display:block;text-decoration:none;line-height:48px;margin-bottom:10px"></a>
       <button class="btn ghost" id="r-share" onclick="shareDoc()" style="display:none;margin-bottom:10px"></button>
@@ -940,7 +942,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 
 <div class="airow hidden" id="airow"><div class="wrap">
   <input type="text" id="ai-input" autocomplete="off">
-  <button class="aisend" onclick="sendAI()">➤</button>
+  <button class="aisend" onclick="sendAI()"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
 </div></div>
 
 <div class="nav" id="nav"></div>
@@ -967,23 +969,23 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
 
   const STR={
-    ru:{nav:["Главная","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"OCR, PDF ↔ Word/Excel, сжатие, объединение — 20 операций",admBtn:"🛠 Админ-панель",
+    ru:{nav:["Главная","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"OCR, PDF ↔ Word/Excel, сжатие, объединение — 20 операций",admBtn:"Админ-панель",
       finTitle:"Учёт финансов",finSub:"Доходы, расходы и налоговый контроль",
       finIncome:"Доходы",finExpense:"Расходы",finProfit:"Прибыль",
       finAddIn:"+ Доход",finAddOut:"− Расход",finAmount:"Сумма ₸",finCat:"Категория",finNote:"Примечание (необяз.)",finSave:"Добавить операцию",
       finEmpty:"Пока нет операций. Добавьте доход или расход.",finDelC:"Удалить операцию?",finList:"Операции",
       finThr:"Порог НДС",finThrSub:"Годовой доход к порогу обязательной регистрации по НДС",finThrOver:"Порог превышен — нужна регистрация по НДС!",finThrLeft:"До порога НДС осталось",
-      finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",finToday:"сегодня!",pushBtn:"🔔 Включить уведомления о сроках",pushOn:"Уведомления включены ✓",pushDenied:"Уведомления заблокированы в браузере.",pushUnsupported:"Ваш браузер не поддерживает push-уведомления.",pushNotConfigured:"Push пока не настроен на сервере.",
+      finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",finToday:"сегодня!",pushBtn:"Включить уведомления о сроках",pushOn:"Уведомления включены ✓",pushDenied:"Уведомления заблокированы в браузере.",pushUnsupported:"Ваш браузер не поддерживает push-уведомления.",pushNotConfigured:"Push пока не настроен на сервере.",
       finReg:"Мой налоговый режим",finRegHint:"Выберите режим — календарь и подсказки станут точнее.",
       regime910:"Упрощёнка (ф.910)",regime911:"Патент (ф.911)",regimeour:"Общеустановленный",regimenone:"Не выбран",
-      finImport:"📥 Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
+      finImport:"Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
       finImportFound:"Найдено операций:",finImportAdd:"Добавить все",finImportNone:"Не удалось распознать операции. Лучше всего работает выписка в Excel или CSV.",finImportDone:"Добавлено операций:",finExportBtn:"⬇ Экспорт в Excel",
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Удалить",coAddPrompt:"Название компании или клиента:",coDelConfirm:"Удалить эту компанию и все её операции?",
-      empH:"Зарплата сотрудников",empName:"ФИО сотрудника",empSalary:"Оклад ₸",empAdd:"+ Добавить сотрудника",empNet:"на руки",empEmpty:"Добавьте сотрудников — посчитаем зарплату и налоги.",empGross:"Фонд оплаты труда",empPay:"К выплате на руки",empTaxes:"Налоги и взносы (в бюджет)",empCost:"Затраты работодателя",empDoc:"Договор",empEsutd:"⚠️ Трудовые договоры нужно зарегистрировать в ЕСУТД в течение 5 рабочих дней после приёма:",
+      empH:"Зарплата сотрудников",empName:"ФИО сотрудника",empSalary:"Оклад ₸",empAdd:"+ Добавить сотрудника",empNet:"на руки",empEmpty:"Добавьте сотрудников — посчитаем зарплату и налоги.",empGross:"Фонд оплаты труда",empPay:"К выплате на руки",empTaxes:"Налоги и взносы (в бюджет)",empCost:"Затраты работодателя",empDoc:"Договор",empEsutd:"Трудовые договоры нужно зарегистрировать в ЕСУТД в течение 5 рабочих дней после приёма:",
       mytaxH:"Мой налог",mytaxNoReg:"Выберите налоговый режим ниже — и увидите налог за текущий период.",mytaxPeriod:"Период",mytaxH1:"1 полугодие",mytaxH2:"2 полугодие",mytaxInc:"Доход за период",mytaxTax:"К уплате",mytaxOther:"В этом режиме сдаётся форма {form}. Точную сумму рассчитайте в калькуляторе.",mytaxDlR:"Сдача до",mytaxDlP:"уплата до",mytaxFile:"Сдать в кабинете salyk →",mytaxForm910:"Заполнить декларацию 910 →",
       cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — проверю налоговую задолженность и реестр должников (аресты счетов, запрет выезда).",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
-      hbanner:"✓ Заполните форму — скачайте готовый PDF",
+      hbanner:"Заполните форму — скачайте готовый PDF",
       hgreet:"Добро пожаловать",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Получить консультацию 24/7",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
@@ -991,16 +993,16 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       sname:"Название (ИП/ТОО) *",sbin:"БИН/ИИН",sfio:"ФИО руководителя",bank:"Банковские реквизиты (необязательно)",
       bankname:"Банк",kaspi:"Ссылка Kaspi (для QR)",bname:"Название клиента",bbin:"БИН/ИИН клиента",
       num:"№ документа",date:"Дата",ihname:"Наименование",ihunit:"Кол-во",ihqty:"Цена",
-      additem:"+ Добавить позицию",vat:"С НДС 16%",total:"Итого:",gen:"📄 Создать PDF",genwait:"Создаю…",
+      additem:"+ Добавить позицию",vat:"С НДС 16%",total:"Итого:",gen:"Создать PDF",genwait:"Создаю…",
       fnote:"Данные поставщика сохранятся в браузере.",itemname:"Наименование",
-      rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"👁 Открыть PDF",rdownload:"📥 Скачать PDF",rnew:"➕ Создать ещё",rhome:"🏠 На главную",rshare:"📤 Поделиться",
+      rtitle:"Документ готов!",rsub:"PDF создан.",ropen:"Открыть PDF",rdownload:"Скачать PDF",rnew:"Создать ещё",rhome:"На главную",rshare:"Поделиться",
       errseller:"Укажите название поставщика",erritems:"Добавьте позицию",errnet:"Ошибка сети. Попробуйте ещё раз.",fillreq:"Заполните обязательные поля (отмечены *)",
       ctitle:"Калькуляторы 2026",csub:"Налоги, зарплата, режимы — по ставкам РК 2026.",crun:"Рассчитать",cresult:"Результат",
       convtitle:"Конвертер файлов",convsub:"Конвертируйте файлы прямо в браузере, бесплатно.",convwait:"Конвертирую…",convdone:"Готово! Файл скачан.",converr:"Не удалось — проверьте файл.",
       atitle:"ИИ-бухгалтер",asub:"Налоги, режимы, зарплата, отчёты и документы РК 2026.",
       aplaceholder:"Ваш вопрос…",agreet:"Здравствуйте! Я бухгалтерский помощник Qujat. Помогу разобраться с налогами 2026, режимами (ИП/ТОО), зарплатой и взносами, отчётами и сроками, документами — спрашивайте.",
       achips:["Какой налог у ИП?","Когда сдавать 910?","ИП или ТОО?","Ставка НДС 2026?"],
-      ainote:"⚠️ ИИ может ошибаться. Точные данные — на kgd.gov.kz.",
+      ainote:"ИИ может ошибаться. Точные данные — на kgd.gov.kz.",
       accintro:"Войдите — сессия будет работать на любом устройстве (без SMS).",
       consent:'Регистрируясь, вы принимаете <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">оферту</a> и <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">политику конфиденциальности</a>.',
       proh:"Qujat Pro",prosub:"Безлимит документов, налоговые формы, ИИ-помощник, печать и подпись — без ограничений.",
@@ -1009,7 +1011,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       probuy:"Оформить Pro",proextend:"Продлить Pro",prountil:"Активен до",
       profree:"Бесплатный тариф",prousedl:"Документов в этом месяце:",proleft:"осталось",
       propayhint:"Выберите тариф, оплатите через Kaspi и загрузите чек — Pro включится автоматически.",
-      prokaspi:"Оплатить через Kaspi",proreceipt:"📎 Загрузить чек Kaspi",prochoose:"Сначала выберите тариф",
+      prokaspi:"Оплатить через Kaspi",proreceipt:"Загрузить чек Kaspi",prochoose:"Сначала выберите тариф",
       proverify:"Проверяю чек…",prook:"Готово! Pro активирован 🎉",pronokaspi:"Оплата скоро будет. Напишите в @Qujatkz_bot.",
       proios:"Подписка Pro оформляется через App Store. Появится в ближайшем обновлении приложения.",
       accreg:"Регистрация",acclogin:"Вход",accname:"Имя",accemail:"Email",accpass:"Пароль (мин. 6)",
@@ -1025,8 +1027,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
       linktg:"Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"Premium активен",
       navadmin:"Админ",admTitle:"Управление Qujat",admSub:"Смотрите кто зарегистрировался, создавайте и удаляйте аккаунты",
-      admSecAdd:"➕ Создать пользователя",admSecUsers:"👥 Кто зарегистрировался",admSecStats:"📊 Статистика",
-      admSecWeb:"🌐 Веб-приложение",admSecTg:"🤖 Telegram-бот",
+      admSecAdd:"Создать пользователя",admSecUsers:"Кто зарегистрировался",admSecStats:"Статистика",
+      admSecWeb:"Веб-приложение",admSecTg:"Telegram-бот",
       admCreateBtn:"Создать аккаунт",admCreated:"Пользователь создан ✓",
       admDelete:"Удалить",admDelConfirm:"Удалить {email} и все его данные?",admDeleted:"Удалён ✓",
       admSelf:"это вы",admRegistered:"Зарегистрировался",
@@ -1037,23 +1039,23 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       admNoUsers:"Пользователей не найдено",admDocsUsed:"Док. в месяце",admUntil:"Pro до",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
-    kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"OCR, PDF ↔ Word/Excel, сығу, біріктіру — 20 операция",admBtn:"🛠 Админ-панель",
+    kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"OCR, PDF ↔ Word/Excel, сығу, біріктіру — 20 операция",admBtn:"Админ-панель",
       finTitle:"Қаржы есебі",finSub:"Кіріс, шығыс және салық бақылауы",
       finIncome:"Кіріс",finExpense:"Шығыс",finProfit:"Пайда",
       finAddIn:"+ Кіріс",finAddOut:"− Шығыс",finAmount:"Сома ₸",finCat:"Санат",finNote:"Ескертпе (міндетті емес)",finSave:"Операция қосу",
       finEmpty:"Әзірге операция жоқ. Кіріс не шығыс қосыңыз.",finDelC:"Операцияны жою?",finList:"Операциялар",
       finThr:"ҚҚС шегі",finThrSub:"Жылдық кіріс — ҚҚС-қа міндетті тіркелу шегіне қатысты",finThrOver:"Шектен асты — ҚҚС-қа тіркелу қажет!",finThrLeft:"ҚҚС шегіне дейін қалды",
-      finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",finToday:"бүгін!",pushBtn:"🔔 Мерзім хабарламаларын қосу",pushOn:"Хабарламалар қосылды ✓",pushDenied:"Хабарламалар браузерде бұғатталған.",pushUnsupported:"Браузеріңіз push-хабарламаны қолдамайды.",pushNotConfigured:"Push әлі бапталмаған (серверде кілт жоқ).",
+      finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",finToday:"бүгін!",pushBtn:"Мерзім хабарламаларын қосу",pushOn:"Хабарламалар қосылды ✓",pushDenied:"Хабарламалар браузерде бұғатталған.",pushUnsupported:"Браузеріңіз push-хабарламаны қолдамайды.",pushNotConfigured:"Push әлі бапталмаған (серверде кілт жоқ).",
       finReg:"Салық режимім",finRegHint:"Режимді таңдаңыз — күнтізбе мен кеңестер дәлірек болады.",
       regime910:"Оңайлатылған (910)",regime911:"Патент (911)",regimeour:"Жалпыға бірдей",regimenone:"Таңдалмаған",
-      finImport:"📥 Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
+      finImport:"Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
       finImportFound:"Табылған операция:",finImportAdd:"Барлығын қосу",finImportNone:"Операцияларды тани алмадым. Excel не CSV выписка ең дұрыс жұмыс істейді.",finImportDone:"Қосылған операция:",finExportBtn:"⬇ Excel-ге экспорт",
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Жою",coAddPrompt:"Компания не клиент атауы:",coDelConfirm:"Осы компанияны және барлық операциясын жою?",
-      empH:"Қызметкерлер жалақысы",empName:"Қызметкер аты-жөні",empSalary:"Оклад ₸",empAdd:"+ Қызметкер қосу",empNet:"қолға",empEmpty:"Қызметкер қосыңыз — жалақы мен салықты есептейміз.",empGross:"Еңбекақы қоры",empPay:"Қолға төлеуге",empTaxes:"Салық пен жарналар (бюджетке)",empCost:"Жұмыс беруші шығыны",empDoc:"Шарт",empEsutd:"⚠️ Еңбек шарттарын ЕСУТД жүйесінде қабылдаудан кейін 5 жұмыс күні ішінде тіркеу қажет:",
+      empH:"Қызметкерлер жалақысы",empName:"Қызметкер аты-жөні",empSalary:"Оклад ₸",empAdd:"+ Қызметкер қосу",empNet:"қолға",empEmpty:"Қызметкер қосыңыз — жалақы мен салықты есептейміз.",empGross:"Еңбекақы қоры",empPay:"Қолға төлеуге",empTaxes:"Салық пен жарналар (бюджетке)",empCost:"Жұмыс беруші шығыны",empDoc:"Шарт",empEsutd:"Еңбек шарттарын ЕСУТД жүйесінде қабылдаудан кейін 5 жұмыс күні ішінде тіркеу қажет:",
       mytaxH:"Менің салығым",mytaxNoReg:"Төменнен салық режимін таңдаңыз — сонда ағымдағы кезеңдегі салықты көресіз.",mytaxPeriod:"Кезең",mytaxH1:"1-жартыжылдық",mytaxH2:"2-жартыжылдық",mytaxInc:"Кезеңдегі кіріс",mytaxTax:"Төлеуге",mytaxOther:"Бұл режимде {form} форма тапсырылады. Нақты соманы калькулятордан есептеңіз.",mytaxDlR:"Тапсыру",mytaxDlP:"төлеу",mytaxFile:"salyk кабинетінде тапсыру →",mytaxForm910:"910 декларациясын толтыру →",
       cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — салық берешегі мен борышкер тізілімін (шот тыйымы, шығу тыйымы) тексеремін.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
-      hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
+      hbanner:"Форманы толтырып — дайын PDF жүктеңіз",
       hgreet:"Қош келдіңіз",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Кеңес алу 24/7",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
@@ -1061,16 +1063,16 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       sname:"Атауы (ЖК/ТОО) *",sbin:"БИН/ЖСН",sfio:"Басшы аты-жөні",bank:"Банк деректемелері (міндетті емес)",
       bankname:"Банк",kaspi:"Kaspi сілтемесі (QR)",bname:"Клиент атауы",bbin:"Клиент БИН/ЖСН",
       num:"Құжат №",date:"Күні",ihname:"Атауы",ihunit:"Саны",ihqty:"Баға",
-      additem:"+ Атау қосу",vat:"ҚҚС 16%-бен",total:"Барлығы:",gen:"📄 PDF жасау",genwait:"Жасалуда…",
+      additem:"+ Атау қосу",vat:"ҚҚС 16%-бен",total:"Барлығы:",gen:"PDF жасау",genwait:"Жасалуда…",
       fnote:"Жеткізуші деректері браузерде сақталады.",itemname:"Атауы",
-      rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"👁 PDF ашу",rdownload:"📥 PDF жүктеу",rnew:"➕ Тағы жасау",rhome:"🏠 Басты бет",rshare:"📤 Бөлісу",
+      rtitle:"Құжат дайын!",rsub:"PDF жасалды.",ropen:"PDF ашу",rdownload:"PDF жүктеу",rnew:"Тағы жасау",rhome:"Басты бет",rshare:"Бөлісу",
       errseller:"Жеткізуші атауын жазыңыз",erritems:"Атау қосыңыз",errnet:"Желі қатесі. Қайталаңыз.",fillreq:"Міндетті өрістерді толтырыңыз (* белгісі)",
       ctitle:"Калькуляторлар 2026",csub:"Салық, жалақы, режимдер — 2026 ставкалары.",crun:"Есептеу",cresult:"Нәтиже",
       convtitle:"Файл конвертер",convsub:"Файлдарды браузерде тегін конвертациялаңыз.",convwait:"Конвертация…",convdone:"Дайын! Файл жүктелді.",converr:"Болмады — файлды тексеріңіз.",
       atitle:"AI-бухгалтер",asub:"2026 салық, режимдер, жалақы, есеп-қисап пен құжаттар.",
       aplaceholder:"Сұрағыңыз…",agreet:"Сәлеметсіз бе! Мен Qujat бухгалтер-көмекшісімін. 2026 салығы, режимдер (ИП/ТОО), жалақы мен жарналар, есептер мен мерзімдер, құжаттар — бәрі бойынша көмектесемін, сұраңыз.",
       achips:["ИП қандай салық төлейді?","910 қашан тапсырылады?","ИП па, ТОО ма?","2026 ҚҚС ставкасы?"],
-      ainote:"⚠️ AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз.",
+      ainote:"AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз.",
       accintro:"Кіріңіз — сессия кез келген құрылғыда жұмыс істейді (SMS-сіз).",
       consent:'Тіркелу арқылы сіз <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">офертаны</a> және <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">құпиялылық саясатын</a> қабылдайсыз.',
       proh:"Qujat Pro",prosub:"Шексіз құжат, салық формалары, AI-көмекші, печать пен қолтаңба — шектеусіз.",
@@ -1079,7 +1081,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       probuy:"Pro рәсімдеу",proextend:"Pro ұзарту",prountil:"Белсенді, дейін",
       profree:"Тегін тариф",prousedl:"Осы айдағы құжат:",proleft:"қалды",
       propayhint:"Тарифті таңдап, Kaspi арқылы төлеп, чекті жүктеңіз — Pro автоматты қосылады.",
-      prokaspi:"Kaspi арқылы төлеу",proreceipt:"📎 Kaspi чегін жүктеу",prochoose:"Алдымен тариф таңдаңыз",
+      prokaspi:"Kaspi арқылы төлеу",proreceipt:"Kaspi чегін жүктеу",prochoose:"Алдымен тариф таңдаңыз",
       proverify:"Чекті тексеру…",prook:"Дайын! Pro қосылды 🎉",pronokaspi:"Төлем жақында. @Qujatkz_bot-қа жазыңыз.",
       proios:"Pro жазылым App Store арқылы рәсімделеді. Қосымшаның жақын жаңартуында қосылады.",
       accreg:"Тіркелу",acclogin:"Кіру",accname:"Аты",accemail:"Email",accpass:"Пароль (мин. 6)",
@@ -1095,8 +1097,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
       linktg:"Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"Premium белсенді",
       navadmin:"Админ",admTitle:"Qujat басқару",admSub:"Кім тіркелгенін көріңіз, аккаунт жасаңыз не жойыңыз",
-      admSecAdd:"➕ Пайдаланушы жасау",admSecUsers:"👥 Кім тіркелген",admSecStats:"📊 Статистика",
-      admSecWeb:"🌐 Веб-қосымша",admSecTg:"🤖 Telegram-бот",
+      admSecAdd:"Пайдаланушы жасау",admSecUsers:"Кім тіркелген",admSecStats:"Статистика",
+      admSecWeb:"Веб-қосымша",admSecTg:"Telegram-бот",
       admCreateBtn:"Аккаунт жасау",admCreated:"Пайдаланушы жасалды ✓",
       admDelete:"Жою",admDelConfirm:"{email} және барлық деректі жою керек пе?",admDeleted:"Жойылды ✓",
       admSelf:"сіз",admRegistered:"Тіркелген",
@@ -1136,6 +1138,16 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     'send':'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
     'globe':'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
     'gem':'<path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/>',
+    'building':'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><line x1="8" y1="6" x2="8" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="16" y1="6" x2="16" y2="6.01"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/>',
+    'clipboard':'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>',
+    'check-circle':'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    'alert-circle':'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+    'alert':'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    'eye':'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    'download':'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+    'plus':'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+    'share':'<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>',
+    'bell':'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
     'droplet':'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
     'hash':'<line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>',
     'trash':'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
@@ -1146,6 +1158,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     'alarm':'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/>'
   };
   function svg(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||ICONS['file-text'])+'</svg>';}
+  function sic(n){return '<svg class="iic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||ICONS['file-text'])+'</svg>';}
+  function btnLbl(ic,txt){return '<span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">'+sic(ic)+txt+'</span>';}
   const CALC_ICON={payroll:'wallet',compare:'scale','910':'file-text','300':'receipt',vacation:'sun',sick:'thermo',penalty:'alarm'};
 
   const CATS=[
@@ -1253,7 +1267,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     else loadSchemas();
   }
   function docLabels(){
-    const s=S();const _lb=$('langbtn');if(_lb)_lb.textContent='🌐 '+(lang==='ru'?'RU':'KZ');
+    const s=S();const _lb=$('langbtn');if(_lb)_lb.textContent=(lang==='ru'?'RU':'KZ');
     $('f-back').textContent=s.back;$('s-seller').textContent=s.seller;$('s-buyer').textContent=s.buyer;
     $('s-items').textContent=s.items;$('s-bank').textContent=s.bank;$('l-sname').textContent=s.sname;
     $('l-sbin').textContent=s.sbin;$('l-sfio').textContent=s.sfio;$('l-bank').textContent=s.bankname;
@@ -1262,7 +1276,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('ih-unit').textContent=s.ihunit;$('ih-qty').textContent=s.ihqty;$('b-additem').textContent=s.additem;
     $('l-vat').textContent=s.vat;$('l-total').textContent=s.total;$('genbtn').textContent=s.gen;
     $('f-note').textContent=s.fnote;$('r-title').textContent=s.rtitle;$('r-sub').textContent=s.rsub;
-    $('r-open').textContent=s.ropen;$('r-download').textContent=s.rdownload;$('r-new').textContent=s.rnew;$('r-home').textContent=s.rhome;$('r-share').textContent=s.rshare;
+    $('r-open').innerHTML=btnLbl('eye',s.ropen);$('r-download').innerHTML=btnLbl('download',s.rdownload);$('r-new').innerHTML=btnLbl('plus',s.rnew);$('r-home').innerHTML=btnLbl('home',s.rhome);$('r-share').innerHTML=btnLbl('share',s.rshare);
   }
   function defUnit(){return curDoc==='act'?'усл.':'шт.';}
   function addItem(name='',qty='1',price=''){
@@ -1907,32 +1921,32 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   /* ---------- Проверка контрагента (КГД/Минюст по ИИН/БИН) ---------- */
   function _cpRow(cls,txt){return '<div class="cp-row '+cls+'">'+txt+'</div>';}
   function renderCpResult(d,s){
-    if(d.error)return _cpRow('cp-bad','⚠️ '+d.error);
+    if(d.error)return _cpRow('cp-bad',sic('alert')+d.error);
     const nm=(d.tax&&d.tax.name_ru)?d.tax.name_ru:'';
     let h='<div style="font-size:12px;color:var(--muted);margin-bottom:7px">'+(d.is_bin?'БИН':'ИИН')+' '+d.iin_bin+(nm?(' · '+nm):'')+'</div>';
     const t=d.tax;
     if(t&&t.source==='culs'&&t.code_ok){
-      h+=t.has_debt?_cpRow('cp-red','🔴 <b>'+s.cpDebt+': '+finM(t.total)+' ₸</b>'):_cpRow('cp-green','🟢 '+s.cpNoDebt);
-    }else{h+=_cpRow('cp-wait','⏳ '+s.cpConnecting);}
+      h+=t.has_debt?_cpRow('cp-red',sic('alert-circle')+'<b>'+s.cpDebt+': '+finM(t.total)+' ₸</b>'):_cpRow('cp-green',sic('check-circle')+s.cpNoDebt);
+    }else{h+=_cpRow('cp-wait',sic('clock')+s.cpConnecting);}
     const e=d.enforcement;
     if(e&&e.checked){
       if(e.in_registry||e.has_arrest){
         const p=[];if(e.in_registry)p.push(s.cpInReg+(e.cases?(' ('+e.cases+')'):''));if(e.has_arrest)p.push(s.cpArrest);if(e.has_exit_ban)p.push(s.cpExit);
-        h+=_cpRow('cp-red','🔴 '+p.join(' · '));
-      }else h+=_cpRow('cp-green','🟢 '+s.cpEnfClean);
-    }else h+=_cpRow('cp-wait','⏳ '+s.cpEnfConnecting);
+        h+=_cpRow('cp-red',sic('alert-circle')+p.join(' · '));
+      }else h+=_cpRow('cp-green',sic('check-circle')+s.cpEnfClean);
+    }else h+=_cpRow('cp-wait',sic('clock')+s.cpEnfConnecting);
     h+='<div style="font-size:11px;color:var(--muted-2);margin-top:9px;line-height:1.4">'+s.cpFoot+'</div>';
     return h;
   }
   async function checkCounterparty(){
     const s=S();const v=(($('cp-input').value)||'').replace(/\D/g,'');const box=$('cp-result');
-    if(v.length!==12){box.innerHTML=_cpRow('cp-bad','⚠️ '+s.cpBad);return;}
-    box.innerHTML='<div class="sub">⏳ '+s.cpChecking+'</div>';
+    if(v.length!==12){box.innerHTML=_cpRow('cp-bad',sic('alert')+s.cpBad);return;}
+    box.innerHTML='<div class="sub" style="display:flex;align-items:center;gap:7px">'+sic('clock')+s.cpChecking+'</div>';
     try{
       const r=await afetch(API+'/api/counterparty/check',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({iin_bin:v})});
-      if(r.status===401){box.innerHTML=_cpRow('cp-bad','🔒 '+s.cpAuth);return;}
+      if(r.status===401){box.innerHTML=_cpRow('cp-bad',sic('lock')+s.cpAuth);return;}
       const d=await r.json();box.innerHTML=renderCpResult(d,s);
-    }catch(e){box.innerHTML=_cpRow('cp-bad','⚠️ '+s.errnet);}
+    }catch(e){box.innerHTML=_cpRow('cp-bad',sic('alert')+s.errnet);}
   }
   async function loadFinance(){
     renderFinanceLabels();loadCompanies();
@@ -2016,7 +2030,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       const items=d.items||[];
       const al=$('fin-alert');
       const urgent=items.filter(function(i){return i.days_left<=7;}).sort(function(a,b){return a.days_left-b.days_left;})[0];
-      if(al){if(urgent){const c=finUrgColor(urgent.days_left);al.style.background=c+'1f';al.style.color=c;al.style.border='1px solid '+c+'55';al.innerHTML='🔔 '+urgent.desc+' — '+(urgent.days_left<=0?s.finToday:(urgent.days_left+' '+s.finDays));al.className='';}else{al.className='hidden';}}
+      if(al){if(urgent){const c=finUrgColor(urgent.days_left);al.style.background=c+'1f';al.style.color=c;al.style.border='1px solid '+c+'55';al.innerHTML='<span style="display:inline-flex;align-items:center;gap:7px">'+sic('bell')+'<span>'+urgent.desc+' — '+(urgent.days_left<=0?s.finToday:(urgent.days_left+' '+s.finDays))+'</span></span>';al.className='';}else{al.className='hidden';}}
       if(!items.length){box.innerHTML='<p class="sub">'+s.finCalEmpty+'</p>';return;}
       box.innerHTML=items.slice(0,8).map(function(i){const dt=i.date.split('-').reverse().join('.');return '<div class="fin-cal-i"><span>'+i.desc+'</span><b style="color:'+finUrgColor(i.days_left)+'">'+dt+' · '+i.days_left+' '+s.finDays+'</b></div>';}).join('');
     }catch(e){}
