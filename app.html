@@ -570,13 +570,20 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 
 <div class="wrap">
   <!-- ===== TAB: DOCUMENTS ===== -->
-  <div id="tab-docs">
+  <div id="tab-home" class="hidden">
+    <h2 class="hgreet" id="h-greet"></h2><p class="sub" id="h-sub"></p>
+    <div class="hsnap" id="h-snap" style="display:none"></div>
+    <div class="card" id="home-ai" onclick="showTab('ai')" style="cursor:pointer">
+      <span class="ic" id="home-ai-ic"></span>
+      <div><div class="t" id="home-ai-t"></div><div class="d" id="home-ai-d"></div></div>
+      <div class="chev">›</div>
+    </div>
+    <div class="sec-h" id="home-mydocs-h"></div>
+    <div id="home-mydocs"></div>
+  </div>
+  <div id="tab-docs" class="hidden">
     <div id="home">
-      <h2 class="hgreet" id="h-greet"></h2><p class="sub" id="h-sub"></p>
-      <div class="hsnap" id="h-snap" style="display:none"></div>
-      <div class="sec-h" id="h-qa-h"></div>
-      <div class="qa-grid" id="h-qa"></div>
-      <div class="sec-h" id="h-docs-h"></div>
+      <h2 class="hgreet" id="docs-title"></h2><p class="sub" id="docs-sub"></p>
       <div id="cats"></div>
       <div id="home-tools"></div>
     </div>
@@ -655,6 +662,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 
   <!-- ===== TAB: AI ===== -->
   <div id="tab-ai" class="hidden">
+    <button class="back" onclick="showTab('home')">‹ <span id="ai-back"></span></button>
     <h2 id="a-title" style="margin-bottom:2px"></h2><p class="sub" id="a-sub"></p>
     <p class="note" id="a-note" style="text-align:left;margin:-6px 0 10px;color:var(--muted)"></p>
     <div class="chips" id="a-chips"></div>
@@ -965,7 +973,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — проверю налоговую задолженность и реестр должников (аресты счетов, запрет выезда).",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
-      hgreet:"Здравствуйте",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      hgreet:"Добро пожаловать",navDocs:"Документы",myDocs:"Мои документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Бухгалтер-консультант",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -1035,7 +1043,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — салық берешегі мен борышкер тізілімін (шот тыйымы, шығу тыйымы) тексеремін.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
-      hgreet:"Сәлеметсіз бе",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      hgreet:"Қош келдіңіз",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Бухгалтер-кеңесші",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1091,6 +1099,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   };
   /* ---------- SVG иконкалар (Lucide стилі — emoji орнына, премиум) ---------- */
   const ICONS={
+    'home':'<path d="M3 9.5 12 3l9 6.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>',
     'file-text':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/>',
     'file-check':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="m9 15 2 2 4-4"/>',
     'file-out':'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
@@ -1146,7 +1155,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 
   function renderNav(){
     const s=S();
-    const icons=["file-text","banknote","calc","message","user"],ids=["docs","finance","calc","ai","account"],labels=[s.nav[0],s.navfin,s.nav[1],s.nav[2],s.nav[4]];
+    const icons=["home","file-text","banknote","calc","user"],ids=["home","docs","finance","calc","account"],labels=[s.nav[0],s.navDocs,s.navfin,s.nav[1],s.nav[4]];
     $('nav').innerHTML='';$('nav').classList.remove('nav-6');
     labels.forEach((label,i)=>{
       const b=document.createElement('button'); if(ids[i]===curTab)b.className='active';
@@ -1155,10 +1164,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     });
   }
   function showTab(t){
-    if(t==='admin'&&!(meUser&&meUser.role==='admin'))t='docs';
+    if(t==='admin'&&!(meUser&&meUser.role==='admin'))t='home';
     curTab=t;
-    ['docs','finance','calc','ai','convert','account','admin'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==t);});
+    ['home','docs','finance','calc','ai','convert','account','admin'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==t);});
     $('airow').classList.toggle('hidden',t!=='ai');
+    if(t==='home') renderHomeTab();
+    if(t==='docs') goDocsHome();
     if(t==='calc'&&!calcList.length) loadCalc();
     if(t==='ai'&&!aiHist.length) aiGreet();
     if(t==='convert') renderConvert();
@@ -1174,34 +1185,42 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const s=S();const el=$('h-snap');if(!el)return;
     if(_homeFin===null){el.style.display='none';return;}
     const inc=_homeFin.income||0,pr=_homeFin.profit||0;
-    let dueB=s.hsnapNone,dueL=s.hsnapDue;
+    let dueB=s.hsnapNone,dueT='';
     if(_homeCal&&_homeCal.items&&_homeCal.items.length){const it=_homeCal.items[0];
-      dueB=(it.days_left!=null?it.days_left+' '+s.hsnapDays:'—');dueL=it.desc||s.hsnapDue;}
+      dueB=(it.days_left!=null?it.days_left+' '+s.hsnapDays:'—');dueT=(it.desc||'').replace(/"/g,'');}
     el.style.display='flex';
     el.innerHTML='<div class="up"><b>'+finM(inc)+'</b><span>'+s.hsnapInc+'</span></div>'
       +'<div><b>'+finM(pr)+'</b><span>'+s.hsnapProfit+'</span></div>'
-      +'<div><b>'+dueB+'</b><span>'+dueL+'</span></div>';
+      +'<div title="'+dueT+'"><b>'+dueB+'</b><span>'+s.hsnapDue+'</span></div>';
   }
   function fetchHomeSnap(){
     fetch('/api/fin').then(r=>r.json()).then(d=>{_homeFin=d||{};renderSnap();}).catch(()=>{});
     fetch('/api/tax-calendar').then(r=>r.json()).then(d=>{_homeCal=d||{};renderSnap();}).catch(()=>{});
   }
-  function renderHome(){
+  function renderHomeTab(){
     const s=S();
     const nm=(typeof meUser!=='undefined'&&meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';
-    $('h-greet').textContent=s.hgreet+nm+' 👋';$('h-sub').textContent=s.hsub;
-    $('h-qa-h').textContent=s.qaTitle;$('h-docs-h').textContent=s.hdocsTitle;
-    const qa=$('h-qa');if(qa){
-      const acts=[
-        {ic:'file-text',t:s.qaDoc,d:s.qaDocD,fn:"document.getElementById('h-docs-h').scrollIntoView({behavior:'smooth',block:'start'})"},
-        {ic:'banknote',t:s.navfin,d:s.qaFinD,fn:"showTab('finance')"},
-        {ic:'calc',t:s.nav[1],d:s.qaCalcD,fn:"showTab('calc')"},
-        {ic:'message',t:s.nav[2],d:s.qaAiD,fn:"showTab('ai')"}];
-      qa.innerHTML=acts.map(a=>'<div class="qa" onclick="'+a.fn+'"><div class="qic">'+svg(a.ic)+'</div><div><div class="qt">'+a.t+'</div><div class="qd">'+a.d+'</div></div></div>').join('');
-    }
+    if($('h-greet')){$('h-greet').textContent=s.hgreet+nm+' 👋';$('h-sub').textContent=s.hsub;}
+    const aic=$('home-ai-ic');if(aic&&!aic.innerHTML)aic.innerHTML=svg('message');
+    if($('home-ai-t')){$('home-ai-t').textContent=s.nav[2];$('home-ai-d').textContent=s.qaAiD;}
+    if($('home-mydocs-h'))$('home-mydocs-h').textContent=s.myDocs;
     renderSnap();if(_homeFin===null)fetchHomeSnap();
+    loadMyDocs();
+  }
+  async function loadMyDocs(){
+    const box=$('home-mydocs');if(!box)return;const s=S();
+    try{const r=await afetch(API+'/api/history',{credentials:'include'});const docs=((await r.json()).docs||[]).slice(0,4);
+      if(!docs.length){box.innerHTML='<div class="card" onclick="showTab(\'docs\')" style="cursor:pointer;justify-content:center;color:var(--muted);font-weight:600">'+s.myDocsEmpty+'</div>';return;}
+      box.innerHTML=docs.map(d=>'<div class="rline"><span>'+d.title+'<br><span style="color:var(--muted);font-size:12px">'+d.created+' · '+(d.total||0).toLocaleString('ru-RU')+' ₸</span></span>'+
+        '<a style="cursor:pointer;color:var(--accent);font-weight:700;white-space:nowrap" onclick="repeatDoc('+d.id+')">'+s.accrepeat+'</a></div>').join('');
+    }catch(e){box.innerHTML='';}
+  }
+  function renderHome(){renderHomeTab();renderDocsTab();}
+  function renderDocsTab(){
+    const s=S();
+    if($('docs-title')){$('docs-title').textContent=s.hdocsTitle;$('docs-sub').textContent=s.hsub;}
     const ht=$('home-tools');if(ht)ht.innerHTML='<div class="card" onclick="showTab(\'convert\')" style="cursor:pointer"><div class="ic">'+svg('refresh')+'</div><div><div class="t">'+s.nav[3]+'</div><div class="d">'+s.convHomeD+'</div></div><div class="chev">›</div></div>';
-    const box=$('cats');box.innerHTML='';
+    const box=$('cats');if(!box)return;box.innerHTML='';
     CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
       el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
       el.onclick=()=>openForm(c.key);box.appendChild(el);});
@@ -1260,7 +1279,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     calcTotal();
   }
   function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('xform').classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
-  function goHome(){if(document.body.classList.contains('gated'))return;showTab('docs');goDocsHome();}
+  function goHome(){if(document.body.classList.contains('gated'))return;showTab('home');}
   const val=id=>($(id).value||'').trim();
   function fmtDate(){const d=$('d_date').value;if(!d)return '';const[y,m,dd]=d.split('-');return dd+'.'+m+'.'+y;}
   function markBad(id){const el=$(id);if(!el)return;el.classList.add('bad');
@@ -1435,7 +1454,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function bubble(role,text){const m=document.createElement('div');m.className='msg '+(role==='user'?'u':'a');m.textContent=text;$('chat').appendChild(m);
     window.scrollTo(0,document.body.scrollHeight);return m;}
   function aiGreet(){
-    const s=S();$('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('ai-input').placeholder=s.aplaceholder;
+    const s=S();$('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('ai-input').placeholder=s.aplaceholder;if($('ai-back'))$('ai-back').textContent=s.aiBack;
     $('a-note').textContent=s.ainote;
     $('chat').innerHTML='';aiHist=[];bubble('assistant',s.agreet);
     const ch=$('a-chips');ch.innerHTML='';
@@ -1593,7 +1612,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const b=$('a-regbtn');b.disabled=true;
     try{const r=await afetch(API+'/auth/register-email',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,name})});
       if(r.status===409){alert(s.e_taken);return;}if(!r.ok){alert(s.errnet);return;}
-      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('docs');
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('home');
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function doLogin(){
@@ -1602,7 +1621,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const b=$('a-loginbtn');b.disabled=true;
     try{const r=await afetch(API+'/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
       if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
-      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('docs');
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('home');
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;if(NATIVE_APP){document.body.classList.add('gated');renderAccount();showTab('account');return;}location.replace('/auth/');}
@@ -1779,7 +1798,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   async function onGoogle(resp){
     try{const r=await afetch(API+'/auth/google',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})});
-      if(r.ok){const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('docs');}else{alert(S().errnet);}
+      if(r.ok){const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('home');}else{alert(S().errnet);}
     }catch(e){alert(S().errnet);}
   }
 
@@ -2074,7 +2093,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       return;
     }
     document.body.classList.remove('gated');
-    showTab('docs');
+    showTab('home');
   })();
 </script>
 <script>
