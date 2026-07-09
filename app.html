@@ -199,6 +199,7 @@ input.bad,input.bad:focus{border-color:var(--danger);background:var(--danger-sof
 .afold[open]>summary .fchev{transform:rotate(90deg);color:var(--accent)}
 .afold[open]>summary{margin-bottom:14px}
 .afold[open]{border-color:rgba(94,23,235,.25)}
+.fic{width:19px;height:19px;color:var(--accent);flex:none}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 
 .itemrow{display:grid;grid-template-columns:1fr 50px 82px 32px;gap:8px;margin-bottom:9px;align-items:center}
@@ -737,19 +738,19 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <div class="sec" id="acc-sub" style="text-align:center"></div>
 
       <details class="sec afold">
-        <summary>📁 <span id="acc-hist-t"></span><span class="fchev">›</span></summary>
+        <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span id="acc-hist-t"></span><span class="fchev">›</span></summary>
         <div id="acc-history"></div>
       </details>
 
       <details class="sec afold" id="acc-assets">
-        <summary>🖋 <span id="acc-assets-t"></span><span class="fchev">›</span></summary>
+        <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span id="acc-assets-t"></span><span class="fchev">›</span></summary>
         <p class="sub" id="acc-assets-hint" style="margin-bottom:12px"></p>
         <div id="assets-rows"></div>
         <input type="file" id="asset-input" accept="image/*" class="hidden" onchange="onAssetFile()">
       </details>
 
       <details class="sec afold" id="acc-link">
-        <summary><span id="acc-link-t"></span><span class="fchev">›</span></summary>
+        <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg><span id="acc-link-t"></span><span class="fchev">›</span></summary>
         <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
         <div id="acc-link-form">
           <p class="sub" id="acc-link-hint" style="margin-bottom:8px"></p>
@@ -761,14 +762,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       </details>
 
       <details class="sec afold">
-        <summary>🔑 <span id="acc-chpass-t"></span><span class="fchev">›</span></summary>
+        <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span id="acc-chpass-t"></span><span class="fchev">›</span></summary>
         <div class="field"><label id="la-old"></label><input type="password" id="cp_old"></div>
         <div class="field"><label id="la-new"></label><input type="password" id="cp_new"></div>
         <button class="btn" id="a-chpass" onclick="doChangePass()"></button>
       </details>
 
       <div class="sec" onclick="toggleLang()" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
-        <span style="font-weight:800;font-size:15px">🌐 <span id="acc-lang-lbl"></span></span>
+        <span style="font-weight:800;font-size:15px;display:inline-flex;align-items:center;gap:9px"><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="acc-lang-lbl"></span></span>
         <span class="ib" style="height:34px;padding:0 15px;pointer-events:none;font-weight:800"><span id="acc-lang2-t">RU</span></span>
       </div>
       <button class="btn ghost hidden" id="a-admin" onclick="showTab('admin')" style="margin-bottom:14px"></button>
@@ -1005,7 +1006,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       proh:"Qujat Pro",prosub:"Безлимит документов, налоговые формы, ИИ-помощник, печать и подпись — без ограничений.",
       prolimit:"Лимит бесплатных документов в этом месяце исчерпан. Оформите Pro:",
       prioslim:"Лимит бесплатных документов в этом месяце исчерпан.",
-      probuy:"💎 Оформить Pro",proextend:"Продлить Pro",prountil:"Активен до",
+      probuy:"Оформить Pro",proextend:"Продлить Pro",prountil:"Активен до",
       profree:"Бесплатный тариф",prousedl:"Документов в этом месяце:",proleft:"осталось",
       propayhint:"Выберите тариф, оплатите через Kaspi и загрузите чек — Pro включится автоматически.",
       prokaspi:"Оплатить через Kaspi",proreceipt:"📎 Загрузить чек Kaspi",prochoose:"Сначала выберите тариф",
@@ -1022,7 +1023,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
-      linktg:"🔗 Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"💎 Premium активен",
+      linktg:"Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"Premium активен",
       navadmin:"Админ",admTitle:"Управление Qujat",admSub:"Смотрите кто зарегистрировался, создавайте и удаляйте аккаунты",
       admSecAdd:"➕ Создать пользователя",admSecUsers:"👥 Кто зарегистрировался",admSecStats:"📊 Статистика",
       admSecWeb:"🌐 Веб-приложение",admSecTg:"🤖 Telegram-бот",
@@ -1075,7 +1076,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       proh:"Qujat Pro",prosub:"Шексіз құжат, салық формалары, AI-көмекші, печать пен қолтаңба — шектеусіз.",
       prolimit:"Осы айдағы тегін құжат лимиті бітті. Pro рәсімдеңіз:",
       prioslim:"Осы айдағы тегін құжат лимиті бітті.",
-      probuy:"💎 Pro рәсімдеу",proextend:"Pro ұзарту",prountil:"Белсенді, дейін",
+      probuy:"Pro рәсімдеу",proextend:"Pro ұзарту",prountil:"Белсенді, дейін",
       profree:"Тегін тариф",prousedl:"Осы айдағы құжат:",proleft:"қалды",
       propayhint:"Тарифті таңдап, Kaspi арқылы төлеп, чекті жүктеңіз — Pro автоматты қосылады.",
       prokaspi:"Kaspi арқылы төлеу",proreceipt:"📎 Kaspi чегін жүктеу",prochoose:"Алдымен тариф таңдаңыз",
@@ -1092,7 +1093,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
-      linktg:"🔗 Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"💎 Premium белсенді",
+      linktg:"Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"Premium белсенді",
       navadmin:"Админ",admTitle:"Qujat басқару",admSub:"Кім тіркелгенін көріңіз, аккаунт жасаңыз не жойыңыз",
       admSecAdd:"➕ Пайдаланушы жасау",admSecUsers:"👥 Кім тіркелген",admSecStats:"📊 Статистика",
       admSecWeb:"🌐 Веб-қосымша",admSecTg:"🤖 Telegram-бот",
@@ -1130,6 +1131,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     'rotate':'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
     'lock':'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     'unlock':'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+    'clock':'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    'pen':'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+    'send':'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+    'globe':'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+    'gem':'<path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/>',
     'droplet':'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
     'hash':'<line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>',
     'trash':'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
@@ -1655,7 +1661,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if(!subInfo){box.innerHTML='';return;}
     const m=NATIVE_APP?'0':'12px';
     if(subInfo.premium){
-      box.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--accent2)">💎 Qujat Pro</div>'+
+      box.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--accent2);display:flex;align-items:center;justify-content:center;gap:7px"><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/></svg>Qujat Pro</div>'+
         '<div class="sub" style="margin:4px 0 '+m+'">'+s.prountil+' <b>'+(subInfo.until||'')+'</b></div>'+
         (NATIVE_APP?'':'<button class="btn ghost" onclick="openPro()">'+s.proextend+'</button>');
     }else{
@@ -1670,7 +1676,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     (subInfo.tariffs||[]).forEach(t=>{
       const el=document.createElement('div');el.className='card';el.style.cursor='pointer';
       el.dataset.k=t.key;
-      el.innerHTML='<div class="ic">💎</div><div><div class="t">'+t.title+'</div><div class="d">'+kzt(t.kzt)+'</div></div><div class="chev">›</div>';
+      el.innerHTML='<div class="ic">'+svg('gem')+'</div><div><div class="t">'+t.title+'</div><div class="d">'+kzt(t.kzt)+'</div></div><div class="chev">›</div>';
       el.onclick=()=>selectTariff(t.key);box.appendChild(el);
     });
     if(subInfo.tariffs&&subInfo.tariffs.length)selectTariff(proTariff||subInfo.tariffs[0].key);
