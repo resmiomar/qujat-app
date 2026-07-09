@@ -578,8 +578,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <div><div class="t" id="home-ai-t"></div><div class="d" id="home-ai-d"></div></div>
       <div class="chev">›</div>
     </div>
-    <div class="sec-h" id="home-mydocs-h"></div>
-    <div id="home-mydocs"></div>
+    <div class="card" id="home-mydocs-card" onclick="showTab('mydocs')" style="cursor:pointer">
+      <span class="ic" id="home-mydocs-ic"></span>
+      <div><div class="t" id="home-mydocs-t"></div><div class="d" id="home-mydocs-d"></div></div>
+      <div class="chev">›</div>
+    </div>
   </div>
   <div id="tab-docs" class="hidden">
     <div id="home">
@@ -667,6 +670,13 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <p class="note" id="a-note" style="text-align:left;margin:-6px 0 10px;color:var(--muted)"></p>
     <div class="chips" id="a-chips"></div>
     <div class="chat" id="chat"></div>
+  </div>
+
+  <!-- ===== TAB: MY DOCUMENTS ===== -->
+  <div id="tab-mydocs" class="hidden">
+    <button class="back" onclick="showTab('home')">‹ <span id="mydocs-back"></span></button>
+    <h2 id="mydocs-title" style="margin-bottom:2px"></h2><p class="sub" id="mydocs-sub"></p>
+    <div id="mydocs-list"></div>
   </div>
 
   <!-- ===== TAB: CONVERT ===== -->
@@ -973,7 +983,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — проверю налоговую задолженность и реестр должников (аресты счетов, запрет выезда).",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"✓ Заполните форму — скачайте готовый PDF",
-      hgreet:"Добро пожаловать",navDocs:"Документы",myDocs:"Мои документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      hgreet:"Добро пожаловать",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Бухгалтер-консультант",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -1043,7 +1053,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — салық берешегі мен борышкер тізілімін (шот тыйымы, шығу тыйымы) тексеремін.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"✓ Форманы толтырып — дайын PDF жүктеңіз",
-      hgreet:"Қош келдіңіз",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      hgreet:"Қош келдіңіз",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Бухгалтер-кеңесші",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1166,9 +1176,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function showTab(t){
     if(t==='admin'&&!(meUser&&meUser.role==='admin'))t='home';
     curTab=t;
-    ['home','docs','finance','calc','ai','convert','account','admin'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==t);});
+    ['home','docs','finance','calc','ai','mydocs','convert','account','admin'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==t);});
     $('airow').classList.toggle('hidden',t!=='ai');
     if(t==='home') renderHomeTab();
+    if(t==='mydocs') loadMyDocs();
     if(t==='docs') goDocsHome();
     if(t==='calc'&&!calcList.length) loadCalc();
     if(t==='ai'&&!aiHist.length) aiGreet();
@@ -1203,13 +1214,16 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if($('h-greet')){$('h-greet').textContent=s.hgreet+nm+' 👋';$('h-sub').textContent=s.hsub;}
     const aic=$('home-ai-ic');if(aic&&!aic.innerHTML)aic.innerHTML=svg('message');
     if($('home-ai-t')){$('home-ai-t').textContent=s.nav[2];$('home-ai-d').textContent=s.qaAiD;}
-    if($('home-mydocs-h'))$('home-mydocs-h').textContent=s.myDocs;
+    const mdic=$('home-mydocs-ic');if(mdic&&!mdic.innerHTML)mdic.innerHTML=svg('file-text');
+    if($('home-mydocs-t')){$('home-mydocs-t').textContent=s.myDocs;$('home-mydocs-d').textContent=s.myDocsSub;}
     renderSnap();if(_homeFin===null)fetchHomeSnap();
-    loadMyDocs();
   }
   async function loadMyDocs(){
-    const box=$('home-mydocs');if(!box)return;const s=S();
-    try{const r=await afetch(API+'/api/history',{credentials:'include'});const docs=((await r.json()).docs||[]).slice(0,4);
+    const box=$('mydocs-list');if(!box)return;const s=S();
+    if($('mydocs-back'))$('mydocs-back').textContent=s.aiBack;
+    if($('mydocs-title'))$('mydocs-title').textContent=s.myDocs;
+    if($('mydocs-sub'))$('mydocs-sub').textContent=s.myDocsSub;
+    try{const r=await afetch(API+'/api/history',{credentials:'include'});const docs=(await r.json()).docs||[];
       if(!docs.length){box.innerHTML='<div class="card" onclick="showTab(\'docs\')" style="cursor:pointer;justify-content:center;color:var(--muted);font-weight:600">'+s.myDocsEmpty+'</div>';return;}
       box.innerHTML=docs.map(d=>'<div class="rline"><span>'+d.title+'<br><span style="color:var(--muted);font-size:12px">'+d.created+' · '+(d.total||0).toLocaleString('ru-RU')+' ₸</span></span>'+
         '<a style="cursor:pointer;color:var(--accent);font-weight:700;white-space:nowrap" onclick="repeatDoc('+d.id+')">'+s.accrepeat+'</a></div>').join('');
