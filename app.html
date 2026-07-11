@@ -202,6 +202,20 @@ input.bad,input.bad:focus{border-color:var(--danger);background:var(--danger-sof
 .afold[open]{border-color:rgba(94,23,235,.25)}
 .fic{width:19px;height:19px;color:var(--accent);flex:none}
 .iic{width:18px;height:18px;flex:none;vertical-align:-4px}
+.tg-banner{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:16px;margin-bottom:16px;cursor:pointer;background:linear-gradient(135deg,#eef1ff,#f4ecff);border:1px solid rgba(94,23,235,.16);box-shadow:var(--sh-xs);transition:transform .16s var(--ease),box-shadow .2s var(--ease)}
+.tg-banner:active{transform:scale(.99)}
+.tg-banner .tg-ic{width:40px;height:40px;flex:none;border-radius:12px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center}
+.tg-banner .tg-ic svg{width:22px;height:22px}
+.tg-b-txt{flex:1;min-width:0}
+.tg-b-t{font-weight:800;font-size:14.5px;letter-spacing:-.01em;color:var(--text)}
+.tg-b-d{font-size:12.5px;color:var(--muted);margin-top:1px}
+.tg-b-cta{flex:none;font-weight:800;font-size:13px;color:var(--accent);white-space:nowrap}
+.tglock{text-align:center;padding:48px 20px;animation:rise .5s var(--ease)}
+.tglock-ic{width:88px;height:88px;border-radius:50%;margin:0 auto 18px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center}
+.tglock-ic svg{width:38px;height:38px;color:var(--accent)}
+.tglock h2{margin:0 0 8px}
+.tglock .sub{max-width:300px;margin:0 auto 22px}
+.tglock .btn{max-width:290px;margin:0 auto}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 
 .itemrow{display:grid;grid-template-columns:1fr 50px 82px 32px;gap:8px;margin-bottom:9px;align-items:center}
@@ -574,6 +588,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 <div class="wrap">
   <!-- ===== TAB: DOCUMENTS ===== -->
   <div id="tab-home" class="hidden">
+    <div id="tg-banner" class="tg-banner hidden" onclick="goLinkTg()">
+      <span class="tg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
+      <div class="tg-b-txt"><div class="tg-b-t" id="tg-b-t"></div><div class="tg-b-d" id="tg-b-d"></div></div>
+      <span class="tg-b-cta" id="tg-b-cta"></span>
+    </div>
     <h2 class="hgreet" id="h-greet"></h2><p class="sub" id="h-sub"></p>
     <div class="hsnap" id="h-snap" style="display:none"></div>
     <div class="card" id="home-ai" onclick="showTab('ai')" style="cursor:pointer">
@@ -680,6 +699,16 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <button class="back" onclick="showTab('home')">‹ <span id="mydocs-back"></span></button>
     <h2 id="mydocs-title" style="margin-bottom:2px"></h2><p class="sub" id="mydocs-sub"></p>
     <div id="mydocs-list"></div>
+  </div>
+
+  <!-- ===== TAB: TELEGRAM LOCK ===== -->
+  <div id="tab-tglock" class="hidden">
+    <div class="tglock">
+      <div class="tglock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></div>
+      <h2 id="tglock-title"></h2>
+      <p class="sub" id="tglock-text"></p>
+      <button class="btn" onclick="goLinkTg()" id="tglock-btn"></button>
+    </div>
   </div>
 
   <!-- ===== TAB: CONVERT ===== -->
@@ -983,7 +1012,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Удалить",coAddPrompt:"Название компании или клиента:",coDelConfirm:"Удалить эту компанию и все её операции?",
       empH:"Зарплата сотрудников",empName:"ФИО сотрудника",empSalary:"Оклад ₸",empAdd:"+ Добавить сотрудника",empNet:"на руки",empEmpty:"Добавьте сотрудников — посчитаем зарплату и налоги.",empGross:"Фонд оплаты труда",empPay:"К выплате на руки",empTaxes:"Налоги и взносы (в бюджет)",empCost:"Затраты работодателя",empDoc:"Договор",empEsutd:"Трудовые договоры нужно зарегистрировать в ЕСУТД в течение 5 рабочих дней после приёма:",
       mytaxH:"Мой налог",mytaxNoReg:"Выберите налоговый режим ниже — и увидите налог за текущий период.",mytaxPeriod:"Период",mytaxH1:"1 полугодие",mytaxH2:"2 полугодие",mytaxInc:"Доход за период",mytaxTax:"К уплате",mytaxOther:"В этом режиме сдаётся форма {form}. Точную сумму рассчитайте в калькуляторе.",mytaxDlR:"Сдача до",mytaxDlP:"уплата до",mytaxFile:"Сдать в кабинете salyk →",mytaxForm910:"Заполнить декларацию 910 →",
-      cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — проверю налоговую задолженность и реестр должников (аресты счетов, запрет выезда).",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
+      cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — покажу, настоящий ли контрагент: благонадёжность, налоговую задолженность, реестр должников и госзакупок.",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpReg:"рег.",cpVerReal:"Надёжный, действующий контрагент",cpVerRisky:"Есть риски — проверьте внимательно",cpVerFake:"Ненадёжный / опасный контрагент",cpVerNotfound:"Не найден в гос-базах",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"Заполните форму — скачайте готовый PDF",
       hgreet:"Добро пожаловать",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
@@ -1026,6 +1055,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
       linktg:"Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"Premium активен",
+      tgBannerT:"Откройте полный доступ",tgBannerD:"Прикрепите Telegram — это займёт минуту",tgBannerCta:"Прикрепить",tgLockTitle:"Прикрепите Telegram",tgLockText:"Чтобы пользоваться разделами Qujat, привяжите свой Telegram. Это быстро и бесплатно.",tgLockBtn:"Прикрепить Telegram",
       navadmin:"Админ",admTitle:"Управление Qujat",admSub:"Смотрите кто зарегистрировался, создавайте и удаляйте аккаунты",
       admSecAdd:"Создать пользователя",admSecUsers:"Кто зарегистрировался",admSecStats:"Статистика",
       admSecWeb:"Веб-приложение",admSecTg:"Telegram-бот",
@@ -1053,7 +1083,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Жою",coAddPrompt:"Компания не клиент атауы:",coDelConfirm:"Осы компанияны және барлық операциясын жою?",
       empH:"Қызметкерлер жалақысы",empName:"Қызметкер аты-жөні",empSalary:"Оклад ₸",empAdd:"+ Қызметкер қосу",empNet:"қолға",empEmpty:"Қызметкер қосыңыз — жалақы мен салықты есептейміз.",empGross:"Еңбекақы қоры",empPay:"Қолға төлеуге",empTaxes:"Салық пен жарналар (бюджетке)",empCost:"Жұмыс беруші шығыны",empDoc:"Шарт",empEsutd:"Еңбек шарттарын ЕСУТД жүйесінде қабылдаудан кейін 5 жұмыс күні ішінде тіркеу қажет:",
       mytaxH:"Менің салығым",mytaxNoReg:"Төменнен салық режимін таңдаңыз — сонда ағымдағы кезеңдегі салықты көресіз.",mytaxPeriod:"Кезең",mytaxH1:"1-жартыжылдық",mytaxH2:"2-жартыжылдық",mytaxInc:"Кезеңдегі кіріс",mytaxTax:"Төлеуге",mytaxOther:"Бұл режимде {form} форма тапсырылады. Нақты соманы калькулятордан есептеңіз.",mytaxDlR:"Тапсыру",mytaxDlP:"төлеу",mytaxFile:"salyk кабинетінде тапсыру →",mytaxForm910:"910 декларациясын толтыру →",
-      cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — салық берешегі мен борышкер тізілімін (шот тыйымы, шығу тыйымы) тексеремін.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
+      cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — контрагент нағыз ба екенін көрсетемін: сенімділік, салық берешегі, борышкерлер мен мемлекеттік сатып алу тізілімі.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpReg:"тірк.",cpVerReal:"Сенімді, әрекеттегі контрагент",cpVerRisky:"Тәуекел бар — мұқият тексеріңіз",cpVerFake:"Сенімсіз / қауіпті контрагент",cpVerNotfound:"Мемлекеттік базада табылмады",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"Форманы толтырып — дайын PDF жүктеңіз",
       hgreet:"Қош келдіңіз",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
@@ -1096,6 +1126,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
       linktg:"Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"Premium белсенді",
+      tgBannerT:"Толық қолжетімділік",tgBannerD:"Telegram-ды жалғаңыз — бір минут",tgBannerCta:"Жалғау",tgLockTitle:"Telegram-ды жалғаңыз",tgLockText:"Qujat бөлімдерін пайдалану үшін Telegram-ыңызды жалғаңыз. Жылдам әрі тегін.",tgLockBtn:"Telegram-ды жалғау",
       navadmin:"Админ",admTitle:"Qujat басқару",admSub:"Кім тіркелгенін көріңіз, аккаунт жасаңыз не жойыңыз",
       admSecAdd:"Пайдаланушы жасау",admSecUsers:"Кім тіркелген",admSecStats:"Статистика",
       admSecWeb:"Веб-қосымша",admSecTg:"Telegram-бот",
@@ -1193,11 +1224,17 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       b.onclick=()=>showTab(ids[i]); $('nav').appendChild(b);
     });
   }
+  const TG_GATED=['docs','finance','calc','ai','mydocs','convert'];
+  function needTg(){return !!(meUser && !meUser.telegram_id);}
   function showTab(t){
     if(t==='admin'&&!(meUser&&meUser.role==='admin'))t='home';
     curTab=t;
-    ['home','docs','finance','calc','ai','mydocs','convert','account','admin'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==t);});
-    $('airow').classList.toggle('hidden',t!=='ai');
+    const locked=needTg()&&TG_GATED.indexOf(t)>=0;
+    const shown=locked?'tglock':t;
+    ['home','docs','finance','calc','ai','mydocs','convert','account','admin','tglock'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==shown);});
+    $('airow').classList.toggle('hidden',!(t==='ai'&&!locked));
+    renderNav(); window.scrollTo(0,0);
+    if(locked){renderTgLock();return;}
     if(t==='home') renderHomeTab();
     if(t==='mydocs') loadMyDocs();
     if(t==='docs') goDocsHome();
@@ -1209,6 +1246,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if(t==='finance') loadFinance();
     renderNav(); window.scrollTo(0,0);
   }
+  function renderTgLock(){const s=S();if($('tglock-title'))$('tglock-title').textContent=s.tgLockTitle;if($('tglock-text'))$('tglock-text').textContent=s.tgLockText;if($('tglock-btn'))$('tglock-btn').textContent=s.tgLockBtn;}
+  function renderTgBanner(){const s=S(),b=$('tg-banner');if(!b)return;const on=needTg();b.classList.toggle('hidden',!on);if(on){$('tg-b-t').textContent=s.tgBannerT;$('tg-b-d').textContent=s.tgBannerD;$('tg-b-cta').textContent=s.tgBannerCta;}}
+  function goLinkTg(){showTab('account');setTimeout(function(){const d=$('acc-link');if(d){d.open=true;d.scrollIntoView({behavior:'smooth',block:'center'});const i=$('lt_code');if(i)i.focus();}},140);}
 
   /* ---------- DOCUMENTS ---------- */
   let _homeFin=null,_homeCal=null;
@@ -1236,6 +1276,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if($('home-ai-t')){$('home-ai-t').textContent=s.nav[2];$('home-ai-d').textContent=s.qaAiD;}
     const mdic=$('home-mydocs-ic');if(mdic&&!mdic.innerHTML)mdic.innerHTML=svg('file-text');
     if($('home-mydocs-t')){$('home-mydocs-t').textContent=s.myDocs;$('home-mydocs-d').textContent=s.myDocsSub;}
+    renderTgBanner();
     renderSnap();if(_homeFin===null)fetchHomeSnap();
   }
   async function loadMyDocs(){
@@ -1626,11 +1667,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     try{const r=await afetch(API+'/auth/link-telegram',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
       if(!r.ok){alert(s.linkbad);return;}
       $('lt_code').value='';alert(s.linkok);await loadMe();
+      if(meUser&&meUser.telegram_id)showTab('home');
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function loadMe(){
     try{const r=await afetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
-    renderAccount();applyGate();accLabels();
+    renderAccount();applyGate();accLabels();renderTgBanner();
     const hg=$('h-greet');if(hg){const nm=(meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';hg.textContent=S().hgreet+nm+' 👋';}
   }
   function applyGate(){
@@ -1922,8 +1964,19 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function _cpRow(cls,txt){return '<div class="cp-row '+cls+'">'+txt+'</div>';}
   function renderCpResult(d,s){
     if(d.error)return _cpRow('cp-bad',sic('alert')+d.error);
-    const nm=(d.tax&&d.tax.name_ru)?d.tax.name_ru:'';
+    const b=d.baprg;
+    const nm=(b&&b.name)?b.name:((d.tax&&d.tax.name_ru)?d.tax.name_ru:'');
     let h='<div style="font-size:12px;color:var(--muted);margin-bottom:7px">'+(d.is_bin?'БИН':'ИИН')+' '+d.iin_bin+(nm?(' · '+nm):'')+'</div>';
+    // Вердикт благонадёжности (ba.prg.kz): настоящий / рискованный / ненастоящий
+    if(b&&b.checked&&b.verdict){
+      const map={real:['cp-green','check-circle',s.cpVerReal],risky:['cp-bad','alert',s.cpVerRisky],fake:['cp-red','alert-circle',s.cpVerFake],notfound:['cp-wait','clock',s.cpVerNotfound]};
+      const m=map[b.verdict]||map.notfound;
+      h+='<div class="cp-row '+m[0]+'" style="font-weight:700">'+sic(m[1])+m[2]+'</div>';
+      const info=[];if(b.kind)info.push(b.kind);if(b.ceo)info.push(b.ceo);if(b.city)info.push(b.city);if(b.reg_date)info.push(s.cpReg+' '+b.reg_date);
+      if(info.length)h+='<div style="font-size:12px;color:var(--muted);margin:-1px 0 8px;line-height:1.5">'+info.join(' · ')+'</div>';
+      (b.flags_red||[]).forEach(function(x){h+=_cpRow('cp-red',sic('alert-circle')+x);});
+      (b.flags_yellow||[]).forEach(function(x){h+=_cpRow('cp-bad',sic('alert')+x);});
+    }
     const t=d.tax;
     if(t&&t.source==='culs'&&t.code_ok){
       h+=t.has_debt?_cpRow('cp-red',sic('alert-circle')+'<b>'+s.cpDebt+': '+finM(t.total)+' ₸</b>'):_cpRow('cp-green',sic('check-circle')+s.cpNoDebt);
