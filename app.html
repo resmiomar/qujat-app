@@ -588,7 +588,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 <div class="wrap">
   <!-- ===== TAB: DOCUMENTS ===== -->
   <div id="tab-home" class="hidden">
-    <div id="tg-banner" class="tg-banner hidden" onclick="goLinkTg()">
+    <div id="tg-banner" class="tg-banner hidden" onclick="startTgLink()">
       <span class="tg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
       <div class="tg-b-txt"><div class="tg-b-t" id="tg-b-t"></div><div class="tg-b-d" id="tg-b-d"></div></div>
       <span class="tg-b-cta" id="tg-b-cta"></span>
@@ -707,7 +707,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <div class="tglock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></div>
       <h2 id="tglock-title"></h2>
       <p class="sub" id="tglock-text"></p>
-      <button class="btn" onclick="goLinkTg()" id="tglock-btn"></button>
+      <button class="btn" onclick="startTgLink()" id="tglock-btn"></button>
     </div>
   </div>
 
@@ -784,6 +784,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg><span id="acc-link-t"></span><span class="fchev">›</span></summary>
         <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
         <div id="acc-link-form">
+          <button class="btn" id="a-tgopen" onclick="startTgLink()" style="margin-bottom:12px"></button>
+          <p class="sub" id="acc-link-manual" style="margin:0 0 8px;text-align:center;font-size:12.5px;color:var(--muted-2)"></p>
           <p class="sub" id="acc-link-hint" style="margin-bottom:8px"></p>
           <div style="display:flex;gap:8px">
             <input type="text" id="lt_code" inputmode="numeric" placeholder="000000" style="flex:1">
@@ -1055,7 +1057,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
       linktg:"Связать Telegram",linkhint:"В боте @Qujatkz_bot отправьте /link и введите код:",linkcode:"Код из бота",linkbtn:"Связать",linkok:"Telegram связан ✓",linkbad:"Неверный или просроченный код",linkedlbl:"✓ Telegram привязан",premon:"Premium активен",
-      tgBannerT:"Откройте полный доступ",tgBannerD:"Прикрепите Telegram — это займёт минуту",tgBannerCta:"Прикрепить",tgLockTitle:"Прикрепите Telegram",tgLockText:"Чтобы пользоваться разделами Qujat, привяжите свой Telegram. Это быстро и бесплатно.",tgLockBtn:"Прикрепить Telegram",
+      tgBannerT:"Откройте полный доступ",tgBannerD:"Прикрепите Telegram — это займёт минуту",tgBannerCta:"Прикрепить",tgLockTitle:"Прикрепите Telegram",tgLockText:"Нажмите кнопку — откроется бот. Нажмите в нём «Старт», и доступ откроется автоматически.",tgLockBtn:"Прикрепить Telegram",tgWaiting:"Ожидаем привязку…",tgOpenBtn:"Открыть Telegram",tgManual:"или введите код вручную:",
       navadmin:"Админ",admTitle:"Управление Qujat",admSub:"Смотрите кто зарегистрировался, создавайте и удаляйте аккаунты",
       admSecAdd:"Создать пользователя",admSecUsers:"Кто зарегистрировался",admSecStats:"Статистика",
       admSecWeb:"Веб-приложение",admSecTg:"Telegram-бот",
@@ -1126,7 +1128,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
       linktg:"Telegram байланыстыру",linkhint:"@Qujatkz_bot ботында /link жіберіп, кодты енгізіңіз:",linkcode:"Боттан код",linkbtn:"Байланыстыру",linkok:"Telegram байланысты ✓",linkbad:"Қате немесе ескірген код",linkedlbl:"✓ Telegram байланысқан",premon:"Premium белсенді",
-      tgBannerT:"Толық қолжетімділік",tgBannerD:"Telegram-ды жалғаңыз — бір минут",tgBannerCta:"Жалғау",tgLockTitle:"Telegram-ды жалғаңыз",tgLockText:"Qujat бөлімдерін пайдалану үшін Telegram-ыңызды жалғаңыз. Жылдам әрі тегін.",tgLockBtn:"Telegram-ды жалғау",
+      tgBannerT:"Толық қолжетімділік",tgBannerD:"Telegram-ды жалғаңыз — бір минут",tgBannerCta:"Жалғау",tgLockTitle:"Telegram-ды жалғаңыз",tgLockText:"Батырманы басыңыз — бот ашылады. Онда «Старт» басыңыз, қолжетімділік автоматты ашылады.",tgLockBtn:"Telegram-ды жалғау",tgWaiting:"Байланысты күтудеміз…",tgOpenBtn:"Telegram-ды ашу",tgManual:"немесе кодты қолмен енгізіңіз:",
       navadmin:"Админ",admTitle:"Qujat басқару",admSub:"Кім тіркелгенін көріңіз, аккаунт жасаңыз не жойыңыз",
       admSecAdd:"Пайдаланушы жасау",admSecUsers:"Кім тіркелген",admSecStats:"Статистика",
       admSecWeb:"Веб-қосымша",admSecTg:"Telegram-бот",
@@ -1249,6 +1251,33 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function renderTgLock(){const s=S();if($('tglock-title'))$('tglock-title').textContent=s.tgLockTitle;if($('tglock-text'))$('tglock-text').textContent=s.tgLockText;if($('tglock-btn'))$('tglock-btn').textContent=s.tgLockBtn;}
   function renderTgBanner(){const s=S(),b=$('tg-banner');if(!b)return;const on=needTg();b.classList.toggle('hidden',!on);if(on){$('tg-b-t').textContent=s.tgBannerT;$('tg-b-d').textContent=s.tgBannerD;$('tg-b-cta').textContent=s.tgBannerCta;}}
   function goLinkTg(){showTab('account');setTimeout(function(){const d=$('acc-link');if(d){d.open=true;d.scrollIntoView({behavior:'smooth',block:'center'});const i=$('lt_code');if(i)i.focus();}},140);}
+  let _tgPoll=null;
+  function _tgStopPoll(){if(_tgPoll){clearInterval(_tgPoll);_tgPoll=null;}}
+  async function startTgLink(){
+    const s=S();
+    const w=window.open('about:blank','_blank');            // sync — пайдаланушы қимылын сақтап popup ашамыз
+    try{
+      const r=await afetch(API+'/auth/tg-link-token',{method:'POST',credentials:'include'});
+      const d=await r.json().catch(()=>({}));
+      if(!d.url){if(w)w.close();alert(s.errnet);return;}
+      const inTG=!!(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData&&Telegram.WebApp.initData.length);
+      try{
+        if(inTG&&Telegram.WebApp.openTelegramLink){if(w)w.close();Telegram.WebApp.openTelegramLink(d.url);}
+        else if(w){w.location.href=d.url;}
+        else{location.href=d.url;}
+      }catch(e){if(w){w.location.href=d.url;}else{location.href=d.url;}}
+    }catch(e){if(w)w.close();alert(s.errnet);return;}
+    // Telegram-да «Старт» басылғанша /auth/me-ні сұрап отырамыз
+    const btns=[$('tglock-btn'),$('a-tgopen')].filter(Boolean);
+    btns.forEach(b=>{b.disabled=true;b.dataset.lbl=b.textContent;b.textContent=s.tgWaiting;});
+    _tgStopPoll();let n=0;
+    _tgPoll=setInterval(async function(){
+      n++;await loadMe();
+      if(meUser&&meUser.telegram_id){_tgStopPoll();btns.forEach(b=>{b.disabled=false;if(b.dataset.lbl)b.textContent=b.dataset.lbl;});alert(s.linkok);showTab('home');}
+      else if(n>=40){_tgStopPoll();btns.forEach(b=>{b.disabled=false;if(b.dataset.lbl)b.textContent=b.dataset.lbl;});}
+    },3000);
+  }
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&_tgPoll)loadMe();});
 
   /* ---------- DOCUMENTS ---------- */
   let _homeFin=null,_homeCal=null;
@@ -1572,6 +1601,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
     $('a-delete').textContent=s.accdelete;$('a-forgot').textContent=s.forgot;
     $('acc-link-t').textContent=s.linktg;$('acc-link-hint').textContent=s.linkhint;$('a-linkbtn').textContent=s.linkbtn;
+    if($('a-tgopen'))$('a-tgopen').textContent=s.tgOpenBtn;if($('acc-link-manual'))$('acc-link-manual').textContent=s.tgManual;
     $('reset-h').textContent=s.resettitle;$('reset-sub').textContent=s.resetsub;
     $('la-reset').textContent=s.accnew;$('a-resetbtn').textContent=s.resetbtn;
   }
