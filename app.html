@@ -796,6 +796,13 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         </div>
       </details>
 
+      <details class="sec afold" id="acc-nca">
+        <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3a9 9 0 0 0-9 9c0 4 3 7.5 9 9 6-1.5 9-5 9-9a9 9 0 0 0-9-9z"/></svg><span id="acc-nca-t"></span><span class="fchev">›</span></summary>
+        <p class="sub" id="acc-nca-hint" style="margin-bottom:10px"></p>
+        <button class="btn" id="a-nca-btn" onclick="checkNca()"></button>
+        <div id="nca-status" style="margin-top:10px;font-size:13px;line-height:1.5"></div>
+      </details>
+
       <details class="sec afold">
         <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span id="acc-chpass-t"></span><span class="fchev">›</span></summary>
         <div class="field"><label id="la-old"></label><input type="password" id="cp_old"></div>
@@ -1055,6 +1062,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       assetstamp:"Печать",assetsign:"Подпись",assetup:"Загрузить",assetre:"Заменить",assetdel:"Удалить",
       assetok:"✓ Загружено",assetno:"Не загружено",assetuperr:"Не удалось — нужно чёткое фото на светлом фоне",
       accchpass:"Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
+      accnca:"ЭЦП (NCALayer)",accncahint:"Проверьте, что ваша ЭЦП готова подписывать документы (ЭСФ, отчётность). Ключ остаётся у вас — Qujat его не хранит. Нужен NCALayer на компьютере.",accncabtn:"Проверить подключение ЭЦП",ncaChecking:"Проверяю NCALayer…",ncaOk:"ЭЦП подключена",ncaTill:"действует до",ncaFail:"NCALayer не запущен или ЭЦП не выбрана",ncaDownload:"Скачать NCALayer",
       accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
@@ -1126,6 +1134,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       assetstamp:"Печать",assetsign:"Қолтаңба",assetup:"Жүктеу",assetre:"Ауыстыру",assetdel:"Жою",
       assetok:"✓ Жүктелді",assetno:"Жүктелмеген",assetuperr:"Болмады — ашық фондағы анық фото керек",
       accchpass:"Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
+      accnca:"ЭЦҚ (NCALayer)",accncahint:"ЭЦҚ құжаттарға (ЭСФ, есептілік) қол қоюға дайын ба тексеріңіз. Кілт сізде қалады — Qujat сақтамайды. Компьютерде NCALayer керек.",accncabtn:"ЭЦҚ қосылымын тексеру",ncaChecking:"NCALayer тексерілуде…",ncaOk:"ЭЦҚ қосылған",ncaTill:"дейін жарамды",ncaFail:"NCALayer іске қосылмаған не ЭЦҚ таңдалмаған",ncaDownload:"NCALayer жүктеу",
       accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
@@ -1599,6 +1608,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const hl=$('hdr-logout');if(hl){hl.textContent=s.acclogout;hl.classList.toggle('hidden',!meUser);}
     $('acc-welcome').textContent=s.accwelcome;
     $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
+    if($('acc-nca-t')){$('acc-nca-t').textContent=s.accnca;$('acc-nca-hint').textContent=s.accncahint;$('a-nca-btn').textContent=s.accncabtn;}
     $('acc-assets-t').textContent=s.assetst;$('acc-assets-hint').textContent=s.assetshint;
     $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
     $('a-delete').textContent=s.accdelete;$('a-forgot').textContent=s.forgot;
@@ -2028,6 +2038,38 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     }else h+=_cpRow('cp-wait',sic('clock')+s.cpEnfConnecting);
     h+='<div style="font-size:11px;color:var(--muted-2);margin-top:9px;line-height:1.4">'+s.cpFoot+'</div>';
     return h;
+  }
+  /* ---- NCALayer: клиентская подпись ЭЦП (ГОСТ-2015). Ключ у нас НЕ хранится. ---- */
+  let _ncaWs=null;
+  function ncaConnect(){return new Promise(function(res,rej){
+    try{ if(_ncaWs&&_ncaWs.readyState===1)return res(_ncaWs);
+      const ws=new WebSocket('wss://127.0.0.1:13579');
+      const t=setTimeout(function(){try{ws.close();}catch(e){}rej(new Error('timeout'));},6000);
+      ws.onopen=function(){clearTimeout(t);_ncaWs=ws;res(ws);};
+      ws.onerror=function(){clearTimeout(t);rej(new Error('nca_down'));};
+      ws.onclose=function(){if(_ncaWs===ws)_ncaWs=null;};
+    }catch(e){rej(e);}
+  });}
+  function ncaCall(method,args){return new Promise(function(res,rej){
+    ncaConnect().then(function(ws){
+      ws.onmessage=function(ev){var d={};try{d=JSON.parse(ev.data);}catch(e){}
+        if(d&&(d.code==='200'||d.code===200))res(d.responseObject);
+        else rej(new Error((d&&d.message)||'nca_err'));};
+      ws.send(JSON.stringify({module:'kz.gov.pki.knca.commonUtils',method:method,args:args}));
+    }).catch(rej);
+  });}
+  function ncaKeyInfo(){return ncaCall('getKeyInfo',['PKCS12']);}
+  function ncaSignXml(xml){return ncaCall('signXml',['PKCS12','SIGNATURE',xml,'','']);}  // для ЭСФ/ФНО
+  async function checkNca(){
+    const s=S(),box=$('nca-status');if(box)box.textContent=s.ncaChecking;
+    try{
+      const info=await ncaKeyInfo();
+      const dn=(info&&(info.subjectCn||info.subjectDn||info.subject))||'';
+      const till=(info&&(info.certNotAfter||info.notAfter))||'';
+      if(box)box.innerHTML='<span style="color:var(--accent2);font-weight:700">✓ '+s.ncaOk+'</span>'+(dn?('<br><span style="color:var(--muted);font-size:12px">'+String(dn).replace(/</g,'')+(till?(' · '+s.ncaTill+' '+String(till).slice(0,10)):'')+'</span>'):'');
+    }catch(e){
+      if(box)box.innerHTML='<span style="color:var(--danger);font-weight:700">⚠ '+s.ncaFail+'</span><br><a href="https://ncl.pki.gov.kz/" target="_blank" style="color:var(--accent);font-size:12px">'+s.ncaDownload+'</a>';
+    }
   }
   async function fillByBin(pre){
     const el=$(pre+'_bin');if(!el)return;
