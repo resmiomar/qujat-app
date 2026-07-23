@@ -670,6 +670,40 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <button class="btn" id="xf-gen" onclick="genXDoc()"></button>
       <p class="note" id="xf-note"></p>
     </div>
+
+    <!-- ===== ЭСФ (КГД): выписка электронного счёта-фактуры ===== -->
+    <div id="esf-invoice" class="hidden">
+      <button class="back" onclick="closeEsfInvoice()">‹ <span id="ei-back"></span></button>
+      <h2 id="ei-title"></h2><p class="sub" id="ei-sub"></p>
+      <div class="sec">
+        <h3 id="ei-seller-h"></h3>
+        <div class="field"><label id="ei-l-sname"></label><input type="text" id="ei_s_name" autocomplete="organization"></div>
+        <div class="field"><label id="ei-l-sbin"></label><input type="text" id="ei_s_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}"></div>
+      </div>
+      <div class="sec">
+        <h3 id="ei-buyer-h"></h3>
+        <div class="field"><label id="ei-l-bname"></label><input type="text" id="ei_b_name"></div>
+        <div class="row2">
+          <div class="field"><label id="ei-l-bbin"></label><input type="text" id="ei_b_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}"></div>
+          <div class="field"><label id="ei-l-country"></label><input type="text" id="ei_b_country" value="KZ" maxlength="2"></div>
+        </div>
+      </div>
+      <div class="sec"><div class="row2">
+        <div class="field"><label id="ei-l-num"></label><input type="text" id="ei_num" value="1" inputmode="numeric"></div>
+        <div class="field"><label id="ei-l-date"></label><input type="date" id="ei_date"></div>
+      </div>
+      <div class="field"><label id="ei-l-tdate"></label><input type="date" id="ei_tdate"></div>
+      </div>
+      <div class="sec">
+        <h3 id="ei-items-h"></h3>
+        <div id="ei-items"></div>
+        <button class="additem" onclick="eiAddItem()" id="ei-additem"></button>
+        <div class="total"><span id="ei-l-total"></span><span id="ei-total">0 ₸</span></div>
+      </div>
+      <button class="btn" id="ei-btn" onclick="esfIssueInvoice()"></button>
+      <div id="ei-status" style="margin-top:12px;font-size:13px;line-height:1.6"></div>
+      <p class="note" id="ei-note"></p>
+    </div>
   </div>
 
   <!-- ===== TAB: CALCULATORS ===== -->
@@ -1071,6 +1105,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       accchpass:"Сменить пароль",accold:"Текущий пароль",accnew:"Новый пароль (мин. 6)",accsave:"Сохранить",
       accnca:"ЭЦП (NCALayer)",accncahint:"Проверьте, что ваша ЭЦП готова подписывать документы (ЭСФ, отчётность). Ключ остаётся у вас — Qujat его не хранит. Нужен NCALayer на компьютере.",accncabtn:"Проверить подключение ЭЦП",ncaChecking:"Проверяю NCALayer…",ncaOk:"ЭЦП подключена",ncaTill:"действует до",ncaFail:"NCALayer не запущен или ЭЦП не выбрана",ncaDownload:"Скачать NCALayer",
       accesf:"Подключение к ЭСФ (КГД)",accesfhint:"Единый вход в систему ЭСФ вашей ЭЦП — потом сможете выписывать счета-фактуры прямо из Qujat. Подпись только на вашем компьютере через NCALayer, ключ не сохраняется.",accesfbtn:"Подключиться к ЭСФ",esfConnecting:"Читаю ЭЦП…",esfNoIin:"В сертификате не найден ИИН — выберите ключ физлица/ИП",esfSigning:"Подпишите запрос в NCALayer…",esfOpening:"Открываю сессию ЭСФ…",esfConnected:"Подключено к ЭСФ",esfSignFail:"Не удалось подписать или открыть сессию",
+      eiCardT:"Выписать ЭСФ",eiCardD:"Электронный счёт-фактура (КГД) с подписью ЭЦП",eiBack:"Документы",eiTitle:"Выписать ЭСФ",eiSub:"Электронный счёт-фактура в КГД. Подпись — на вашем ПК через NCALayer.",eiSellerH:"Поставщик",eiBuyerH:"Покупатель",eiItemsH:"Товары и услуги",eiLSName:"Наименование поставщика",eiLSBin:"БИН/ИИН поставщика",eiLBName:"Наименование покупателя",eiLBBin:"БИН/ИИН покупателя",eiLCountry:"Страна",eiLNum:"Номер счёта",eiLDate:"Дата выписки",eiLTDate:"Дата оборота",eiDesc:"Наименование",eiPrice:"Стоимость без НДС ₸",eiNdsL:"НДС",eiBzm:"Без НДС",eiDel:"Удалить",eiAddBtn:"+ Добавить строку",eiTotalL:"Итого с НДС",eiBtn:"Выписать и подписать ЭСФ",eiNote:"Счёт формируется и подписывается вашей ЭЦП через NCALayer на компьютере. Ключ на сервер не передаётся.",eiNoItems:"Добавьте хотя бы одну строку с ценой",eiBuilding:"Готовлю счёт…",eiSigning:"Подпишите счёт в NCALayer…",eiIssuing:"Отправляю в ЭСФ…",eiOk:"ЭСФ принят системой",eiReg:"Рег. номер",eiDeclined:"ЭСФ отклонён (ФЛК)",
       accpassok:"Пароль изменён ✓",accdelete:"Удалить аккаунт",accdelconfirm:"Удалить аккаунт и все данные? Это необратимо.",
       forgot:"Забыли пароль?",forgotask:"Введите email — пришлём ссылку для сброса:",forgotsent:"Если такой email есть — отправили ссылку для сброса. Проверьте почту.",
       resettitle:"Новый пароль",resetsub:"Придумайте новый пароль для входа.",resetbtn:"Сохранить пароль",resetok:"Пароль изменён! Теперь войдите.",resetbad:"Ссылка недействительна или истекла.",
@@ -1144,6 +1179,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       accchpass:"Пароль ауыстыру",accold:"Қазіргі пароль",accnew:"Жаңа пароль (мин. 6)",accsave:"Сақтау",
       accnca:"ЭЦҚ (NCALayer)",accncahint:"ЭЦҚ құжаттарға (ЭСФ, есептілік) қол қоюға дайын ба тексеріңіз. Кілт сізде қалады — Qujat сақтамайды. Компьютерде NCALayer керек.",accncabtn:"ЭЦҚ қосылымын тексеру",ncaChecking:"NCALayer тексерілуде…",ncaOk:"ЭЦҚ қосылған",ncaTill:"дейін жарамды",ncaFail:"NCALayer іске қосылмаған не ЭЦҚ таңдалмаған",ncaDownload:"NCALayer жүктеу",
       accesf:"ЭСФ-қа қосылу (МКК)",accesfhint:"ЭЦҚ арқылы ЭСФ жүйесіне бірыңғай кіру — кейін шот-фактураларды тікелей Qujat-тан жаза аласыз. Қол қою тек сіздің компьютеріңізде NCALayer арқылы, кілт сақталмайды.",accesfbtn:"ЭСФ-қа қосылу",esfConnecting:"ЭЦҚ оқылуда…",esfNoIin:"Сертификаттан ЖСН табылмады — жеке тұлға/ЖК кілтін таңдаңыз",esfSigning:"NCALayer-де сұранысқа қол қойыңыз…",esfOpening:"ЭСФ сессиясы ашылуда…",esfConnected:"ЭСФ-қа қосылды",esfSignFail:"Қол қою немесе сессия ашу сәтсіз аяқталды",
+      eiCardT:"ЭСФ жазу",eiCardD:"Электрондық шот-фактура (МКК) ЭЦҚ қолымен",eiBack:"Құжаттар",eiTitle:"ЭСФ жазу",eiSub:"МКК-ға электрондық шот-фактура. Қол қою — компьютеріңізде NCALayer арқылы.",eiSellerH:"Жеткізуші",eiBuyerH:"Сатып алушы",eiItemsH:"Тауарлар мен қызметтер",eiLSName:"Жеткізуші атауы",eiLSBin:"Жеткізуші БСН/ЖСН",eiLBName:"Сатып алушы атауы",eiLBBin:"Сатып алушы БСН/ЖСН",eiLCountry:"Ел",eiLNum:"Шот нөмірі",eiLDate:"Жазылған күні",eiLTDate:"Айналым күні",eiDesc:"Атауы",eiPrice:"ҚҚС-сыз құны ₸",eiNdsL:"ҚҚС",eiBzm:"ҚҚС-сыз",eiDel:"Жою",eiAddBtn:"+ Жол қосу",eiTotalL:"ҚҚС-пен барлығы",eiBtn:"ЭСФ жазу және қол қою",eiNote:"Шот сіздің ЭЦҚ-мен компьютерде NCALayer арқылы құрылып, қол қойылады. Кілт серверге берілмейді.",eiNoItems:"Бағасы бар кемінде бір жол қосыңыз",eiBuilding:"Шот дайындалуда…",eiSigning:"NCALayer-де шотқа қол қойыңыз…",eiIssuing:"ЭСФ-ке жіберілуде…",eiOk:"ЭСФ жүйеге қабылданды",eiReg:"Тіркеу нөмірі",eiDeclined:"ЭСФ қабылданбады (ФЛБ)",
       accpassok:"Пароль өзгертілді ✓",accdelete:"Аккаунтты жою",accdelconfirm:"Аккаунт пен барлық деректі жою? Қайтарылмайды.",
       forgot:"Парольді ұмыттыңыз ба?",forgotask:"Email жазыңыз — қалпына келтіру сілтемесін жібереміз:",forgotsent:"Егер email болса — қалпына келтіру сілтемесін жібердік. Поштаны тексеріңіз.",
       resettitle:"Жаңа пароль",resetsub:"Кіру үшін жаңа пароль ойлап табыңыз.",resetbtn:"Парольді сақтау",resetok:"Пароль өзгертілді! Кіріңіз.",resetbad:"Сілтеме жарамсыз немесе ескірген.",
@@ -1343,7 +1379,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function renderDocsTab(){
     const s=S();
     if($('docs-title')){$('docs-title').textContent=s.hdocsTitle;$('docs-sub').textContent=s.hsub;}
-    const ht=$('home-tools');if(ht)ht.innerHTML='<div class="card" onclick="showTab(\'convert\')" style="cursor:pointer"><div class="ic">'+svg('refresh')+'</div><div><div class="t">'+s.nav[3]+'</div><div class="d">'+s.convHomeD+'</div></div><div class="chev">›</div></div>';
+    const ht=$('home-tools');if(ht)ht.innerHTML=
+      '<div class="card" onclick="openEsfInvoice()" style="cursor:pointer"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg></div><div><div class="t">'+s.eiCardT+'</div><div class="d">'+s.eiCardD+'</div></div><div class="chev">›</div></div>'
+      +'<div class="card" onclick="showTab(\'convert\')" style="cursor:pointer"><div class="ic">'+svg('refresh')+'</div><div><div class="t">'+s.nav[3]+'</div><div class="d">'+s.convHomeD+'</div></div><div class="chev">›</div></div>';
     const box=$('cats');if(!box)return;box.innerHTML='';
     CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
       el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
@@ -1402,7 +1440,100 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('items').innerHTML='';(p.items||[]).forEach(it=>addItem(it.name,it.qty||'1',it.price));if(!(p.items||[]).length)addItem();
     calcTotal();
   }
-  function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('xform').classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
+  function goDocsHome(){$('form').classList.add('hidden');$('result').classList.add('hidden');$('xform').classList.add('hidden');const ei=$('esf-invoice');if(ei)ei.classList.add('hidden');$('home').classList.remove('hidden');window.scrollTo(0,0);}
+
+  // ===== ЭСФ выписка =====
+  function _today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function _ddmm(iso){if(!iso)return'';const p=iso.split('-');return p.length===3?(p[2]+'.'+p[1]+'.'+p[0]):iso;}
+  function openEsfInvoice(){
+    const s=S();$('home').classList.add('hidden');$('form').classList.add('hidden');$('xform').classList.add('hidden');$('result').classList.add('hidden');
+    const ei=$('esf-invoice');ei.classList.remove('hidden');
+    if($('ei-status'))$('ei-status').innerHTML='';
+    if(!$('ei_date').value)$('ei_date').value=_today();
+    if(!$('ei_tdate').value)$('ei_tdate').value=_today();
+    // префилл поставщика из сохранённого профиля счёта, если пусто
+    try{const sv=JSON.parse(localStorage.getItem('qujat_seller')||'{}');
+      if(!$('ei_s_name').value&&sv.name)$('ei_s_name').value=sv.name;
+      if(!$('ei_s_bin').value&&sv.bin)$('ei_s_bin').value=sv.bin;}catch(e){}
+    if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{const p=d.profile||{};if(!$('ei_s_name').value&&p.name)$('ei_s_name').value=p.name;if(!$('ei_s_bin').value&&p.bin)$('ei_s_bin').value=p.bin;}).catch(()=>{});
+    if(!$('ei-items').children.length)eiAddItem();
+    eiTotal();window.scrollTo(0,0);
+  }
+  function closeEsfInvoice(){goDocsHome();}
+  function eiAddItem(){
+    const s=S(),wrap=$('ei-items');const row=document.createElement('div');row.className='eirow';row.style.cssText='border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px';
+    row.innerHTML='<div class="field"><label>'+s.eiDesc+'</label><input type="text" class="ei-desc"></div>'
+      +'<div class="row2"><div class="field"><label>'+s.eiPrice+'</label><input type="text" class="ei-price" inputmode="decimal" oninput="eiTotal()"></div>'
+      +'<div class="field"><label>'+s.eiNdsL+'</label><select class="ei-nds" onchange="eiTotal()"><option value="12">12%</option><option value="0">'+s.eiBzm+'</option></select></div></div>'
+      +'<button class="back" style="margin:0" onclick="this.parentNode.remove();eiTotal()">✕ '+s.eiDel+'</button>';
+    wrap.appendChild(row);
+  }
+  function eiReadItems(){
+    const out=[];document.querySelectorAll('#ei-items .eirow').forEach(r=>{
+      const desc=(r.querySelector('.ei-desc').value||'').trim();
+      const price=parseFloat((r.querySelector('.ei-price').value||'').replace(',','.'))||0;
+      const rate=parseInt(r.querySelector('.ei-nds').value,10);
+      if(price>0)out.push({description:desc,catalogTruId:'1',truOriginCode:'5',priceWithoutTax:price,ndsRate:rate>0?rate:undefined});
+    });return out;
+  }
+  function eiTotal(){
+    let t=0;eiReadItems().forEach(p=>{const base=p.priceWithoutTax;const nds=p.ndsRate?Math.round(base*p.ndsRate)/100:0;t+=base+nds;});
+    if($('ei-total'))$('ei-total').textContent=finM(t)+' ₸';
+  }
+  async function esfIssueInvoice(){
+    const s=S(),box=$('ei-status');
+    const items=eiReadItems();
+    if(!items.length){box.innerHTML='<span style="color:var(--danger)">⚠ '+s.eiNoItems+'</span>';return;}
+    // 1) читаем ЭЦП → iin/bin
+    box.textContent=s.esfConnecting;let info;
+    try{info=await ncaKeyInfo();}catch(e){box.innerHTML='<span style="color:var(--danger)">⚠ '+s.ncaFail+'</span><br><a href="https://ncl.pki.gov.kz/" target="_blank" style="color:var(--accent);font-size:12px">'+s.ncaDownload+'</a>';return;}
+    const blob=JSON.stringify(info||{});
+    const iin=(blob.match(/IIN(\d{12})/)||[])[1]||(blob.match(/\b(\d{12})\b/)||[])[1]||'';
+    const bin=((blob.match(/BIN(\d{12})/)||[])[1])||iin;
+    if(!iin){box.innerHTML='<span style="color:var(--danger)">⚠ '+s.esfNoIin+'</span>';return;}
+    const sbin=((($('ei_s_bin').value||'').replace(/\D/g,''))||bin);
+    const data={
+      date:_ddmm($('ei_date').value),turnoverDate:_ddmm($('ei_tdate').value),
+      num:($('ei_num').value||'1').replace(/\D/g,'')||'1',invoiceType:'ORDINARY_INVOICE',
+      currencyCode:'KZT',
+      seller:{name:($('ei_s_name').value||'').trim(),tin:sbin},
+      customer:{name:($('ei_b_name').value||'').trim(),countryCode:($('ei_b_country').value||'KZ').trim().toUpperCase(),tin:($('ei_b_bin').value||'').replace(/\D/g,'')},
+      products:items,
+    };
+    try{
+      // 2) собрать XML на сервере
+      box.textContent=s.eiBuilding;
+      let r=await afetch(API+'/api/esf/invoice/build',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+      let d=await r.json();
+      if(!d.xml){box.innerHTML='<span style="color:var(--danger)">⚠ '+(d.error||s.errnet)+'</span>';return;}
+      // 3) подписать счёт (NCALayer)
+      box.textContent=s.eiSigning;
+      const signedInvoice=await ncaSignXml(d.xml);
+      // 4) auth-ticket → подписать → выписать
+      box.textContent=s.esfConnecting;
+      r=await afetch(API+'/api/esf/auth-ticket',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({iin:iin})});
+      d=await r.json();
+      if(!d.ticket){box.innerHTML='<span style="color:var(--danger)">⚠ '+(d.error||s.errnet)+'</span>';return;}
+      box.textContent=s.esfSigning;
+      const signedTicket=await ncaSignXml(d.ticket);
+      box.textContent=s.eiIssuing;
+      r=await afetch(API+'/api/esf/invoice/issue',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({signedTicket:signedTicket,signedInvoice:signedInvoice,tin:bin,signatureType:'COMPANY'})});
+      d=await r.json();
+      if(d.ok){
+        const acc=(d.accepted||[])[0]||{};
+        let h='<span style="color:var(--accent2);font-weight:700">✓ '+s.eiOk+'</span>';
+        if(d.registrationNumber)h+='<br><span style="font-size:12px;color:var(--muted)">'+s.eiReg+': '+String(d.registrationNumber).replace(/</g,'')+'</span>';
+        if(acc.id)h+='<br><span style="font-size:12px;color:var(--muted)">ID: '+String(acc.id).replace(/</g,'')+(d.status?(' · '+String(d.status).replace(/</g,'')):'')+'</span>';
+        box.innerHTML=h;
+      }else if((d.declined||[]).length){
+        const esc=x=>String(x||'').replace(/</g,'');
+        const errs=(d.declined[0].errors||[]).map(e=>'• '+esc(e.errorCode)+(e.text?(' — '+esc(e.text)):'')).join('<br>');
+        box.innerHTML='<span style="color:var(--danger);font-weight:700">✕ '+s.eiDeclined+'</span><br><span style="font-size:12px">'+errs+'</span>';
+      }else{
+        box.innerHTML='<span style="color:var(--danger)">⚠ '+(d.error||s.errnet)+'</span>';
+      }
+    }catch(e){box.innerHTML='<span style="color:var(--danger)">⚠ '+s.esfSignFail+'</span>';}
+  }
   function goHome(){if(document.body.classList.contains('gated'))return;showTab('home');}
   const val=id=>($(id).value||'').trim();
   function fmtDate(){const d=$('d_date').value;if(!d)return '';const[y,m,dd]=d.split('-');return dd+'.'+m+'.'+y;}
@@ -1619,6 +1750,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
     if($('acc-nca-t')){$('acc-nca-t').textContent=s.accnca;$('acc-nca-hint').textContent=s.accncahint;$('a-nca-btn').textContent=s.accncabtn;}
     if($('acc-esf-t')){$('acc-esf-t').textContent=s.accesf;$('acc-esf-hint').textContent=s.accesfhint;$('a-esf-btn').textContent=s.accesfbtn;}
+    if($('ei-title')){
+      $('ei-back').textContent=s.eiBack;$('ei-title').textContent=s.eiTitle;$('ei-sub').textContent=s.eiSub;
+      $('ei-seller-h').textContent=s.eiSellerH;$('ei-buyer-h').textContent=s.eiBuyerH;$('ei-items-h').textContent=s.eiItemsH;
+      $('ei-l-sname').textContent=s.eiLSName;$('ei-l-sbin').textContent=s.eiLSBin;
+      $('ei-l-bname').textContent=s.eiLBName;$('ei-l-bbin').textContent=s.eiLBBin;$('ei-l-country').textContent=s.eiLCountry;
+      $('ei-l-num').textContent=s.eiLNum;$('ei-l-date').textContent=s.eiLDate;$('ei-l-tdate').textContent=s.eiLTDate;
+      $('ei-l-total').textContent=s.eiTotalL;$('ei-additem').textContent=s.eiAddBtn;$('ei-btn').textContent=s.eiBtn;$('ei-note').textContent=s.eiNote;
+    }
     $('acc-assets-t').textContent=s.assetst;$('acc-assets-hint').textContent=s.assetshint;
     $('la-old').textContent=s.accold;$('la-new').textContent=s.accnew;$('a-chpass').textContent=s.accsave;
     $('a-delete').textContent=s.accdelete;$('a-forgot').textContent=s.forgot;
