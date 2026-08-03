@@ -1283,7 +1283,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     });
   }
   const TG_GATED=['docs','finance','calc','ai','mydocs','convert'];
-  function needTg(){return !!(meUser && !meUser.telegram_id);}
+  // Нативное приложение (iOS/Android) НЕ гейтим Telegram-ом: Apple 3.1.1 запрещает
+  // воронку во внешнюю оплату, а функции (ИИ-чат и др.) должны работать сразу.
+  function needTg(){return !NATIVE_APP && !!(meUser && !meUser.telegram_id);}
   function showTab(t){
     if(t==='admin'&&!(meUser&&meUser.role==='admin'))t='home';
     curTab=t;
@@ -1719,10 +1721,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const inp=$('ai-input');const text=inp.value.trim();if(!text)return;inp.value='';
     bubble('user',text);aiHist.push({role:'user',content:text});
     const wait=bubble('assistant','…');
+    // Таймаут: ответ ИИ не должен «висеть» бесконечно (Apple 2.1 — indefinite loading).
+    let ac=null,to=null;
+    if(typeof AbortController!=='undefined'){ac=new AbortController();to=setTimeout(function(){try{ac.abort();}catch(e){}},45000);}
     try{
-      const r=await afetch(API+'/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,lang,history:aiHist.slice(-6)})});
+      const r=await afetch(API+'/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,lang,history:aiHist.slice(-6)}),signal:ac?ac.signal:undefined});
       const d=await r.json();wait.textContent=d.reply||S().errnet;aiHist.push({role:'assistant',content:d.reply||''});
     }catch(e){wait.textContent=S().errnet;}
+    finally{if(to)clearTimeout(to);}
     window.scrollTo(0,document.body.scrollHeight);
   }
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===$('ai-input'))sendAI();});
