@@ -726,6 +726,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <button class="back" onclick="showTab('home')">‹ <span id="ai-back"></span></button>
     <h2 id="a-title" style="margin-bottom:2px"></h2><p class="sub" id="a-sub"></p>
     <p class="note" id="a-note" style="text-align:left;margin:-6px 0 10px;color:var(--muted)"></p>
+    <div id="ai-consent" class="hidden" style="border:1px solid var(--line);border-radius:16px;padding:20px;margin:4px 0 10px">
+      <div class="tglock-ic" style="width:60px;height:60px;margin:0 auto 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16.01"/><line x1="16" y1="16" x2="16" y2="16.01"/></svg></div>
+      <h3 id="aic-title" style="text-align:center;margin:0 0 8px"></h3>
+      <p class="sub" id="aic-text" style="text-align:left;margin:0 0 10px"></p>
+      <p id="aic-warn" style="text-align:left;font-size:13px;color:var(--muted);margin:0 0 12px"></p>
+      <p class="note" style="text-align:left;margin:0 0 14px"><a id="aic-privacy" href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)"></a></p>
+      <button class="btn" id="aic-btn" onclick="acceptAiConsent()"></button>
+    </div>
     <div class="chips" id="a-chips"></div>
     <div class="chat" id="chat"></div>
   </div>
@@ -1083,7 +1091,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       atitle:"ИИ-бухгалтер",asub:"Налоги, режимы, зарплата, отчёты и документы РК 2026.",
       aplaceholder:"Ваш вопрос…",agreet:"Здравствуйте! Я бухгалтерский помощник Qujat. Помогу разобраться с налогами 2026, режимами (ИП/ТОО), зарплатой и взносами, отчётами и сроками, документами — спрашивайте.",
       achips:["Какой налог у ИП?","Когда сдавать 910?","ИП или ТОО?","Ставка НДС 2026?"],
-      ainote:"ИИ может ошибаться. Точные данные — на kgd.gov.kz.",
+      ainote:"Ответы формирует ИИ Anthropic (Claude). Может ошибаться — сверяйте на kgd.gov.kz. Не вводите конфиденциальные данные.",
+      aicTitle:"Использование ИИ-помощника",
+      aicText:"Чтобы ответить на ваши вопросы, приложение отправляет текст ваших сообщений стороннему ИИ-сервису — Anthropic (Claude, США). Он обрабатывает сообщение и формирует ответ. Другие данные вашего профиля не передаются.",
+      aicWarn:"Не вводите конфиденциальные данные: ИИН/БИН, номера карт, пароли, персональные данные третьих лиц.",
+      aicPrivacy:"Как мы обрабатываем данные — в политике конфиденциальности",
+      aicBtn:"Принять и продолжить",
       accintro:"Войдите — сессия будет работать на любом устройстве (без SMS).",
       consent:'Регистрируясь, вы принимаете <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">оферту</a> и <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">политику конфиденциальности</a>.',
       proh:"Qujat Pro",prosub:"Безлимит документов, налоговые формы, ИИ-помощник, печать и подпись — без ограничений.",
@@ -1157,7 +1170,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       atitle:"AI-бухгалтер",asub:"2026 салық, режимдер, жалақы, есеп-қисап пен құжаттар.",
       aplaceholder:"Сұрағыңыз…",agreet:"Сәлеметсіз бе! Мен Qujat бухгалтер-көмекшісімін. 2026 салығы, режимдер (ИП/ТОО), жалақы мен жарналар, есептер мен мерзімдер, құжаттар — бәрі бойынша көмектесемін, сұраңыз.",
       achips:["ИП қандай салық төлейді?","910 қашан тапсырылады?","ИП па, ТОО ма?","2026 ҚҚС ставкасы?"],
-      ainote:"AI қателесуі мүмкін. Нақтысын kgd.gov.kz-тен тексеріңіз.",
+      ainote:"Жауаптарды Anthropic (Claude) ЖИ жасайды. Қателесуі мүмкін — kgd.gov.kz-тен тексеріңіз. Құпия деректерді енгізбеңіз.",
+      aicTitle:"ЖИ көмекшісін пайдалану",
+      aicText:"Сұрақтарыңызға жауап беру үшін қосымша хабарламаларыңыздың мәтінін үшінші тарап ЖИ қызметіне — Anthropic (Claude, АҚШ) жібереді. Ол хабарламаны өңдеп, жауап дайындайды. Профильіңіздің басқа деректері берілмейді.",
+      aicWarn:"Құпия деректерді енгізбеңіз: ЖСН/БСН, карта нөмірлері, парольдер, үшінші тұлғалардың дербес деректері.",
+      aicPrivacy:"Деректерді қалай өңдейміз — құпиялылық саясатында",
+      aicBtn:"Қабылдап, жалғастыру",
       accintro:"Кіріңіз — сессия кез келген құрылғыда жұмыс істейді (SMS-сіз).",
       consent:'Тіркелу арқылы сіз <a href="https://qujat.digital/offer.html" target="_blank" style="color:var(--accent-ink)">офертаны</a> және <a href="https://qujat.digital/privacy.html" target="_blank" style="color:var(--accent-ink)">құпиялылық саясатын</a> қабылдайсыз.',
       proh:"Qujat Pro",prosub:"Шексіз құжат, салық формалары, AI-көмекші, печать пен қолтаңба — шектеусіз.",
@@ -1292,14 +1310,18 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const locked=needTg()&&TG_GATED.indexOf(t)>=0;
     const shown=locked?'tglock':t;
     ['home','docs','finance','calc','ai','mydocs','convert','account','admin','tglock'].forEach(x=>{const el=$('tab-'+x);if(el)el.classList.toggle('hidden',x!==shown);});
-    $('airow').classList.toggle('hidden',!(t==='ai'&&!locked));
+    $('airow').classList.toggle('hidden',!(t==='ai'&&!locked&&aiConsented()));
     renderNav(); window.scrollTo(0,0);
     if(locked){renderTgLock();return;}
     if(t==='home') renderHomeTab();
     if(t==='mydocs') loadMyDocs();
     if(t==='docs') goDocsHome();
     if(t==='calc'&&!calcList.length) loadCalc();
-    if(t==='ai'&&!aiHist.length) aiGreet();
+    if(t==='ai'){
+      if($('ai-consent'))$('ai-consent').classList.add('hidden');
+      if(!aiConsented()){showAiConsent();}
+      else{$('chat').classList.remove('hidden');$('a-chips').classList.remove('hidden');if(!aiHist.length)aiGreet();}
+    }
     if(t==='convert') renderConvert();
     if(t==='account') loadMe();
     if(t==='admin') loadAdminPanel();
@@ -1710,6 +1732,20 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   /* ---------- AI ---------- */
   function bubble(role,text){const m=document.createElement('div');m.className='msg '+(role==='user'?'u':'a');m.textContent=text;$('chat').appendChild(m);
     window.scrollTo(0,document.body.scrollHeight);return m;}
+  function aiConsented(){try{return localStorage.getItem('qujat_ai_consent')==='1';}catch(e){return false;}}
+  function showAiConsent(){
+    const s=S();
+    $('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('a-note').textContent=s.ainote;if($('ai-back'))$('ai-back').textContent=s.aiBack;
+    if($('aic-title')){$('aic-title').textContent=s.aicTitle;$('aic-text').textContent=s.aicText;$('aic-warn').textContent=s.aicWarn;$('aic-privacy').textContent=s.aicPrivacy;$('aic-btn').textContent=s.aicBtn;}
+    $('ai-consent').classList.remove('hidden');
+    $('chat').classList.add('hidden');$('a-chips').classList.add('hidden');$('airow').classList.add('hidden');
+  }
+  function acceptAiConsent(){
+    try{localStorage.setItem('qujat_ai_consent','1');}catch(e){}
+    $('ai-consent').classList.add('hidden');
+    $('chat').classList.remove('hidden');$('a-chips').classList.remove('hidden');$('airow').classList.remove('hidden');
+    if(!aiHist.length)aiGreet();
+  }
   function aiGreet(){
     const s=S();$('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('ai-input').placeholder=s.aplaceholder;if($('ai-back'))$('ai-back').textContent=s.aiBack;
     $('a-note').textContent=s.ainote;
@@ -1718,6 +1754,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     s.achips.forEach(q=>{const b=document.createElement('div');b.className='chip';b.textContent=q;b.onclick=()=>{$('ai-input').value=q;sendAI();};ch.appendChild(b);});
   }
   async function sendAI(){
+    if(!aiConsented()){showAiConsent();return;}
     const inp=$('ai-input');const text=inp.value.trim();if(!text)return;inp.value='';
     bubble('user',text);aiHist.push({role:'user',content:text});
     const wait=bubble('assistant','…');
@@ -1743,6 +1780,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('acc-card-sub').textContent=s.accintro;
     $('acc-lang-t').textContent=lang==='ru'?'RU':'KZ';
     if($('a-consent'))$('a-consent').innerHTML=s.consent;
+    if($('aic-title')){$('aic-title').textContent=s.aicTitle;$('aic-text').textContent=s.aicText;$('aic-warn').textContent=s.aicWarn;$('aic-privacy').textContent=s.aicPrivacy;$('aic-btn').textContent=s.aicBtn;if($('a-note')&&!$('ai-consent').classList.contains('hidden'))$('a-note').textContent=s.ainote;}
     $('la-name').textContent=s.accname;$('la-email-r').textContent=s.accemail;$('la-pass-r').textContent=s.accpass;
     $('la-email-l').textContent=s.accemail;$('la-pass-l').textContent=s.accpass;
     $('a-regbtn').textContent=s.accregbtn;$('a-loginbtn').textContent=s.accloginbtn;
