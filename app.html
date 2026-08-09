@@ -1053,6 +1053,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if(!('credentials' in opts))opts.credentials='include';
     const h=Object.assign({},opts.headers||{});
     if(authToken)h['Authorization']='Bearer '+authToken;
+    if(NATIVE_IOS)h['X-Qujat-Client']='ios';  // Apple 3.1.1: iOS = бесплатная версия (веб-подписка не действует)
     opts.headers=h;
     return fetch(url,opts);
   }
