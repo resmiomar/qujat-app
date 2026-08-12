@@ -1137,7 +1137,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       admSearch:"Поиск email или имени…",admRefresh:"Обновить",admGrant:"+30 дн Pro",admGranted:"Pro выдан ✓",
       admNoUsers:"Пользователей не найдено",admDocsUsed:"Док. в месяце",admUntil:"Pro до",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
-      e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль"},
+      e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль",e_toomany:"Слишком много попыток. Подождите минуту и попробуйте снова."},
     kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"OCR, PDF ↔ Word/Excel, сығу, біріктіру — 20 операция",admBtn:"Админ-панель",
       finTitle:"Қаржы есебі",finSub:"Кіріс, шығыс және салық бақылауы",
       finIncome:"Кіріс",finExpense:"Шығыс",finProfit:"Пайда",
@@ -1216,7 +1216,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       admSearch:"Email немесе атын іздеу…",admRefresh:"Жаңарту",admGrant:"+30 күн Pro",admGranted:"Pro берілді ✓",
       admNoUsers:"Пайдаланушы табылмады",admDocsUsed:"Айдағы құжат",admUntil:"Pro дейін",
       e_email:"Дұрыс email жазыңыз",e_pass:"Пароль кемінде 6 таңба",e_name:"Аты кемінде 2 таңба",
-      e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль"}
+      e_taken:"Бұл email бос емес",e_creds:"Қате email немесе пароль",e_toomany:"Тым көп әрекет. Бір минут күтіп, қайталаңыз."}
   };
   /* ---------- SVG иконкалар (Lucide стилі — emoji орнына, премиум) ---------- */
   const ICONS={
@@ -1908,8 +1908,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   async function loadMe(){
     try{const r=await afetch(API+'/auth/me',{credentials:'include'});meUser=(await r.json()).user;}catch(e){meUser=null;}
-    renderAccount();applyGate();accLabels();renderTgBanner();
-    const hg=$('h-greet');if(hg){const nm=(meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';hg.textContent=S().hgreet+nm+' 👋';}
+    try{
+      renderAccount();applyGate();accLabels();renderTgBanner();
+      const hg=$('h-greet');if(hg){const nm=(meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';hg.textContent=S().hgreet+nm+' 👋';}
+    }catch(e){}
   }
   function applyGate(){
     if(resetTok){location.replace('/auth/?reset='+encodeURIComponent(resetTok));return;}
@@ -1932,8 +1934,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if(!reEmail.test(email))return alert(s.e_email);if(!pass)return alert(s.e_pass);
     const b=$('a-loginbtn');b.disabled=true;
     try{const r=await afetch(API+'/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
-      if(r.status===401){alert(s.e_creds);return;}if(!r.ok){alert(s.errnet);return;}
-      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);await loadMe();if(meUser)showTab('home');
+      if(r.status===401){alert(s.e_creds);return;}
+      if(r.status===429){alert(s.e_toomany);return;}
+      if(!r.ok){alert(s.errnet);return;}
+      const d=await r.json().catch(()=>({}));if(d.token)setToken(d.token);
+      try{await loadMe();}catch(e){}
+      if(meUser)showTab('home');else{alert(s.errnet);}
     }catch(e){alert(s.errnet);}finally{b.disabled=false;}
   }
   async function doLogout(){try{await afetch(API+'/auth/logout',{method:'POST',credentials:'include'});}catch(e){}setToken('');meUser=null;proOpen=false;if(NATIVE_APP){document.body.classList.add('gated');renderAccount();showTab('account');return;}location.replace('/auth/');}
