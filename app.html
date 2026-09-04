@@ -2101,7 +2101,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   /* ---------- Google Sign-In (Gmail) ---------- */
   let GCID=null,gReady=false;
   async function initGoogle(){
-    if(NATIVE_IOS)return;   /* Apple 4.8: Google-кірі Sign in with Apple-сіз көрсетілмейді (iOS-та email/пароль ғана) */
+    if(NATIVE_APP)return;   /* Нативті қосымшада Google-кірі көрсетілмейді: iOS-та Apple 4.8 талабы, Android-та
+                               Google Identity Services WebView ішінде жұмыс істемейді (disallowed_useragent) —
+                               батырма «өлі» болып қалады. Нативте тек email/пароль. */
     if(GCID===null){try{const r=await afetch(API+'/auth/config');GCID=(await r.json()).googleClientId||'';}catch(e){GCID='';}}
     if(!GCID)return;
     $('g-or-t').textContent=lang==='ru'?'или':'немесе';
