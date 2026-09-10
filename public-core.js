@@ -1,5 +1,5 @@
 (function (global) {
-  const API = 'https://qujat-production.up.railway.app';
+  const API = 'https://app.qalqan.digital/qujat-api';
   const LANGS = ['ru', 'kz', 'en'];
   const LANG_KEY = 'qujat_weblang';
 
