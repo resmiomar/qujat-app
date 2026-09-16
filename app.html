@@ -1287,6 +1287,36 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     }catch(e){}
   }
   function showShareBtn(){if($('r-share'))$('r-share').style.display=(lastBlob&&navigator.share)?'block':'none';}
+
+  /* Сохранение готовых файлов.
+     ⚠️ Google Play снял приложение 04.09.2026 как «неработающие функции»: внутри
+     Android WebView ссылка вида blob:/data: с атрибутом download не скачивает
+     ничего, поэтому все кнопки «Скачать» выглядели мёртвыми. Если нативная часть
+     дала мост (AndroidFile), отдаём файл ей - она сохранит и откроет документ.
+     В браузере и на iOS работает прежний путь через ссылку. */
+  function hasFileBridge(){
+    return !!(window.AndroidFile&&typeof window.AndroidFile.save==='function');
+  }
+  function saveFile(blob,name,mime){
+    const type=mime||blob.type||'application/octet-stream';
+    if(hasFileBridge()){
+      const fr=new FileReader();
+      fr.onload=function(){try{window.AndroidFile.save(String(fr.result),name,type);}catch(e){}};
+      fr.readAsDataURL(blob);          // мост принимает base64 или целиком data:-URL
+      return;
+    }
+    const u=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u);},1000);
+  }
+  /* Кнопки «Открыть» и «Скачать» готового документа ведут на blob-ссылку. В
+     приложении она мертва, поэтому там перехватываем нажатие и идём через мост. */
+  function bindDocButtons(blob,fn){
+    if(!hasFileBridge())return;
+    const handler=function(e){e.preventDefault();saveFile(blob,fn,'application/pdf');};
+    ['r-download','r-open'].forEach(function(id){ if($(id))$(id).onclick=handler; });
+  }
   const S=()=>STR[lang];
 
   function toggleLang(){lang=lang==='ru'?'kz':'ru';localStorage.setItem('qujat_weblang',lang);renderAll();}
@@ -1584,7 +1614,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       if(res.status===402){openPro(S().prolimit);return;}
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
-      const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';lastBlob=blob;lastFn=fn;showShareBtn();$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
+      const fn=curDoc+'_'+(val('d_number')||'1')+'.pdf';lastBlob=blob;lastFn=fn;showShareBtn();$('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);bindDocButtons(blob,fn);
       $('form').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
     }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
   }
@@ -1684,7 +1714,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       if(!res.ok)throw new Error('http');
       const blob=await res.blob();if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
       const fn=curXKey+'_'+(vals.number||'1')+'.pdf';lastBlob=blob;lastFn=fn;showShareBtn();
-      $('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);
+      $('r-open').href=lastUrl;$('r-download').href=lastUrl;$('r-download').setAttribute('download',fn);bindDocButtons(blob,fn);
       $('xform').classList.add('hidden');$('result').classList.remove('hidden');window.scrollTo(0,0);
     }catch(e){alert(s.errnet);}finally{btn.disabled=false;btn.textContent=s.gen;}
   }
@@ -2091,9 +2121,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     try{
       const r=await afetch(API+'/api/convert',{method:'POST',body:fd});
       if(!r.ok){$('conv-status').textContent='❌ '+s.converr;return;}
-      const blob=await r.blob();const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');a.href=url;a.download='qujat_converted.'+CONV_EXT[convTarget.target];
-      document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+      const blob=await r.blob();
+      saveFile(blob,'qujat_converted.'+CONV_EXT[convTarget.target]);
       $('conv-status').textContent='✅ '+s.convdone;
     }catch(e){$('conv-status').textContent='❌ '+s.converr;}
   }
@@ -2459,9 +2488,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const ym=$('fin-month').value?ymToRu($('fin-month').value):'';
     try{const r=await afetch(API+'/api/fin/export'+(ym?'?ym='+encodeURIComponent(ym):''));
       if(!r.ok){alert(S().errnet);return;}
-      const b=await r.blob();const u=URL.createObjectURL(b);const a=document.createElement('a');
-      a.href=u;a.download='qujat-uchet'+(ym?'-'+ym:'')+'.xlsx';document.body.appendChild(a);a.click();a.remove();
-      setTimeout(()=>URL.revokeObjectURL(u),1000);
+      const b=await r.blob();
+      saveFile(b,'qujat-uchet'+(ym?'-'+ym:'')+'.xlsx');
     }catch(e){alert(S().errnet);}
   }
   let finImportItems=[];
