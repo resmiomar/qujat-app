@@ -1027,6 +1027,18 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <div class="fin-hero-m" id="fin-hero-m"></div>
     </div>
 
+    <div class="pcard hidden" id="fin-manual">
+      <div class="fin-kind">
+        <button id="fin-k-in" class="fin-kbtn on-in" onclick="finKind('in')"></button>
+        <button id="fin-k-out" class="fin-kbtn" onclick="finKind('out')"></button>
+      </div>
+      <div class="field"><input type="number" id="fin-amount" inputmode="decimal"></div>
+      <div class="field"><input type="text" id="fin-cat"></div>
+      <div class="field"><input type="text" id="fin-note"></div>
+      <button class="btn" id="fin-save" onclick="finAdd()"></button>
+    </div>
+
+
     <div id="fin-data" class="hidden">
     <div class="pcard">
       <div class="fin-sum" id="fin-summary"></div>
@@ -1042,17 +1054,6 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <button class="btn ghost" id="fin-man-btn" style="margin-top:8px" onclick="finShowManual()"></button>
       <p class="note" id="fin-import-hint" style="margin-top:8px"></p>
       <div id="fin-import-preview" class="hidden" style="margin-top:12px"></div>
-    </div>
-
-    <div class="pcard hidden" id="fin-manual">
-      <div class="fin-kind">
-        <button id="fin-k-in" class="fin-kbtn on-in" onclick="finKind('in')"></button>
-        <button id="fin-k-out" class="fin-kbtn" onclick="finKind('out')"></button>
-      </div>
-      <div class="field"><input type="number" id="fin-amount" inputmode="decimal"></div>
-      <div class="field"><input type="text" id="fin-cat"></div>
-      <div class="field"><input type="text" id="fin-note"></div>
-      <button class="btn" id="fin-save" onclick="finAdd()"></button>
     </div>
 
     <div class="pcard" id="mytax-card" style="border:1.5px solid var(--accent,#5810E8)">
@@ -2337,7 +2338,9 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
   function finShowManual(){
     const m=$('fin-manual');if(!m)return;
-    $('fin-data').classList.remove('hidden');
+    /* Форма живёт вне блока с числами: из пустого состояния показываем только её,
+       чтобы не выводить на экран три нуля, которых человек и так не ждёт. */
+    $('fin-empty').classList.add('hidden');
     m.classList.remove('hidden');
     $('fin-amount').focus();
     m.scrollIntoView({behavior:'smooth',block:'center'});
@@ -2501,6 +2504,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       $('fin-summary').innerHTML='<div class="in"><b>'+finM(d.income)+'</b><span>'+s.finIncome+'</span></div><div class="out"><b>'+finM(d.expense)+'</b><span>'+s.finExpense+'</span></div><div class="pr"><b>'+finM(d.profit)+'</b><span>'+s.finProfit+'</span></div>';
       const has=!!(d.rows&&d.rows.length);
       if($('fin-empty')){
+        $('fin-manual').classList.add('hidden');
         $('fin-empty').classList.toggle('hidden',has);
         $('fin-hero').classList.toggle('hidden',!has);
         $('fin-data').classList.toggle('hidden',!has);
