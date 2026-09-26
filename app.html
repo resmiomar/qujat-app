@@ -143,6 +143,24 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
 
 /* Басты бет (dashboard) */
 .hgreet{font-size:26px;font-weight:800;letter-spacing:-.03em;color:var(--text);margin:2px 0 3px;line-height:1.15}
+
+/* Главная: дело вместо приветствия */
+.hhero{background:var(--grad);color:#fff;border-radius:var(--radius);padding:18px 18px 16px;margin:2px 0 12px;cursor:pointer;box-shadow:0 12px 26px -18px rgba(94,23,235,.85)}
+.hhero h3{margin:0 0 4px;font-size:21px;font-weight:800;letter-spacing:-.03em}
+.hhero p{margin:0 0 14px;font-size:13px;line-height:1.45;opacity:.88}
+.hhero-b{display:block;background:#fff;color:var(--accent);border-radius:13px;padding:12px;text-align:center;font-weight:700;font-size:14.5px}
+#h-quick{margin-bottom:18px}
+
+/* Каталог документов строками: на экран влезает вдвое больше типов */
+#cats .card{padding:11px 12px;margin-bottom:0;border-radius:0;border-width:0 0 1px 0;box-shadow:none;gap:12px}
+#cats .card:hover{transform:none;border-color:var(--line);background:var(--surface-2)}
+#cats .card:active{transform:none}
+#cats .card .ic{width:32px;height:32px;border-radius:10px}
+#cats .cgh{margin:20px 4px 6px}
+.catsq{width:100%;box-sizing:border-box;margin:4px 0 12px;padding:12px 14px;border:1px solid var(--line-2);border-radius:13px;background:var(--card);font-family:inherit;font-size:14px;color:var(--text)}
+.catsq::placeholder{color:var(--muted-2)}
+.catsq:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.cats-none{padding:22px 4px;color:var(--muted);font-size:14px;text-align:center}
 .hsnap{display:flex;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px 4px;margin:16px 0 2px;box-shadow:var(--sh-xs)}
 .hsnap>div{flex:1;text-align:center;padding:0 8px;min-width:0}
 .hsnap>div+div{border-left:1px solid var(--line-soft)}
@@ -588,12 +606,18 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 <div class="wrap">
   <!-- ===== TAB: DOCUMENTS ===== -->
   <div id="tab-home" class="hidden">
+    <div class="hhero" id="h-hero" onclick="showTab('docs')">
+      <h3 id="h-hero-t"></h3>
+      <p id="h-hero-d"></p>
+      <span class="hhero-b" id="h-hero-b"></span>
+    </div>
+    <div class="chips" id="h-quick"></div>
     <div id="tg-banner" class="tg-banner hidden" onclick="startTgLink()">
       <span class="tg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
       <div class="tg-b-txt"><div class="tg-b-t" id="tg-b-t"></div><div class="tg-b-d" id="tg-b-d"></div></div>
       <span class="tg-b-cta" id="tg-b-cta"></span>
     </div>
-    <h2 class="hgreet" id="h-greet"></h2><p class="sub" id="h-sub"></p>
+    <h2 class="hgreet hidden" id="h-greet"></h2><p class="sub hidden" id="h-sub"></p>
     <div class="hsnap" id="h-snap" style="display:none"></div>
     <div class="card" id="home-ai" onclick="showTab('ai')" style="cursor:pointer">
       <span class="ic" id="home-ai-ic"></span>
@@ -609,6 +633,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   <div id="tab-docs" class="hidden">
     <div id="home">
       <h2 class="hgreet" id="docs-title"></h2><p class="sub" id="docs-sub"></p>
+      <input class="catsq" id="cats-q" type="search" autocomplete="off" oninput="filterCats(this.value)">
       <div id="cats"></div>
       <div id="home-tools"></div>
     </div>
@@ -1076,7 +1101,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — покажу, настоящий ли контрагент: благонадёжность, налоговую задолженность, реестр должников и госзакупок.",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpInvalid:"Неверный БИН/ИИН — проверьте номер",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpReg:"рег.",cpRef:"справочно, ba.prg.kz",cpNds:"плательщик НДС",cpVerReal:"Надёжный, действующий контрагент",cpVerRisky:"Есть риски — проверьте внимательно",cpVerFake:"Ненадёжный / опасный контрагент",cpVerNotfound:"Не найден в гос-базах",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"Заполните форму — скачайте готовый PDF",
-      hgreet:"Добро пожаловать",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Получить консультацию 24/7",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -1155,7 +1180,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — контрагент нағыз ба екенін көрсетемін: сенімділік, салық берешегі, борышкерлер мен мемлекеттік сатып алу тізілімі.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpInvalid:"БИН/ИИН қате — нөмірді тексеріңіз",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpReg:"тірк.",cpRef:"анықтамалық, ba.prg.kz",cpNds:"ҚҚС төлеуші",cpVerReal:"Сенімді, әрекеттегі контрагент",cpVerRisky:"Тәуекел бар — мұқият тексеріңіз",cpVerFake:"Сенімсіз / қауіпті контрагент",cpVerNotfound:"Мемлекеттік базада табылмады",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"Форманы толтырып — дайын PDF жүктеңіз",
-      hgreet:"Қош келдіңіз",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Кеңес алу 24/7",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1412,6 +1437,21 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const s=S();
     const nm=(typeof meUser!=='undefined'&&meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';
     if($('h-greet')){$('h-greet').textContent=s.hgreet+nm+' 👋';$('h-sub').textContent=s.hsub;}
+    /* Главная встречает делом, а не приветствием: раньше здесь были только две
+       карточки и пустое поле до низа экрана. */
+    if($('h-hero-t')){
+      $('h-hero-t').textContent=s.heroT; $('h-hero-d').textContent=s.heroD; $('h-hero-b').textContent=s.heroB;
+      const q=$('h-quick');
+      if(q&&q.dataset.lang!==lang){
+        q.dataset.lang=lang; q.innerHTML='';
+        CATS.slice(0,4).forEach(c=>{
+          const b=document.createElement('button');
+          b.className='chip'; b.type='button'; b.textContent=c[lang][0];
+          b.onclick=ev=>{ev.stopPropagation();showTab('docs');openForm(c.key);};
+          q.appendChild(b);
+        });
+      }
+    }
     const aic=$('home-ai-ic');if(aic&&!aic.innerHTML)aic.innerHTML=svg('message');
     if($('home-ai-t')){$('home-ai-t').textContent=s.nav[2];$('home-ai-d').textContent=s.qaAiD;}
     const mdic=$('home-mydocs-ic');if(mdic&&!mdic.innerHTML)mdic.innerHTML=svg('file-text');
@@ -1431,12 +1471,36 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     }catch(e){box.innerHTML='';}
   }
   function renderHome(){renderHomeTab();renderDocsTab();}
+  /* Поиск по каталогу: тридцать два типа листать дольше, чем набрать «акт».
+     Прячем и заголовки разделов, в которых после фильтра ничего не осталось. */
+  function filterCats(q){
+    const box=$('cats'); if(!box) return;
+    const needle=(q||'').trim().toLowerCase();
+    let shown=0, head=null, headHas=false;
+    [...box.children].forEach(el=>{
+      if(el.classList.contains('cgh')){
+        if(head) head.classList.toggle('hidden',!headHas);
+        head=el; headHas=false; return;
+      }
+      const hit=!needle || el.textContent.toLowerCase().includes(needle);
+      el.classList.toggle('hidden',!hit);
+      if(hit){ shown++; headHas=true; }
+    });
+    if(head) head.classList.toggle('hidden',!headHas);
+    let none=$('cats-none');
+    if(!none){ none=document.createElement('div'); none.id='cats-none'; none.className='cats-none hidden'; box.parentNode.insertBefore(none,box.nextSibling); }
+    none.textContent=S().catsNone;
+    none.classList.toggle('hidden',shown>0);
+    const tools=$('home-tools'); if(tools) tools.classList.toggle('hidden',!!needle);
+  }
+
   function renderDocsTab(){
     const s=S();
     if($('docs-title')){$('docs-title').textContent=s.hdocsTitle;$('docs-sub').textContent=s.hsub;}
     const ht=$('home-tools');if(ht)ht.innerHTML=
       '<div class="card" onclick="openEsfInvoice()" style="cursor:pointer"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg></div><div><div class="t">'+s.eiCardT+'</div><div class="d">'+s.eiCardD+'</div></div><div class="chev">›</div></div>'
       +'<div class="card" onclick="showTab(\'convert\')" style="cursor:pointer"><div class="ic">'+svg('refresh')+'</div><div><div class="t">'+s.nav[3]+'</div><div class="d">'+s.convHomeD+'</div></div><div class="chev">›</div></div>';
+    const qi=$('cats-q');if(qi){qi.placeholder=s.catsQ;qi.value='';}
     const box=$('cats');if(!box)return;box.innerHTML='';
     CATS.forEach(c=>{const[t,d]=c[lang];const el=document.createElement('div');el.className='card';
       el.innerHTML='<div class="ic">'+svg(c.icon)+'</div><div><div class="t">'+t+'</div><div class="d">'+d+'</div></div><div class="chev">›</div>';
