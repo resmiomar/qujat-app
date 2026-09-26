@@ -936,11 +936,35 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       #fin-regime{width:100%;height:44px;border:1px solid var(--line,#e6e4f0);border-radius:11px;padding:0 12px;font-family:inherit;font-size:14px}
       .fin-cal-i{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line,#eee);font-size:13px}
       .fin-cal-i b{color:var(--accent,#5810E8);white-space:nowrap}
+      .fin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+      .fin-gear{flex:none;width:42px;height:42px;border-radius:13px;border:1px solid var(--line,#e6e4f0);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted,#64748b)}
+      .fin-gear.on{background:var(--accent,#5810E8);border-color:var(--accent,#5810E8);color:#fff}
+      .fin-gear svg{width:20px;height:20px}
+      .fin-empty-c{text-align:center}
+      .fin-empty-ic{width:54px;height:54px;margin:2px auto 12px;border-radius:17px;background:var(--bg,#f4f2fb);display:flex;align-items:center;justify-content:center;color:var(--accent,#5810E8)}
+      .fin-empty-ic svg{width:26px;height:26px}
+      .fin-empty-c h3{font-size:18px;font-weight:800;margin:0 0 6px}
+      .fin-empty-c p{margin:0 0 14px;font-size:13.5px;line-height:1.5;color:var(--muted,#64748b)}
+      .fin-soon-i{padding:10px 0;border-bottom:1px solid var(--line,#eee)}
+      .fin-soon-i:last-child{border-bottom:none}
+      .fin-soon-i b{display:block;font-size:14px;font-weight:700}
+      .fin-soon-i span{display:block;color:var(--muted,#64748b);font-size:12.5px;margin-top:2px}
+      .fin-hero{background:var(--grad);color:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px;box-shadow:0 12px 26px -18px rgba(94,23,235,.85)}
+      .fin-hero-l{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+      .fin-hero b{display:block;font-size:30px;font-weight:800;letter-spacing:-.03em;margin:4px 0 8px}
+      .fin-hero-m{font-size:12.5px;opacity:.88}
     </style>
-    <h2 id="fin-title"></h2><p class="sub" id="fin-sub"></p>
+    <div class="fin-head">
+      <div><h2 id="fin-title"></h2><p class="sub" id="fin-sub"></p></div>
+      <button type="button" class="fin-gear" id="fin-gear" onclick="toggleFinSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6 1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.63.67 1.09 1.31 1.09H21a2 2 0 1 1 0 4h-.09c-.64 0-1.17.46-1.31 1.09z"/></svg>
+      </button>
+    </div>
 
     <div id="fin-alert" class="hidden" style="border-radius:14px;padding:12px 14px;margin-bottom:12px;font-weight:700;font-size:14px"></div>
+    <input type="file" id="fin-import-file" accept=".csv,.xlsx,.pdf" class="hidden" onchange="onFinImportFile()">
 
+    <div id="fin-settings" class="hidden">
     <div class="pcard">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="co-h"></h3>
       <select id="co-select" onchange="switchCompany(this.value)" style="width:100%;height:44px;border:1px solid var(--line,#e6e4f0);border-radius:11px;padding:0 12px;font-family:inherit;font-size:14px"></select>
@@ -950,53 +974,15 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       </div>
     </div>
 
-    <div class="pcard">
-      <div class="fin-sum" id="fin-summary"></div>
-      <input type="month" id="fin-month" class="fin-month" onchange="loadFinance()">
-      <button class="btn ghost" id="fin-export-btn" style="margin-top:8px" onclick="finExport()"></button>
-    </div>
-
-    <div class="pcard" id="mytax-card" style="border:1.5px solid var(--accent,#5810E8)">
-      <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="mytax-h"></h3>
-      <div id="mytax-body"></div>
-    </div>
-
     <div class="pcard" id="cp-card">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:4px" id="cp-h"></h3>
       <p class="sub" id="cp-hint" style="margin:0 0 10px;font-size:12.5px"></p>
       <div style="display:flex;gap:8px">
         <input id="cp-input" inputmode="numeric" maxlength="12" onkeydown="if(event.key==='Enter')checkCounterparty()"
-               style="flex:1;height:46px;border:1px solid var(--line,#e6e4f0);border-radius:12px;padding:0 14px;font-family:inherit;font-size:16px;letter-spacing:.02em">
-        <button class="btn" id="cp-btn" onclick="checkCounterparty()" style="width:auto;padding:0 20px;height:46px"></button>
+               style="flex:1;min-width:0;height:46px;border:1px solid var(--line,#e6e4f0);border-radius:12px;padding:0 14px;font-family:inherit;font-size:16px;letter-spacing:.02em">
+        <button class="btn" id="cp-btn" onclick="checkCounterparty()" style="width:auto;flex:none;padding:0 18px;height:46px"></button>
       </div>
       <div id="cp-result" style="margin-top:12px"></div>
-    </div>
-
-    <div class="pcard">
-      <div class="fin-kind">
-        <button id="fin-k-in" class="fin-kbtn on-in" onclick="finKind('in')"></button>
-        <button id="fin-k-out" class="fin-kbtn" onclick="finKind('out')"></button>
-      </div>
-      <div class="field"><input type="number" id="fin-amount" inputmode="decimal"></div>
-      <div class="field"><input type="text" id="fin-cat"></div>
-      <div class="field"><input type="text" id="fin-note"></div>
-      <button class="btn" id="fin-save" onclick="finAdd()"></button>
-    </div>
-
-    <div class="pcard">
-      <button class="btn ghost" id="fin-import-btn" onclick="finImportPick()"></button>
-      <input type="file" id="fin-import-file" accept=".csv,.xlsx,.pdf" class="hidden" onchange="onFinImportFile()">
-      <p class="note" id="fin-import-hint" style="margin-top:8px"></p>
-      <div id="fin-import-preview" class="hidden" style="margin-top:12px"></div>
-    </div>
-
-    <h3 class="fin-h" id="fin-list-h"></h3>
-    <div id="fin-rows"></div>
-
-    <div class="pcard fin-thr">
-      <h3 style="font-size:15px;font-weight:800;margin-bottom:4px" id="fin-thr-h"></h3>
-      <div class="fin-bar"><div id="fin-bar-fill" style="width:0%"></div></div>
-      <p class="sub" id="fin-thr-txt" style="margin:0"></p>
     </div>
 
     <div class="pcard">
@@ -1020,6 +1006,65 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <button class="btn ghost" id="emp-add" onclick="addEmployee()"></button>
       <div id="emp-list" style="margin-top:10px"></div>
       <div id="emp-totals" style="margin-top:8px"></div>
+    </div>
+    </div>
+
+    <div id="fin-empty" class="hidden">
+      <div class="pcard fin-empty-c">
+        <div class="fin-empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9"/><path d="M7 9h10"/><path d="M7 13h5"/><path d="M17 17v5"/><path d="m14.5 19.5 2.5-2.5 2.5 2.5"/></svg></div>
+        <h3 id="fin-empty-t"></h3>
+        <p id="fin-empty-d"></p>
+        <button class="btn" id="fin-empty-imp" onclick="finImportPick()"></button>
+        <button class="btn ghost" id="fin-empty-man" style="margin-top:8px" onclick="finShowManual()"></button>
+      </div>
+      <div class="cgh" id="fin-soon-h"></div>
+      <div class="pcard" id="fin-soon"></div>
+    </div>
+
+    <div class="fin-hero hidden" id="fin-hero">
+      <span class="fin-hero-l" id="fin-hero-l"></span>
+      <b id="fin-hero-v"></b>
+      <div class="fin-hero-m" id="fin-hero-m"></div>
+    </div>
+
+    <div id="fin-data" class="hidden">
+    <div class="pcard">
+      <div class="fin-sum" id="fin-summary"></div>
+      <input type="month" id="fin-month" class="fin-month" onchange="loadFinance()">
+      <button class="btn ghost" id="fin-export-btn" style="margin-top:8px" onclick="finExport()"></button>
+    </div>
+
+    <h3 class="fin-h" id="fin-list-h"></h3>
+    <div id="fin-rows"></div>
+
+    <div class="pcard">
+      <button class="btn ghost" id="fin-import-btn" onclick="finImportPick()"></button>
+      <button class="btn ghost" id="fin-man-btn" style="margin-top:8px" onclick="finShowManual()"></button>
+      <p class="note" id="fin-import-hint" style="margin-top:8px"></p>
+      <div id="fin-import-preview" class="hidden" style="margin-top:12px"></div>
+    </div>
+
+    <div class="pcard hidden" id="fin-manual">
+      <div class="fin-kind">
+        <button id="fin-k-in" class="fin-kbtn on-in" onclick="finKind('in')"></button>
+        <button id="fin-k-out" class="fin-kbtn" onclick="finKind('out')"></button>
+      </div>
+      <div class="field"><input type="number" id="fin-amount" inputmode="decimal"></div>
+      <div class="field"><input type="text" id="fin-cat"></div>
+      <div class="field"><input type="text" id="fin-note"></div>
+      <button class="btn" id="fin-save" onclick="finAdd()"></button>
+    </div>
+
+    <div class="pcard" id="mytax-card" style="border:1.5px solid var(--accent,#5810E8)">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="mytax-h"></h3>
+      <div id="mytax-body"></div>
+    </div>
+
+    <div class="pcard fin-thr">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:4px" id="fin-thr-h"></h3>
+      <div class="fin-bar"><div id="fin-bar-fill" style="width:0%"></div></div>
+      <p class="sub" id="fin-thr-txt" style="margin:0"></p>
+    </div>
     </div>
   </div>
 
@@ -1101,7 +1146,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — покажу, настоящий ли контрагент: благонадёжность, налоговую задолженность, реестр должников и госзакупок.",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpInvalid:"Неверный БИН/ИИН — проверьте номер",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpReg:"рег.",cpRef:"справочно, ba.prg.kz",cpNds:"плательщик НДС",cpVerReal:"Надёжный, действующий контрагент",cpVerRisky:"Есть риски — проверьте внимательно",cpVerFake:"Ненадёжный / опасный контрагент",cpVerNotfound:"Не найден в гос-базах",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"Заполните форму — скачайте готовый PDF",
-      hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      finGearA:"Настройки учёта",finEmptyT:"Операций пока нет",finEmptyD:"Загрузите выписку Kaspi или банка. Операции разложатся по категориям сами, налог посчитается по вашему режиму.",finEmptyImp:"Загрузить выписку",finEmptyMan:"Добавить вручную",finSoonH:"Появится после загрузки",finSoon:[["Доходы, расходы, прибыль","за выбранный месяц"],["Налог по режиму","910, 911 или общеустановленный"],["Порог НДС","предупредим заранее"]],finHeroL:"Прибыль за период",finTaxIs:"Налог",hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Получить консультацию 24/7",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -1180,7 +1225,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — контрагент нағыз ба екенін көрсетемін: сенімділік, салық берешегі, борышкерлер мен мемлекеттік сатып алу тізілімі.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpInvalid:"БИН/ИИН қате — нөмірді тексеріңіз",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpReg:"тірк.",cpRef:"анықтамалық, ba.prg.kz",cpNds:"ҚҚС төлеуші",cpVerReal:"Сенімді, әрекеттегі контрагент",cpVerRisky:"Тәуекел бар — мұқият тексеріңіз",cpVerFake:"Сенімсіз / қауіпті контрагент",cpVerNotfound:"Мемлекеттік базада табылмады",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"Форманы толтырып — дайын PDF жүктеңіз",
-      hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      finGearA:"Есеп баптаулары",finEmptyT:"Әзірге операция жоқ",finEmptyD:"Kaspi не банк үзіндісін жүктеңіз. Операциялар санаттарға өзі жіктеледі, салық режиміңіз бойынша есептеледі.",finEmptyImp:"Үзінді жүктеу",finEmptyMan:"Қолмен қосу",finSoonH:"Жүктегеннен кейін шығады",finSoon:[["Кіріс, шығыс, пайда","таңдалған айға"],["Режим бойынша салық","910, 911 немесе жалпыға бірдей"],["ҚҚС шегі","алдын ала ескертеміз"]],finHeroL:"Кезең пайдасы",finTaxIs:"Салық",hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Кеңес алу 24/7",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -2280,6 +2325,27 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   /* ---------- УЧЁТ (финансы + налоги) ---------- */
   let finCurKind='in';
   function finM(n){return Math.round(+n||0).toLocaleString('ru-RU');}
+  /* Учёт живёт в двух состояниях. Пока операций нет, три нуля и десять
+     разделов только пугают: показываем один шаг и честный список того, что
+     появится. Редкое и опасное (компания с «Удалить», режим, контрагент,
+     календарь, сотрудники) убрано под шестерёнку. */
+  function toggleFinSettings(){
+    const b=$('fin-settings'),g=$('fin-gear');if(!b)return;
+    const open=b.classList.toggle('hidden')===false;
+    g.classList.toggle('on',open);
+    if(open)b.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  function finShowManual(){
+    const m=$('fin-manual');if(!m)return;
+    $('fin-data').classList.remove('hidden');
+    m.classList.remove('hidden');
+    $('fin-amount').focus();
+    m.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function finHeroMeta(){
+    const h=$('fin-hero-m');if(!h)return;
+    h.textContent=(myTaxData&&myTaxData.tax!=null)?(S().finTaxIs+' '+finM(myTaxData.tax)+' ₸'):'';
+  }
   function finKind(k){finCurKind=k;$('fin-k-in').className='fin-kbtn'+(k==='in'?' on-in':'');$('fin-k-out').className='fin-kbtn'+(k==='out'?' on-out':'');}
   function ymToRu(m){const p=m.split('-');return p[1]+'.'+p[0];}
   function renderFinanceLabels(){
@@ -2295,6 +2361,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if($('cp-h')){$('cp-h').textContent=s.cpH;$('cp-hint').textContent=s.cpHint;$('cp-btn').textContent=s.cpBtn;$('cp-input').placeholder='БИН / ИИН';}
     if($('emp-h')){$('emp-h').textContent=s.empH;$('emp-add').textContent=s.empAdd;$('emp-name').placeholder=s.empName;$('emp-salary').placeholder=s.empSalary;}
     if($('push-btn'))$('push-btn').textContent=s.pushBtn;
+    if($('fin-empty-t')){
+      $('fin-empty-t').textContent=s.finEmptyT;$('fin-empty-d').textContent=s.finEmptyD;
+      $('fin-empty-imp').textContent=s.finEmptyImp;$('fin-empty-man').textContent=s.finEmptyMan;
+      $('fin-soon-h').textContent=s.finSoonH;
+      $('fin-soon').innerHTML=s.finSoon.map(function(a){return '<div class="fin-soon-i"><b>'+a[0]+'</b><span>'+a[1]+'</span></div>';}).join('');
+      $('fin-hero-l').textContent=s.finHeroL;
+    }
+    if($('fin-man-btn'))$('fin-man-btn').textContent=s.finEmptyMan;
     const sel=$('fin-regime');if(sel){const cur=sel.value;sel.innerHTML=[['','regimenone'],['910','regime910'],['911','regime911'],['our','regimeour']].map(function(a){return '<option value="'+a[0]+'">'+s[a[1]]+'</option>';}).join('');sel.value=cur;}
   }
   /* ---------- Проверка контрагента (КГД/Минюст по ИИН/БИН) ---------- */
@@ -2425,8 +2499,16 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     try{
       const d=await (await afetch(API+'/api/fin'+(ym?'?ym='+encodeURIComponent(ym):''))).json();
       $('fin-summary').innerHTML='<div class="in"><b>'+finM(d.income)+'</b><span>'+s.finIncome+'</span></div><div class="out"><b>'+finM(d.expense)+'</b><span>'+s.finExpense+'</span></div><div class="pr"><b>'+finM(d.profit)+'</b><span>'+s.finProfit+'</span></div>';
+      const has=!!(d.rows&&d.rows.length);
+      if($('fin-empty')){
+        $('fin-empty').classList.toggle('hidden',has);
+        $('fin-hero').classList.toggle('hidden',!has);
+        $('fin-data').classList.toggle('hidden',!has);
+        $('fin-hero-v').textContent=finM(d.profit)+' ₸';
+        finHeroMeta();
+      }
       const box=$('fin-rows');
-      if(!d.rows||!d.rows.length){box.innerHTML='<p class="sub">'+s.finEmpty+'</p>';}
+      if(!has){box.innerHTML='<p class="sub">'+s.finEmpty+'</p>';}
       else{box.innerHTML=d.rows.map(function(r){return '<div class="fin-row"><div><b>'+(r.category||'—')+'</b><div class="meta">'+r.date+(r.note?' · '+r.note:'')+'</div></div><div style="display:flex;align-items:center;gap:6px"><span class="amt '+r.kind+'">'+(r.kind==='in'?'+':'−')+finM(r.amount)+' ₸</span><button class="fin-x" onclick="finDelete('+r.id+')">✕</button></div></div>';}).join('');}
     }catch(e){}
     loadInsights();loadRegime();loadTaxCalendar();loadMyTax();loadEmployees();
@@ -2453,7 +2535,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       h+='<div class="sub" style="margin:6px 0">'+s.mytaxDlR+' <b>'+d.deadline_report+'</b> · '+s.mytaxDlP+' <b>'+d.deadline_pay+'</b></div>';
       if(d.regime==='910')h+='<button class="btn ghost" style="margin-bottom:8px" onclick="fill910()">'+s.mytaxForm910+'</button>';
       h+='<a class="btn" href="https://cabinet.salyk.gov.kz" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;line-height:46px">'+s.mytaxFile+'</a>';
-      box.innerHTML=h;
+      box.innerHTML=h;finHeroMeta();
     }catch(e){box.innerHTML='';}
   }
   async function finAdd(){
