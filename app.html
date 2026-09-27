@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Qujat — документы, налоги, ИИ онлайн</title>
+<title>Qujat: документы, налоги и учёт онлайн</title>
 <meta name="description" content="Бухгалтерия Казахстана онлайн: создавайте счёт, акт, накладную, считайте налоги 2026 и спрашивайте ИИ-помощника — прямо в браузере, бесплатно.">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -150,6 +150,12 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
 .hhero p{margin:0 0 14px;font-size:13px;line-height:1.45;opacity:.88}
 .hhero-b{display:block;background:#fff;color:var(--accent);border-radius:13px;padding:12px;text-align:center;font-weight:700;font-size:14.5px}
 #h-quick{margin-bottom:18px}
+/* Ближайший налоговый срок: повод открывать приложение каждый месяц */
+.hdl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin:2px 0 10px;cursor:pointer}
+.hdl b{font-size:14px;font-weight:800;color:var(--text)}
+.hdl span{grid-column:1;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdl i{grid-column:2;grid-row:1/3;font-style:normal;font-size:12.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:10px;padding:6px 9px;white-space:nowrap}
+.hdl.soon i{color:#c2410c;background:#ffedd5}
 
 /* Каталог документов строками: на экран влезает вдвое больше типов */
 #cats .card,#calc-list .card{padding:11px 12px;margin-bottom:0;border-radius:0;border-width:0 0 1px 0;box-shadow:none;gap:12px}
@@ -624,12 +630,23 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
 <div class="wrap">
   <!-- ===== TAB: DOCUMENTS ===== -->
   <div id="tab-home" class="hidden">
+    <div class="hdl hidden" id="h-dl" onclick="openDeadlines()"><b id="h-dl-t"></b><span id="h-dl-d"></span><i id="h-dl-n"></i></div>
     <div class="hhero" id="h-hero" onclick="showTab('docs')">
       <h3 id="h-hero-t"></h3>
       <p id="h-hero-d"></p>
       <span class="hhero-b" id="h-hero-b"></span>
     </div>
     <div class="chips" id="h-quick"></div>
+    <div class="pcard" id="cp-card">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:4px" id="cp-h"></h3>
+      <p class="sub" id="cp-hint" style="margin:0 0 10px;font-size:12.5px"></p>
+      <div style="display:flex;gap:8px">
+        <input id="cp-input" inputmode="numeric" maxlength="12" onkeydown="if(event.key==='Enter')checkCounterparty()"
+               style="flex:1;min-width:0;height:46px;border:1px solid var(--line,#e6e4f0);border-radius:12px;padding:0 14px;font-family:inherit;font-size:16px;letter-spacing:.02em">
+        <button class="btn" id="cp-btn" onclick="checkCounterparty()" style="width:auto;flex:none;padding:0 18px;height:46px"></button>
+      </div>
+      <div id="cp-result" style="margin-top:12px"></div>
+    </div>
     <div id="tg-banner" class="tg-banner hidden" onclick="startTgLink()">
       <span class="tg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
       <div class="tg-b-txt"><div class="tg-b-t" id="tg-b-t"></div><div class="tg-b-d" id="tg-b-d"></div></div>
@@ -1006,16 +1023,6 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       </div>
     </div>
 
-    <div class="pcard" id="cp-card">
-      <h3 style="font-size:15px;font-weight:800;margin-bottom:4px" id="cp-h"></h3>
-      <p class="sub" id="cp-hint" style="margin:0 0 10px;font-size:12.5px"></p>
-      <div style="display:flex;gap:8px">
-        <input id="cp-input" inputmode="numeric" maxlength="12" onkeydown="if(event.key==='Enter')checkCounterparty()"
-               style="flex:1;min-width:0;height:46px;border:1px solid var(--line,#e6e4f0);border-radius:12px;padding:0 14px;font-family:inherit;font-size:16px;letter-spacing:.02em">
-        <button class="btn" id="cp-btn" onclick="checkCounterparty()" style="width:auto;flex:none;padding:0 18px;height:46px"></button>
-      </div>
-      <div id="cp-result" style="margin-top:12px"></div>
-    </div>
 
     <div class="pcard">
       <h3 style="font-size:15px;font-weight:800;margin-bottom:8px" id="fin-reg-h"></h3>
@@ -1147,6 +1154,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   const NATIVE_IOS=!!(window.Capacitor&&typeof window.Capacitor.getPlatform==='function'&&window.Capacitor.getPlatform()==='ios');
   /* Кез келген нативті қосымша (iOS не Android) — монетизация кейінге қалды, Pro/төлемді жасырамыз */
   const NATIVE_APP=!!(window.Capacitor&&typeof window.Capacitor.isNativePlatform==='function'&&window.Capacitor.isNativePlatform());
+  /* Бесплатный период для сбора клиентов (27.09.2026). ИИ выключен: каждый вопрос
+     стоил денег, на сервере он тоже выключен (AI_DISABLED=1). Telegram-бот не запущен,
+     поэтому замок «привяжите Telegram» закрывал разделы наглухо. Вернуть: true. */
+  const AI_ON=false, TG_BOT_ON=false;
 
   /* ---- Auth токен (Bearer): Safari/iPhone/Telegram-де cross-site cookie бұғатталғанда ---- */
   let authToken=localStorage.getItem('qujat_token')||'';
@@ -1162,24 +1173,24 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
 
   const STR={
-    ru:{nav:["Главная","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"OCR, PDF ↔ Word/Excel, сжатие, объединение — 20 операций",admBtn:"Админ-панель",
+    ru:{nav:["Главная","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"PDF ↔ Word/Excel, сжатие, объединение: 19 операций",admBtn:"Админ-панель",
       finTitle:"Учёт финансов",finSub:"Доходы, расходы и налоговый контроль",
       finIncome:"Доходы",finExpense:"Расходы",finProfit:"Прибыль",
       finAddIn:"+ Доход",finAddOut:"− Расход",finAmount:"Сумма ₸",finCat:"Категория",finNote:"Примечание (необяз.)",finSave:"Добавить операцию",
       finEmpty:"Пока нет операций. Добавьте доход или расход.",finDelC:"Удалить операцию?",finList:"Операции",
       finThr:"Порог НДС",finThrSub:"Годовой доход к порогу обязательной регистрации по НДС",finThrOver:"Порог превышен — нужна регистрация по НДС!",finThrLeft:"До порога НДС осталось",
       finCal:"Налоговый календарь",finCalEmpty:"Ближайших сроков нет.",finDays:"дн.",finToday:"сегодня!",pushBtn:"Включить уведомления о сроках",pushOn:"Уведомления включены ✓",pushDenied:"Уведомления заблокированы в браузере.",pushUnsupported:"Ваш браузер не поддерживает push-уведомления.",pushNotConfigured:"Push пока не настроен на сервере.",
-      finReg:"Мой налоговый режим",finRegHint:"Выберите режим — календарь и подсказки станут точнее.",
+      finReg:"Мой налоговый режим",finRegHint:"Выберите режим, и за 7, 3 и 1 день до срока придёт письмо на почту.",
       regime910:"Упрощёнка (ф.910)",regime911:"Патент (ф.911)",regimeour:"Общеустановленный",regimenone:"Не выбран",
       finImport:"Импорт выписки (Kaspi / банк)",finImportHint:"Загрузите выписку из Kaspi или банка (Excel, CSV, PDF) — операции распознаются и категории проставятся автоматически.",
       finImportFound:"Найдено операций:",finImportAdd:"Добавить все",finImportNone:"Не удалось распознать операции. Лучше всего работает выписка в Excel или CSV.",finImportDone:"Добавлено операций:",finExportBtn:"⬇ Экспорт в Excel",
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Удалить",coAddPrompt:"Название компании или клиента:",coDelConfirm:"Удалить эту компанию и все её операции?",
       empH:"Зарплата сотрудников",empName:"ФИО сотрудника",empSalary:"Оклад ₸",empAdd:"+ Добавить сотрудника",empNet:"на руки",empEmpty:"Добавьте сотрудников — посчитаем зарплату и налоги.",empGross:"Фонд оплаты труда",empPay:"К выплате на руки",empTaxes:"Налоги и взносы (в бюджет)",empCost:"Затраты работодателя",empDoc:"Договор",empEsutd:"Трудовые договоры нужно зарегистрировать в ЕСУТД в течение 5 рабочих дней после приёма:",
       mytaxH:"Мой налог",mytaxNoReg:"Выберите налоговый режим ниже — и увидите налог за текущий период.",mytaxPeriod:"Период",mytaxH1:"1 полугодие",mytaxH2:"2 полугодие",mytaxInc:"Доход за период",mytaxTax:"К уплате",mytaxOther:"В этом режиме сдаётся форма {form}. Точную сумму рассчитайте в калькуляторе.",mytaxDlR:"Сдача до",mytaxDlP:"уплата до",mytaxFile:"Сдать в кабинете salyk →",mytaxForm910:"Заполнить декларацию 910 →",
-      cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — покажу, настоящий ли контрагент: благонадёжность, налоговую задолженность, реестр должников и госзакупок.",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpInvalid:"Неверный БИН/ИИН — проверьте номер",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpReg:"рег.",cpRef:"справочно, ba.prg.kz",cpNds:"плательщик НДС",cpVerReal:"Надёжный, действующий контрагент",cpVerRisky:"Есть риски — проверьте внимательно",cpVerFake:"Ненадёжный / опасный контрагент",cpVerNotfound:"Не найден в гос-базах",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
+      cpH:"Проверка контрагента",cpHint:"Введите БИН или ИИН: покажем, числится ли компания в реестре должников. Проверку налогового долга в КГД подключаем.",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpInvalid:"Неверный БИН/ИИН — проверьте номер",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpReg:"рег.",cpRef:"справочно, ba.prg.kz",cpNds:"плательщик НДС",cpVerReal:"Надёжный, действующий контрагент",cpVerRisky:"Есть риски — проверьте внимательно",cpVerFake:"Ненадёжный / опасный контрагент",cpVerNotfound:"Не найден в гос-базах",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"Заполните форму — скачайте готовый PDF",
-      sEdit:"Изменить",sBinP:"БИН/ИИН",accGDocs:"Документы и подпись",accGAcc:"Аккаунт",finGearA:"Настройки учёта",finEmptyT:"Операций пока нет",finEmptyD:"Загрузите выписку Kaspi или банка. Операции разложатся по категориям сами, налог посчитается по вашему режиму.",finEmptyImp:"Загрузить выписку",finEmptyMan:"Добавить вручную",finSoonH:"Появится после загрузки",finSoon:[["Доходы, расходы, прибыль","за выбранный месяц"],["Налог по режиму","910, 911 или общеустановленный"],["Порог НДС","предупредим заранее"]],finHeroL:"Прибыль за период",finTaxIs:"Налог",hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      dlMon:["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"],dlLeft:"через {n} дн.",sEdit:"Изменить",sBinP:"БИН/ИИН",accGDocs:"Документы и подпись",accGAcc:"Аккаунт",finGearA:"Настройки учёта",finEmptyT:"Операций пока нет",finEmptyD:"Загрузите выписку Kaspi или банка. Операции разложатся по категориям сами, налог посчитается по вашему режиму.",finEmptyImp:"Загрузить выписку",finEmptyMan:"Добавить вручную",finSoonH:"Появится после загрузки",finSoon:[["Доходы, расходы, прибыль","за выбранный месяц"],["Налог по режиму","910, 911 или общеустановленный"],["Порог НДС","предупредим заранее"]],finHeroL:"Прибыль за период",finTaxIs:"Налог",hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Получить консультацию 24/7",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -1241,24 +1252,24 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       admNoUsers:"Пользователей не найдено",admDocsUsed:"Док. в месяце",admUntil:"Pro до",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль",e_toomany:"Слишком много попыток. Подождите минуту и попробуйте снова."},
-    kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"OCR, PDF ↔ Word/Excel, сығу, біріктіру — 20 операция",admBtn:"Админ-панель",
+    kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"PDF ↔ Word/Excel, сығу, біріктіру: 19 операция",admBtn:"Админ-панель",
       finTitle:"Қаржы есебі",finSub:"Кіріс, шығыс және салық бақылауы",
       finIncome:"Кіріс",finExpense:"Шығыс",finProfit:"Пайда",
       finAddIn:"+ Кіріс",finAddOut:"− Шығыс",finAmount:"Сома ₸",finCat:"Санат",finNote:"Ескертпе (міндетті емес)",finSave:"Операция қосу",
       finEmpty:"Әзірге операция жоқ. Кіріс не шығыс қосыңыз.",finDelC:"Операцияны жою?",finList:"Операциялар",
       finThr:"ҚҚС шегі",finThrSub:"Жылдық кіріс — ҚҚС-қа міндетті тіркелу шегіне қатысты",finThrOver:"Шектен асты — ҚҚС-қа тіркелу қажет!",finThrLeft:"ҚҚС шегіне дейін қалды",
       finCal:"Салық күнтізбесі",finCalEmpty:"Жақын мерзім жоқ.",finDays:"күн",finToday:"бүгін!",pushBtn:"Мерзім хабарламаларын қосу",pushOn:"Хабарламалар қосылды ✓",pushDenied:"Хабарламалар браузерде бұғатталған.",pushUnsupported:"Браузеріңіз push-хабарламаны қолдамайды.",pushNotConfigured:"Push әлі бапталмаған (серверде кілт жоқ).",
-      finReg:"Салық режимім",finRegHint:"Режимді таңдаңыз — күнтізбе мен кеңестер дәлірек болады.",
+      finReg:"Салық режимім",finRegHint:"Режимді таңдаңыз, мерзімге 7, 3 және 1 күн қалғанда поштаға хат келеді.",
       regime910:"Оңайлатылған (910)",regime911:"Патент (911)",regimeour:"Жалпыға бірдей",regimenone:"Таңдалмаған",
       finImport:"Выписка импорты (Kaspi / банк)",finImportHint:"Kaspi не банк выпискасын жүктеңіз (Excel, CSV, PDF) — операциялар танылып, санаттар автоматты қойылады.",
       finImportFound:"Табылған операция:",finImportAdd:"Барлығын қосу",finImportNone:"Операцияларды тани алмадым. Excel не CSV выписка ең дұрыс жұмыс істейді.",finImportDone:"Қосылған операция:",finExportBtn:"⬇ Excel-ге экспорт",
       coH:"Компания / клиент",coAdd:"+ Компания",coDel:"Жою",coAddPrompt:"Компания не клиент атауы:",coDelConfirm:"Осы компанияны және барлық операциясын жою?",
       empH:"Қызметкерлер жалақысы",empName:"Қызметкер аты-жөні",empSalary:"Оклад ₸",empAdd:"+ Қызметкер қосу",empNet:"қолға",empEmpty:"Қызметкер қосыңыз — жалақы мен салықты есептейміз.",empGross:"Еңбекақы қоры",empPay:"Қолға төлеуге",empTaxes:"Салық пен жарналар (бюджетке)",empCost:"Жұмыс беруші шығыны",empDoc:"Шарт",empEsutd:"Еңбек шарттарын ЕСУТД жүйесінде қабылдаудан кейін 5 жұмыс күні ішінде тіркеу қажет:",
       mytaxH:"Менің салығым",mytaxNoReg:"Төменнен салық режимін таңдаңыз — сонда ағымдағы кезеңдегі салықты көресіз.",mytaxPeriod:"Кезең",mytaxH1:"1-жартыжылдық",mytaxH2:"2-жартыжылдық",mytaxInc:"Кезеңдегі кіріс",mytaxTax:"Төлеуге",mytaxOther:"Бұл режимде {form} форма тапсырылады. Нақты соманы калькулятордан есептеңіз.",mytaxDlR:"Тапсыру",mytaxDlP:"төлеу",mytaxFile:"salyk кабинетінде тапсыру →",mytaxForm910:"910 декларациясын толтыру →",
-      cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — контрагент нағыз ба екенін көрсетемін: сенімділік, салық берешегі, борышкерлер мен мемлекеттік сатып алу тізілімі.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpInvalid:"БИН/ИИН қате — нөмірді тексеріңіз",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpReg:"тірк.",cpRef:"анықтамалық, ba.prg.kz",cpNds:"ҚҚС төлеуші",cpVerReal:"Сенімді, әрекеттегі контрагент",cpVerRisky:"Тәуекел бар — мұқият тексеріңіз",cpVerFake:"Сенімсіз / қауіпті контрагент",cpVerNotfound:"Мемлекеттік базада табылмады",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
+      cpH:"Контрагентті тексеру",cpHint:"БСН не ЖСН енгізіңіз: компанияның борышкерлер тізілімінде бар-жоғын көрсетеміз. КГД-дағы салық қарызын тексеруді қосып жатырмыз.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpInvalid:"БИН/ИИН қате — нөмірді тексеріңіз",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpReg:"тірк.",cpRef:"анықтамалық, ba.prg.kz",cpNds:"ҚҚС төлеуші",cpVerReal:"Сенімді, әрекеттегі контрагент",cpVerRisky:"Тәуекел бар — мұқият тексеріңіз",cpVerFake:"Сенімсіз / қауіпті контрагент",cpVerNotfound:"Мемлекеттік базада табылмады",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"Форманы толтырып — дайын PDF жүктеңіз",
-      sEdit:"Өзгерту",sBinP:"БСН/ЖСН",accGDocs:"Құжаттар мен қолтаңба",accGAcc:"Аккаунт",finGearA:"Есеп баптаулары",finEmptyT:"Әзірге операция жоқ",finEmptyD:"Kaspi не банк үзіндісін жүктеңіз. Операциялар санаттарға өзі жіктеледі, салық режиміңіз бойынша есептеледі.",finEmptyImp:"Үзінді жүктеу",finEmptyMan:"Қолмен қосу",finSoonH:"Жүктегеннен кейін шығады",finSoon:[["Кіріс, шығыс, пайда","таңдалған айға"],["Режим бойынша салық","910, 911 немесе жалпыға бірдей"],["ҚҚС шегі","алдын ала ескертеміз"]],finHeroL:"Кезең пайдасы",finTaxIs:"Салық",hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      dlMon:["қаңтарға","ақпанға","наурызға","сәуірге","мамырға","маусымға","шілдеге","тамызға","қыркүйекке","қазанға","қарашаға","желтоқсанға"],dlLeft:"{n} күн қалды",sEdit:"Өзгерту",sBinP:"БСН/ЖСН",accGDocs:"Құжаттар мен қолтаңба",accGAcc:"Аккаунт",finGearA:"Есеп баптаулары",finEmptyT:"Әзірге операция жоқ",finEmptyD:"Kaspi не банк үзіндісін жүктеңіз. Операциялар санаттарға өзі жіктеледі, салық режиміңіз бойынша есептеледі.",finEmptyImp:"Үзінді жүктеу",finEmptyMan:"Қолмен қосу",finSoonH:"Жүктегеннен кейін шығады",finSoon:[["Кіріс, шығыс, пайда","таңдалған айға"],["Режим бойынша салық","910, 911 немесе жалпыға бірдей"],["ҚҚС шегі","алдын ала ескертеміз"]],finHeroL:"Кезең пайдасы",finTaxIs:"Салық",hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Кеңес алу 24/7",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1446,9 +1457,10 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   const TG_GATED=['docs','finance','calc','ai','mydocs','convert'];
   // Нативное приложение (iOS/Android) НЕ гейтим Telegram-ом: Apple 3.1.1 запрещает
   // воронку во внешнюю оплату, а функции (ИИ-чат и др.) должны работать сразу.
-  function needTg(){return !NATIVE_APP && !!(meUser && !meUser.telegram_id);}
+  function needTg(){return TG_BOT_ON && !NATIVE_APP && !!(meUser && !meUser.telegram_id);}
   function showTab(t){
     if(t==='admin'&&!(meUser&&meUser.role==='admin'))t='home';
+    if(t==='ai'&&!AI_ON)t='home';
     curTab=t;
     const locked=needTg()&&TG_GATED.indexOf(t)>=0;
     const shown=locked?'tglock':t;
@@ -1520,8 +1532,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     fetch('/api/fin').then(r=>r.json()).then(d=>{_homeFin=d||{};renderSnap();}).catch(()=>{});
     fetch('/api/tax-calendar').then(r=>r.json()).then(d=>{_homeCal=d||{};renderSnap();}).catch(()=>{});
   }
+  function cpLabels(){const s=S();if($('cp-h')){$('cp-h').textContent=s.cpH;$('cp-hint').textContent=s.cpHint;$('cp-btn').textContent=s.cpBtn;$('cp-input').placeholder='БИН / ИИН';}}
   function renderHomeTab(){
     const s=S();
+    cpLabels();
+    if($('home-ai'))$('home-ai').classList.toggle('hidden',!AI_ON);
+    loadHomeDeadline();
     const nm=(typeof meUser!=='undefined'&&meUser&&meUser.name)?(', '+String(meUser.name).split(' ')[0]):'';
     if($('h-greet')){$('h-greet').textContent=s.hgreet+nm+' 👋';$('h-sub').textContent=s.hsub;}
     /* Главная встречает делом, а не приветствием: раньше здесь были только две
@@ -2038,7 +2054,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       $('acc-av').textContent=((meUser.name||meUser.email||'?').trim()[0]||'?').toUpperCase();
       $('acc-intro').classList.add('hidden');
       if($('a-admin'))$('a-admin').classList.toggle('hidden',!(meUser.role==='admin'));
-      $('acc-link').classList.toggle('hidden',NATIVE_APP);   /* Нативті қосымшада (iOS/Android) Telegram/Kaspi сатып алуға бағыттауды жасыру */
+      $('acc-link').classList.toggle('hidden',NATIVE_APP||!TG_BOT_ON);   /* Нативті қосымшада (iOS/Android) Telegram/Kaspi сатып алуға бағыттауды жасыру */
       const linked=!!meUser.telegram_id;
       $('acc-link-form').classList.toggle('hidden',linked);
       const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
@@ -2170,7 +2186,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     // Apple 3.1.1: iOS қосымшасында жазылым/төлем бөлімі КӨРСЕТІЛМЕЙДІ (Pro веб/Telegram арқылы сатылады)
     if(NATIVE_IOS){box.style.display='none';box.innerHTML='';return;}
     box.style.display='';
-    if(!subInfo){box.innerHTML='';box.style.display='none';return;}
+    if(!subInfo||(subInfo.free_mode&&!subInfo.premium)){box.innerHTML='';box.style.display='none';return;}
     const m=NATIVE_APP?'0':'12px';
     if(subInfo.premium){
       box.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--accent2);display:flex;align-items:center;justify-content:center;gap:7px"><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/></svg>Qujat Pro</div>'+
@@ -2267,7 +2283,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   const CONV_EXT={ocr:"docx",pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",protect:"pdf",unlock:"pdf",watermark:"pdf",addpagenum:"pdf",delpages:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
   let convTarget=null,convParam="";
   const CGROUPS=[
-    {ru:"Конвертация",kz:"Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"]},
+    {ru:"Конвертация",kz:"Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"].filter(function(k){return AI_ON||k!=="ocr";})},
     {ru:"PDF-инструменты",kz:"PDF құралдары",keys:["merge","splitpdf","compresspdf","rotatepdf","protect","unlock","watermark","addpagenum","delpages"]},
     {ru:"Изображения",kz:"Суреттер",keys:["images2pdf","img2jpg","img2png"]},
     {ru:"Таблицы",kz:"Кестелер",keys:["excel2csv","csv2excel"]}
@@ -2404,6 +2420,25 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
      разделов только пугают: показываем один шаг и честный список того, что
      появится. Редкое и опасное (компания с «Удалить», режим, контрагент,
      календарь, сотрудники) убрано под шестерёнку. */
+  /* Срок берём из того же календаря, что в «Учёте»; режим для этого не нужен. */
+  async function loadHomeDeadline(){
+    const box=$('h-dl');if(!box)return;
+    try{
+      const d=await (await afetch(API+'/api/tax-calendar')).json();
+      const it=(d.items||[]).slice().sort(function(a,b){return a.days_left-b.days_left;})[0];
+      if(!it){box.classList.add('hidden');return;}
+      const s=S(),p=it.date.split('-'),day=+p[2],mon=+p[1]-1;
+      $('h-dl-t').textContent=lang==='kz'?(day+' '+s.dlMon[mon]+' дейін'):('До '+day+' '+s.dlMon[mon]);
+      $('h-dl-d').textContent=String(it.desc||'').split(' — ')[0];
+      $('h-dl-n').textContent=s.dlLeft.replace('{n}',it.days_left);
+      box.classList.toggle('soon',it.days_left<=7);
+      box.classList.remove('hidden');
+    }catch(e){box.classList.add('hidden');}
+  }
+  function openDeadlines(){
+    showTab('finance');
+    setTimeout(function(){const b=$('fin-settings');if(b&&b.classList.contains('hidden'))toggleFinSettings();const c=$('fin-regime');if(c)c.scrollIntoView({behavior:'smooth',block:'center'});},300);
+  }
   function toggleFinSettings(){
     const b=$('fin-settings'),g=$('fin-gear');if(!b)return;
     const open=b.classList.toggle('hidden')===false;
@@ -2435,7 +2470,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if($('fin-import-btn')){$('fin-import-btn').textContent=s.finImport;$('fin-import-hint').textContent=s.finImportHint;}
     if($('fin-export-btn'))$('fin-export-btn').textContent=s.finExportBtn;
     if($('co-h')){$('co-h').textContent=s.coH;$('co-add').textContent=s.coAdd;$('co-del').textContent=s.coDel;}
-    if($('cp-h')){$('cp-h').textContent=s.cpH;$('cp-hint').textContent=s.cpHint;$('cp-btn').textContent=s.cpBtn;$('cp-input').placeholder='БИН / ИИН';}
+    cpLabels();
     if($('emp-h')){$('emp-h').textContent=s.empH;$('emp-add').textContent=s.empAdd;$('emp-name').placeholder=s.empName;$('emp-salary').placeholder=s.empSalary;}
     if($('push-btn'))$('push-btn').textContent=s.pushBtn;
     if($('fin-empty-t')){
