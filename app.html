@@ -152,10 +152,11 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
 #h-quick{margin-bottom:18px}
 
 /* Каталог документов строками: на экран влезает вдвое больше типов */
-#cats .card{padding:11px 12px;margin-bottom:0;border-radius:0;border-width:0 0 1px 0;box-shadow:none;gap:12px}
-#cats .card:hover{transform:none;border-color:var(--line);background:var(--surface-2)}
-#cats .card:active{transform:none}
-#cats .card .ic{width:32px;height:32px;border-radius:10px}
+#cats .card,#calc-list .card{padding:11px 12px;margin-bottom:0;border-radius:0;border-width:0 0 1px 0;box-shadow:none;gap:12px}
+#cats .card:hover,#calc-list .card:hover{transform:none;border-color:var(--line);background:var(--surface-2)}
+#cats .card:active,#calc-list .card:active{transform:none}
+#cats .card .ic,#calc-list .card .ic{width:32px;height:32px;border-radius:10px}
+#calc-list{margin-top:6px}
 #cats .cgh{margin:20px 4px 6px}
 .catsq{width:100%;box-sizing:border-box;margin:4px 0 12px;padding:12px 14px;border:1px solid var(--line-2);border-radius:13px;background:var(--card);font-family:inherit;font-size:14px;color:var(--text)}
 .catsq::placeholder{color:var(--muted-2)}
@@ -218,6 +219,17 @@ input.bad,input.bad:focus{border-color:var(--danger);background:var(--danger-sof
 .afold[open]>summary .fchev{transform:rotate(90deg);color:var(--accent)}
 .afold[open]>summary{margin-bottom:14px}
 .afold[open]{border-color:rgba(94,23,235,.25)}
+/* Профиль: кто я одной строкой и разделы группами, как каталог документов */
+.accid{display:flex;align-items:center;gap:14px}
+.accid-av{flex:none;width:48px;height:48px;border-radius:16px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+.accid-t{min-width:0}
+.sec h3#acc-name{display:block;margin:0 0 2px;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#acc-email{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accgrp{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:15px}
+.accgrp>.sec{margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;padding:15px 16px}
+.accgrp>.sec:last-child{border-bottom:0}
+.accgrp>.afold[open]{background:var(--surface-2)}
+#tab-account .cgh{margin:22px 4px 8px}
 .fic{width:19px;height:19px;color:var(--accent);flex:none}
 .iic{width:18px;height:18px;flex:none;vertical-align:-4px}
 .tg-banner{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:16px;margin-bottom:16px;cursor:pointer;background:linear-gradient(135deg,#eef1ff,#f4ecff);border:1px solid rgba(94,23,235,.16);box-shadow:var(--sh-xs);transition:transform .16s var(--ease),box-shadow .2s var(--ease)}
@@ -830,13 +842,15 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       </div>
     </div>
     <div id="acc-user" class="hidden">
-      <div class="sec" style="text-align:center">
-        <p class="sub" id="acc-welcome" style="margin:0 0 2px"></p>
-        <h3 id="acc-name" style="margin:0 0 3px"></h3>
-        <p class="sub" id="acc-email" style="margin:0"></p>
+      <div class="sec accid">
+        <span class="accid-av" id="acc-av"></span>
+        <div class="accid-t"><h3 id="acc-name"></h3><p class="sub" id="acc-email"></p></div>
+        <p class="hidden" id="acc-welcome"></p>
       </div>
       <div class="sec" id="acc-sub" style="text-align:center"></div>
 
+      <div class="cgh" id="acc-g-docs"></div>
+      <div class="accgrp">
       <details class="sec afold">
         <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span id="acc-hist-t"></span><span class="fchev">›</span></summary>
         <div id="acc-history"></div>
@@ -847,20 +861,6 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         <p class="sub" id="acc-assets-hint" style="margin-bottom:12px"></p>
         <div id="assets-rows"></div>
         <input type="file" id="asset-input" accept="image/*" class="hidden" onchange="onAssetFile()">
-      </details>
-
-      <details class="sec afold" id="acc-link">
-        <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg><span id="acc-link-t"></span><span class="fchev">›</span></summary>
-        <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
-        <div id="acc-link-form">
-          <button class="btn" id="a-tgopen" onclick="startTgLink()" style="margin-bottom:12px"></button>
-          <p class="sub" id="acc-link-manual" style="margin:0 0 8px;text-align:center;font-size:12.5px;color:var(--muted-2)"></p>
-          <p class="sub" id="acc-link-hint" style="margin-bottom:8px"></p>
-          <div style="display:flex;gap:8px">
-            <input type="text" id="lt_code" inputmode="numeric" placeholder="000000" style="flex:1">
-            <button class="btn" style="width:auto;padding:0 18px" id="a-linkbtn" onclick="doLinkTg()"></button>
-          </div>
-        </div>
       </details>
 
       <details class="sec afold" id="acc-nca">
@@ -876,6 +876,22 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
         <button class="btn" id="a-esf-btn" onclick="esfConnect()"></button>
         <div id="esf-status" style="margin-top:10px;font-size:13px;line-height:1.5"></div>
       </details>
+      </div>
+      <div class="cgh" id="acc-g-acc"></div>
+      <div class="accgrp">
+      <details class="sec afold" id="acc-link">
+        <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg><span id="acc-link-t"></span><span class="fchev">›</span></summary>
+        <div id="acc-link-status" class="hidden" style="color:var(--accent2);font-weight:700;padding:2px 0"></div>
+        <div id="acc-link-form">
+          <button class="btn" id="a-tgopen" onclick="startTgLink()" style="margin-bottom:12px"></button>
+          <p class="sub" id="acc-link-manual" style="margin:0 0 8px;text-align:center;font-size:12.5px;color:var(--muted-2)"></p>
+          <p class="sub" id="acc-link-hint" style="margin-bottom:8px"></p>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="lt_code" inputmode="numeric" placeholder="000000" style="flex:1">
+            <button class="btn" style="width:auto;padding:0 18px" id="a-linkbtn" onclick="doLinkTg()"></button>
+          </div>
+        </div>
+      </details>
 
       <details class="sec afold">
         <summary><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span id="acc-chpass-t"></span><span class="fchev">›</span></summary>
@@ -887,6 +903,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <div class="sec" onclick="toggleLang()" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
         <span style="font-weight:800;font-size:15px;display:inline-flex;align-items:center;gap:9px"><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="acc-lang-lbl"></span></span>
         <span class="ib" style="height:34px;padding:0 15px;pointer-events:none;font-weight:800"><span id="acc-lang2-t">RU</span></span>
+      </div>
       </div>
       <button class="btn ghost hidden" id="a-admin" onclick="showTab('admin')" style="margin-bottom:14px"></button>
       <div style="display:flex;gap:10px;margin-top:8px">
@@ -1147,7 +1164,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — покажу, настоящий ли контрагент: благонадёжность, налоговую задолженность, реестр должников и госзакупок.",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpInvalid:"Неверный БИН/ИИН — проверьте номер",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpReg:"рег.",cpRef:"справочно, ba.prg.kz",cpNds:"плательщик НДС",cpVerReal:"Надёжный, действующий контрагент",cpVerRisky:"Есть риски — проверьте внимательно",cpVerFake:"Ненадёжный / опасный контрагент",cpVerNotfound:"Не найден в гос-базах",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"Заполните форму — скачайте готовый PDF",
-      finGearA:"Настройки учёта",finEmptyT:"Операций пока нет",finEmptyD:"Загрузите выписку Kaspi или банка. Операции разложатся по категориям сами, налог посчитается по вашему режиму.",finEmptyImp:"Загрузить выписку",finEmptyMan:"Добавить вручную",finSoonH:"Появится после загрузки",finSoon:[["Доходы, расходы, прибыль","за выбранный месяц"],["Налог по режиму","910, 911 или общеустановленный"],["Порог НДС","предупредим заранее"]],finHeroL:"Прибыль за период",finTaxIs:"Налог",hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      accGDocs:"Документы и подпись",accGAcc:"Аккаунт",finGearA:"Настройки учёта",finEmptyT:"Операций пока нет",finEmptyD:"Загрузите выписку Kaspi или банка. Операции разложатся по категориям сами, налог посчитается по вашему режиму.",finEmptyImp:"Загрузить выписку",finEmptyMan:"Добавить вручную",finSoonH:"Появится после загрузки",finSoon:[["Доходы, расходы, прибыль","за выбранный месяц"],["Налог по режиму","910, 911 или общеустановленный"],["Порог НДС","предупредим заранее"]],finHeroL:"Прибыль за период",finTaxIs:"Налог",hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Получить консультацию 24/7",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -1226,7 +1243,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — контрагент нағыз ба екенін көрсетемін: сенімділік, салық берешегі, борышкерлер мен мемлекеттік сатып алу тізілімі.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpInvalid:"БИН/ИИН қате — нөмірді тексеріңіз",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpReg:"тірк.",cpRef:"анықтамалық, ba.prg.kz",cpNds:"ҚҚС төлеуші",cpVerReal:"Сенімді, әрекеттегі контрагент",cpVerRisky:"Тәуекел бар — мұқият тексеріңіз",cpVerFake:"Сенімсіз / қауіпті контрагент",cpVerNotfound:"Мемлекеттік базада табылмады",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"Форманы толтырып — дайын PDF жүктеңіз",
-      finGearA:"Есеп баптаулары",finEmptyT:"Әзірге операция жоқ",finEmptyD:"Kaspi не банк үзіндісін жүктеңіз. Операциялар санаттарға өзі жіктеледі, салық режиміңіз бойынша есептеледі.",finEmptyImp:"Үзінді жүктеу",finEmptyMan:"Қолмен қосу",finSoonH:"Жүктегеннен кейін шығады",finSoon:[["Кіріс, шығыс, пайда","таңдалған айға"],["Режим бойынша салық","910, 911 немесе жалпыға бірдей"],["ҚҚС шегі","алдын ала ескертеміз"]],finHeroL:"Кезең пайдасы",finTaxIs:"Салық",hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      accGDocs:"Құжаттар мен қолтаңба",accGAcc:"Аккаунт",finGearA:"Есеп баптаулары",finEmptyT:"Әзірге операция жоқ",finEmptyD:"Kaspi не банк үзіндісін жүктеңіз. Операциялар санаттарға өзі жіктеледі, салық режиміңіз бойынша есептеледі.",finEmptyImp:"Үзінді жүктеу",finEmptyMan:"Қолмен қосу",finSoonH:"Жүктегеннен кейін шығады",finSoon:[["Кіріс, шығыс, пайда","таңдалған айға"],["Режим бойынша салық","910, 911 немесе жалпыға бірдей"],["ҚҚС шегі","алдын ала ескертеміз"]],finHeroL:"Кезең пайдасы",finTaxIs:"Салық",hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Кеңес алу 24/7",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1340,6 +1357,15 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   function sic(n){return '<svg class="iic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||ICONS['file-text'])+'</svg>';}
   function btnLbl(ic,txt){return '<span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">'+sic(ic)+txt+'</span>';}
   const CALC_ICON={payroll:'wallet',compare:'scale','910':'file-text','300':'receipt',vacation:'sun',sick:'thermo',penalty:'alarm'};
+  /* Одна строка «что считает»: без неё «НДС (форма 300)» ничего не говорит тому, кто не бухгалтер. */
+  const CALC_DESC={
+    payroll:{ru:'Удержания и сумма на руки',kz:'Ұстаулар және қолға тиетін сома'},
+    compare:{ru:'Какой режим выгоднее при вашем доходе',kz:'Табысыңызға қай режим тиімді'},
+    '910':{ru:'Налог за полугодие по упрощёнке',kz:'Жеңілдетілген режим бойынша жарты жылдық салық'},
+    '300':{ru:'НДС к уплате за квартал',kz:'Тоқсан бойынша төленетін ҚҚС'},
+    vacation:{ru:'Средний заработок и сумма отпускных',kz:'Орташа жалақы және демалыс ақысы'},
+    sick:{ru:'Пособие по временной нетрудоспособности',kz:'Уақытша еңбекке жарамсыздық жәрдемақысы'},
+    penalty:{ru:'Пеня за каждый день просрочки',kz:'Кешіктірілген әр күн үшін өсімпұл'}};
 
   const CATS=[
     {key:"invoice",icon:"banknote",ru:["Счёт на оплату","Реквизиты, сумма, Kaspi QR"],kz:["Шот (төлеуге)","Деректеме, сома, QR"]},
@@ -1838,7 +1864,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const s=S();$('c-title').textContent=s.ctitle;$('c-sub').textContent=s.csub;$('c-back').textContent=s.back;
     const box=$('calc-list');box.innerHTML='';
     calcList.forEach(c=>{const el=document.createElement('div');el.className='card';
-      el.innerHTML='<div class="ic">'+svg(CALC_ICON[c.type]||'calc')+'</div><div><div class="t">'+c[lang]+'</div></div><div class="chev">›</div>';
+      const cd=CALC_DESC[c.type];
+      el.innerHTML='<div class="ic">'+svg(CALC_ICON[c.type]||'calc')+'</div><div><div class="t">'+c[lang]+'</div>'+(cd?'<div class="d">'+cd[lang]+'</div>':'')+'</div><div class="chev">›</div>';
       el.onclick=()=>openCalc(c);box.appendChild(el);});
     $('calc-home').classList.remove('hidden');$('calc-form').classList.add('hidden');
   }
@@ -1878,12 +1905,12 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const s=S();
     $('a-title').textContent=s.atitle;$('a-sub').textContent=s.asub;$('a-note').textContent=s.ainote;if($('ai-back'))$('ai-back').textContent=s.aiBack;
     if($('aic-title')){$('aic-title').textContent=s.aicTitle;$('aic-text').textContent=s.aicText;$('aic-warn').textContent=s.aicWarn;$('aic-privacy').textContent=s.aicPrivacy;$('aic-btn').textContent=s.aicBtn;}
-    $('ai-consent').classList.remove('hidden');
+    $('ai-consent').classList.remove('hidden');$('a-note').classList.add('hidden');
     $('chat').classList.add('hidden');$('a-chips').classList.add('hidden');$('airow').classList.add('hidden');
   }
   function acceptAiConsent(){
     try{localStorage.setItem('qujat_ai_consent','1');}catch(e){}
-    $('ai-consent').classList.add('hidden');
+    $('ai-consent').classList.add('hidden');$('a-note').classList.remove('hidden');
     $('chat').classList.remove('hidden');$('a-chips').classList.remove('hidden');$('airow').classList.remove('hidden');
     if(!aiHist.length)aiGreet();
   }
@@ -1932,6 +1959,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     if($('a-admin'))$('a-admin').textContent=s.admBtn;
     const hl=$('hdr-logout');if(hl){hl.textContent=s.acclogout;hl.classList.toggle('hidden',!meUser);}
     $('acc-welcome').textContent=s.accwelcome;
+    if($('acc-g-docs')){$('acc-g-docs').textContent=s.accGDocs;$('acc-g-acc').textContent=s.accGAcc;}
     $('acc-hist-t').textContent=s.acchist;$('acc-chpass-t').textContent=s.accchpass;
     if($('acc-nca-t')){$('acc-nca-t').textContent=s.accnca;$('acc-nca-hint').textContent=s.accncahint;$('a-nca-btn').textContent=s.accncabtn;}
     if($('acc-esf-t')){$('acc-esf-t').textContent=s.accesf;$('acc-esf-hint').textContent=s.accesfhint;$('a-esf-btn').textContent=s.accesfbtn;}
@@ -1963,6 +1991,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     $('acc-reset').classList.add('hidden');
     if(meUser){$('acc-user').classList.remove('hidden');$('acc-auth').classList.add('hidden');
       $('acc-name').textContent=meUser.name||'';$('acc-email').textContent=meUser.email||'';
+      $('acc-av').textContent=((meUser.name||meUser.email||'?').trim()[0]||'?').toUpperCase();
+      $('acc-intro').classList.add('hidden');
       if($('a-admin'))$('a-admin').classList.toggle('hidden',!(meUser.role==='admin'));
       $('acc-link').classList.toggle('hidden',NATIVE_APP);   /* Нативті қосымшада (iOS/Android) Telegram/Kaspi сатып алуға бағыттауды жасыру */
       const linked=!!meUser.telegram_id;
@@ -1970,7 +2000,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       const st=$('acc-link-status');st.classList.toggle('hidden',!linked);
       if(linked)st.textContent=S().linkedlbl+(meUser.premium?' · '+S().premon:'');
       loadHistory();loadAssets();loadSub();renderNav();}
-    else{$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab(NATIVE_APP?'login':'reg');initGoogle();}
+    else{$('acc-intro').classList.remove('hidden');$('acc-auth').classList.remove('hidden');$('acc-user').classList.add('hidden');acctab(NATIVE_APP?'login':'reg');initGoogle();}
   }
   async function loadHistory(){
     const box=$('acc-history');if(!box)return;
@@ -2096,7 +2126,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     // Apple 3.1.1: iOS қосымшасында жазылым/төлем бөлімі КӨРСЕТІЛМЕЙДІ (Pro веб/Telegram арқылы сатылады)
     if(NATIVE_IOS){box.style.display='none';box.innerHTML='';return;}
     box.style.display='';
-    if(!subInfo){box.innerHTML='';return;}
+    if(!subInfo){box.innerHTML='';box.style.display='none';return;}
     const m=NATIVE_APP?'0':'12px';
     if(subInfo.premium){
       box.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--accent2);display:flex;align-items:center;justify-content:center;gap:7px"><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/></svg>Qujat Pro</div>'+
@@ -2153,7 +2183,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     renderTariffs();
     $('pro').classList.remove('hidden');window.scrollTo(0,0);
   }
-  function goAccount(){proOpen=false;$('pro').classList.add('hidden');$('acc-h').classList.remove('hidden');$('acc-intro').classList.remove('hidden');$('acc-user').classList.remove('hidden');loadSub();window.scrollTo(0,0);}
+  function goAccount(){proOpen=false;$('pro').classList.add('hidden');$('acc-h').classList.remove('hidden');$('acc-intro').classList.toggle('hidden',!!meUser);$('acc-user').classList.remove('hidden');loadSub();window.scrollTo(0,0);}
   function pickReceipt(){if(!proTariff){alert(S().prochoose);return;}const i=$('pro-receipt');i.value='';i.click();}
   async function onReceiptFile(){
     const i=$('pro-receipt');if(!i.files.length||!proTariff)return;const s=S();
