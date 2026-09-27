@@ -1173,7 +1173,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   }
 
   const STR={
-    ru:{nav:["Главная","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"OCR, PDF ↔ Word/Excel, сжатие, объединение — 20 операций",admBtn:"Админ-панель",
+    ru:{nav:["Главная","Расчёты","ИИ","Конвертер","Профиль"],navfin:"Учёт",convHomeD:"PDF ↔ Word/Excel, сжатие, объединение: 19 операций",admBtn:"Админ-панель",
       finTitle:"Учёт финансов",finSub:"Доходы, расходы и налоговый контроль",
       finIncome:"Доходы",finExpense:"Расходы",finProfit:"Прибыль",
       finAddIn:"+ Доход",finAddOut:"− Расход",finAmount:"Сумма ₸",finCat:"Категория",finNote:"Примечание (необяз.)",finSave:"Добавить операцию",
@@ -1252,7 +1252,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       admNoUsers:"Пользователей не найдено",admDocsUsed:"Док. в месяце",admUntil:"Pro до",
       e_email:"Введите корректный email",e_pass:"Пароль минимум 6 символов",e_name:"Имя минимум 2 символа",
       e_taken:"Этот email уже занят",e_creds:"Неверный email или пароль",e_toomany:"Слишком много попыток. Подождите минуту и попробуйте снова."},
-    kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"OCR, PDF ↔ Word/Excel, сығу, біріктіру — 20 операция",admBtn:"Админ-панель",
+    kz:{nav:["Басты","Есеп","AI","Конвертер","Профиль"],navfin:"Қаржы",convHomeD:"PDF ↔ Word/Excel, сығу, біріктіру: 19 операция",admBtn:"Админ-панель",
       finTitle:"Қаржы есебі",finSub:"Кіріс, шығыс және салық бақылауы",
       finIncome:"Кіріс",finExpense:"Шығыс",finProfit:"Пайда",
       finAddIn:"+ Кіріс",finAddOut:"− Шығыс",finAmount:"Сома ₸",finCat:"Санат",finNote:"Ескертпе (міндетті емес)",finSave:"Операция қосу",
@@ -2283,7 +2283,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   const CONV_EXT={ocr:"docx",pdf2word:"docx",pdf2excel:"xlsx",pdf2jpg:"zip",word2pdf:"pdf",excel2pdf:"pdf",merge:"pdf",splitpdf:"zip",compresspdf:"pdf",rotatepdf:"pdf",protect:"pdf",unlock:"pdf",watermark:"pdf",addpagenum:"pdf",delpages:"pdf",images2pdf:"pdf",img2jpg:"jpg",img2png:"png",excel2csv:"csv",csv2excel:"xlsx"};
   let convTarget=null,convParam="";
   const CGROUPS=[
-    {ru:"Конвертация",kz:"Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"]},
+    {ru:"Конвертация",kz:"Конвертация",keys:["ocr","pdf2word","pdf2excel","pdf2jpg","word2pdf","excel2pdf"].filter(function(k){return AI_ON||k!=="ocr";})},
     {ru:"PDF-инструменты",kz:"PDF құралдары",keys:["merge","splitpdf","compresspdf","rotatepdf","protect","unlock","watermark","addpagenum","delpages"]},
     {ru:"Изображения",kz:"Суреттер",keys:["images2pdf","img2jpg","img2png"]},
     {ru:"Таблицы",kz:"Кестелер",keys:["excel2csv","csv2excel"]}
