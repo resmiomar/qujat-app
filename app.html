@@ -162,6 +162,12 @@ h2{font-size:25px;font-weight:800;letter-spacing:-.035em;margin:24px 0 5px;line-
 .catsq::placeholder{color:var(--muted-2)}
 .catsq:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .cats-none{padding:22px 4px;color:var(--muted);font-size:14px;text-align:center}
+/* Форма: заполненный поставщик одной строкой, наверху то, что меняется от документа к документу */
+.sellsum{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sellsum-t{min-width:0}
+.sellsum b{display:block;font-size:15px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sellsum span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sellsum button{flex:none;border:1px solid var(--line-2);background:var(--card);color:var(--accent);font-family:inherit;font-weight:700;font-size:13.5px;border-radius:11px;padding:9px 14px;cursor:pointer}
 .hsnap{display:flex;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px 4px;margin:16px 0 2px;box-shadow:var(--sh-xs)}
 .hsnap>div{flex:1;text-align:center;padding:0 8px;min-width:0}
 .hsnap>div+div{border-left:1px solid var(--line-soft)}
@@ -654,6 +660,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <h2 id="f-title"></h2><p class="sub" id="f-sub"></p>
       <div class="sec">
         <h3><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><line x1="8" y1="6" x2="8" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="16" y1="6" x2="16" y2="6.01"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/></svg><span id="s-seller"></span></h3>
+        <div class="sellsum hidden" id="s-sum">
+          <div class="sellsum-t"><b id="s-sum-n"></b><span id="s-sum-d"></span></div>
+          <button type="button" id="s-sum-edit" onclick="editSeller()"></button>
+        </div>
+        <div id="s-fields">
         <div class="field"><label id="l-sname"></label><input type="text" id="s_name" autocomplete="organization"></div>
         <div class="row2">
           <div class="field"><label id="l-sbin"></label><input type="text" id="s_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}" onblur="fillByBin('s')"></div>
@@ -668,6 +679,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
           </div>
           <div class="field"><label id="l-kaspi"></label><input type="text" id="s_kaspi_link" placeholder="https://pay.kaspi.kz/pay/..."></div>
         </div></details>
+        </div>
       </div>
       <div class="sec">
         <h3><svg class="fic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="s-buyer"></span></h3>
@@ -1164,7 +1176,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Проверка контрагента",cpHint:"Введите БИН/ИИН — покажу, настоящий ли контрагент: благонадёжность, налоговую задолженность, реестр должников и госзакупок.",cpBtn:"Проверить",cpBad:"Нужно ровно 12 цифр",cpInvalid:"Неверный БИН/ИИН — проверьте номер",cpAuth:"Войдите, чтобы проверять",cpChecking:"Проверяю…",cpNoDebt:"Налоговой задолженности нет",cpDebt:"Налоговая задолженность",cpConnecting:"Налоговый долг (КГД): идёт подключение",cpEnfClean:"В реестре должников не числится",cpEnfConnecting:"Реестр должников/аресты (Минюст): идёт подключение",cpInReg:"В реестре должников",cpArrest:"Арест счетов/имущества",cpExit:"Запрет на выезд",cpName:"Наименование",cpReg:"рег.",cpRef:"справочно, ba.prg.kz",cpNds:"плательщик НДС",cpVerReal:"Надёжный, действующий контрагент",cpVerRisky:"Есть риски — проверьте внимательно",cpVerFake:"Ненадёжный / опасный контрагент",cpVerNotfound:"Не найден в гос-базах",cpFoot:"Данные из гос-реестров КГД и Минюста. Юридически значимую справку получайте по своей ЭЦП на kgd.gov.kz.",
       htitle:"Создайте документ",hsub:"Что оформляем сегодня?",
       hbanner:"Заполните форму — скачайте готовый PDF",
-      accGDocs:"Документы и подпись",accGAcc:"Аккаунт",finGearA:"Настройки учёта",finEmptyT:"Операций пока нет",finEmptyD:"Загрузите выписку Kaspi или банка. Операции разложатся по категориям сами, налог посчитается по вашему режиму.",finEmptyImp:"Загрузить выписку",finEmptyMan:"Добавить вручную",finSoonH:"Появится после загрузки",finSoon:[["Доходы, расходы, прибыль","за выбранный месяц"],["Налог по режиму","910, 911 или общеустановленный"],["Порог НДС","предупредим заранее"]],finHeroL:"Прибыль за период",finTaxIs:"Налог",hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
+      sEdit:"Изменить",sBinP:"БИН/ИИН",accGDocs:"Документы и подпись",accGAcc:"Аккаунт",finGearA:"Настройки учёта",finEmptyT:"Операций пока нет",finEmptyD:"Загрузите выписку Kaspi или банка. Операции разложатся по категориям сами, налог посчитается по вашему режиму.",finEmptyImp:"Загрузить выписку",finEmptyMan:"Добавить вручную",finSoonH:"Появится после загрузки",finSoon:[["Доходы, расходы, прибыль","за выбранный месяц"],["Налог по режиму","910, 911 или общеустановленный"],["Порог НДС","предупредим заранее"]],finHeroL:"Прибыль за период",finTaxIs:"Налог",hgreet:"Добро пожаловать",heroT:"Новый документ",heroD:"Счёт, акт, накладная или ЭСФ. Печать и подпись подставим сами.",heroB:"Выбрать тип →",catsQ:"Найти: счёт, акт, приказ…",catsNone:"Ничего не нашлось",navDocs:"Документы",myDocs:"Мои документы",myDocsSub:"Все созданные документы",myDocsEmpty:"Пока нет документов — создайте первый",aiBack:"Главная",qaTitle:"Быстрые действия",hdocsTitle:"Создать документ",
       qaDoc:"Документ",qaDocD:"Счёт, акт, накладная",qaFinD:"Доходы и налоги",qaCalcD:"Зарплата, отпускные",qaAiD:"Получить консультацию 24/7",
       hsnapInc:"Доход за месяц",hsnapProfit:"Прибыль",hsnapDue:"Ближайший срок",hsnapDays:"дн",hsnapNone:"Нет сроков",
       back:"Назад",seller:"Поставщик (вы)",buyer:"Покупатель / клиент",items:"Позиции",
@@ -1243,7 +1255,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       cpH:"Контрагентті тексеру",cpHint:"БИН/ИИН енгізіңіз — контрагент нағыз ба екенін көрсетемін: сенімділік, салық берешегі, борышкерлер мен мемлекеттік сатып алу тізілімі.",cpBtn:"Тексеру",cpBad:"Дәл 12 сан керек",cpInvalid:"БИН/ИИН қате — нөмірді тексеріңіз",cpAuth:"Тексеру үшін кіріңіз",cpChecking:"Тексерудемін…",cpNoDebt:"Салық берешегі жоқ",cpDebt:"Салық берешегі",cpConnecting:"Салық берешегі (КГД): қосылуда",cpEnfClean:"Борышкерлер тізілімінде жоқ",cpEnfConnecting:"Борышкерлер тізілімі/тыйым (Әділет): қосылуда",cpInReg:"Борышкерлер тізілімінде",cpArrest:"Шот/мүлік тыйымы",cpExit:"Шығу тыйымы",cpName:"Атауы",cpReg:"тірк.",cpRef:"анықтамалық, ba.prg.kz",cpNds:"ҚҚС төлеуші",cpVerReal:"Сенімді, әрекеттегі контрагент",cpVerRisky:"Тәуекел бар — мұқият тексеріңіз",cpVerFake:"Сенімсіз / қауіпті контрагент",cpVerNotfound:"Мемлекеттік базада табылмады",cpFoot:"Дерек КГД мен Әділет тізілімінен. Заңды маңызды анықтаманы өз ЭЦҚ-мен kgd.gov.kz-тен алыңыз.",
       htitle:"Құжат жасаңыз",hsub:"Бүгін не рәсімдейміз?",
       hbanner:"Форманы толтырып — дайын PDF жүктеңіз",
-      accGDocs:"Құжаттар мен қолтаңба",accGAcc:"Аккаунт",finGearA:"Есеп баптаулары",finEmptyT:"Әзірге операция жоқ",finEmptyD:"Kaspi не банк үзіндісін жүктеңіз. Операциялар санаттарға өзі жіктеледі, салық режиміңіз бойынша есептеледі.",finEmptyImp:"Үзінді жүктеу",finEmptyMan:"Қолмен қосу",finSoonH:"Жүктегеннен кейін шығады",finSoon:[["Кіріс, шығыс, пайда","таңдалған айға"],["Режим бойынша салық","910, 911 немесе жалпыға бірдей"],["ҚҚС шегі","алдын ала ескертеміз"]],finHeroL:"Кезең пайдасы",finTaxIs:"Салық",hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
+      sEdit:"Өзгерту",sBinP:"БСН/ЖСН",accGDocs:"Құжаттар мен қолтаңба",accGAcc:"Аккаунт",finGearA:"Есеп баптаулары",finEmptyT:"Әзірге операция жоқ",finEmptyD:"Kaspi не банк үзіндісін жүктеңіз. Операциялар санаттарға өзі жіктеледі, салық режиміңіз бойынша есептеледі.",finEmptyImp:"Үзінді жүктеу",finEmptyMan:"Қолмен қосу",finSoonH:"Жүктегеннен кейін шығады",finSoon:[["Кіріс, шығыс, пайда","таңдалған айға"],["Режим бойынша салық","910, 911 немесе жалпыға бірдей"],["ҚҚС шегі","алдын ала ескертеміз"]],finHeroL:"Кезең пайдасы",finTaxIs:"Салық",hgreet:"Қош келдіңіз",heroT:"Жаңа құжат",heroD:"Шот, акт, жүкқұжат немесе ЭШФ. Мөр мен қолтаңбаны өзіміз қоямыз.",heroB:"Түрін таңдау →",catsQ:"Іздеу: шот, акт, бұйрық…",catsNone:"Ештеңе табылмады",navDocs:"Құжаттар",myDocs:"Менің құжаттарым",myDocsSub:"Барлық жасалған құжаттар",myDocsEmpty:"Әзірге құжат жоқ — біріншісін жасаңыз",aiBack:"Басты",qaTitle:"Жылдам әрекеттер",hdocsTitle:"Құжат жасау",
       qaDoc:"Құжат",qaDocD:"Шот, акт, жүкқұжат",qaFinD:"Кіріс пен салық",qaCalcD:"Жалақы, демалыс",qaAiD:"Кеңес алу 24/7",
       hsnapInc:"Айлық кіріс",hsnapProfit:"Пайда",hsnapDue:"Жақын мерзім",hsnapDays:"күн",hsnapNone:"Мерзім жоқ",
       back:"Артқа",seller:"Жеткізуші (сіз)",buyer:"Сатып алушы / клиент",items:"Атаулар",
@@ -1612,9 +1624,25 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     const q=parseFloat((r.querySelector('[data-k=qty]').value||'0').replace(',','.'))||0;
     const p=parseFloat((r.querySelector('[data-k=price]').value||'0').replace(',','.'))||0;sum+=q*p;});
     $('total').textContent=sum.toLocaleString('ru-RU')+' ₸';}
-  function fillSeller(o){o=o||{};['name','bin','fio','bank_name','iik','bik','kaspi_link'].forEach(k=>{if($('s_'+k))$('s_'+k).value=o[k]||'';});}
+  function fillSeller(o){o=o||{};['name','bin','fio','bank_name','iik','bik','kaspi_link'].forEach(k=>{if($('s_'+k))$('s_'+k).value=o[k]||'';});sellerSummary();}
+  /* Поставщик один и тот же в каждом документе и уже подставлен из профиля, а занимал
+     весь первый экран. Сворачиваем в строку, только если данные пройдут проверку
+     при выпуске: иначе подсветка ошибки попала бы в скрытое поле. */
+  let sellerEditing=false;
+  function sellerSummary(){
+    const box=$('s-sum');if(!box)return;
+    const name=$('s_name').value.trim(),bin=$('s_bin').value.trim(),iik=$('s_iik').value.trim();
+    const ok=!!name&&(!bin||/^[0-9]{12}$/.test(bin))&&!sellerEditing;
+    box.classList.toggle('hidden',!ok);$('s-fields').classList.toggle('hidden',ok);
+    if(!ok)return;
+    const s=S();
+    $('s-sum-n').textContent=name;
+    $('s-sum-d').textContent=[bin?s.sBinP+' '+bin:'',iik?'IBAN …'+iik.slice(-4):''].filter(Boolean).join(' · ');
+    $('s-sum-edit').textContent=s.sEdit;
+  }
+  function editSeller(){sellerEditing=true;sellerSummary();$('s_name').focus();}
   function openForm(key){
-    curDoc=key;const c=CATS.find(x=>x.key===key);
+    curDoc=key;sellerEditing=false;const c=CATS.find(x=>x.key===key);
     $('f-title').textContent=c[lang][0];$('f-sub').textContent=c[lang][1];
     fillSeller(JSON.parse(localStorage.getItem('qujat_seller')||'{}'));
     $('b_name').value='';$('b_bin').value='';$('d_number').value='1';$('d_date').valueAsDate=new Date();
