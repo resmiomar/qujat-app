@@ -714,7 +714,7 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     <div id="xform" class="hidden">
       <button class="back" onclick="goDocsHome()">‹ <span id="xf-back"></span></button>
       <h2 id="xf-title"></h2>
-      <div class="sec"><h3 id="xf-seller-h"></h3><div id="xf-seller"></div></div>
+      <div class="sec"><h3 id="xf-seller-h"></h3><div class="sellsum hidden" id="xf-sum"><div class="sellsum-t"><b id="xf-sum-n"></b><span id="xf-sum-d"></span></div><button type="button" id="xf-sum-edit" onclick="editSeller('xf')"></button></div><div id="xf-seller"></div></div>
       <div class="sec"><div id="xf-fields"></div></div>
       <button class="btn" id="xf-gen" onclick="genXDoc()"></button>
       <p class="note" id="xf-note"></p>
@@ -726,8 +726,11 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
       <h2 id="ei-title"></h2><p class="sub" id="ei-sub"></p>
       <div class="sec">
         <h3 id="ei-seller-h"></h3>
+        <div class="sellsum hidden" id="ei-sum"><div class="sellsum-t"><b id="ei-sum-n"></b><span id="ei-sum-d"></span></div><button type="button" id="ei-sum-edit" onclick="editSeller('ei')"></button></div>
+        <div id="ei-fields">
         <div class="field"><label id="ei-l-sname"></label><input type="text" id="ei_s_name" autocomplete="organization"></div>
         <div class="field"><label id="ei-l-sbin"></label><input type="text" id="ei_s_bin" inputmode="numeric" maxlength="12" pattern="[0-9]{12}"></div>
+        </div>
       </div>
       <div class="sec">
         <h3 id="ei-buyer-h"></h3>
@@ -1628,21 +1631,32 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
   /* Поставщик один и тот же в каждом документе и уже подставлен из профиля, а занимал
      весь первый экран. Сворачиваем в строку, только если данные пройдут проверку
      при выпуске: иначе подсветка ошибки попала бы в скрытое поле. */
-  let sellerEditing=false;
-  function sellerSummary(){
-    const box=$('s-sum');if(!box)return;
-    const name=$('s_name').value.trim(),bin=$('s_bin').value.trim(),iik=$('s_iik').value.trim();
-    const ok=!!name&&(!bin||/^[0-9]{12}$/.test(bin))&&!sellerEditing;
-    box.classList.toggle('hidden',!ok);$('s-fields').classList.toggle('hidden',ok);
+  const sellerEdit={},SELLER_F={s:'s-fields',xf:'xf-seller',ei:'ei-fields'};
+  function foldSeller(p,name,bin,iik,need){
+    const box=$(p+'-sum');if(!box)return;
+    name=(name||'').trim();bin=(bin||'').trim();iik=(iik||'').trim();
+    const ok=!!name&&(!bin||/^[0-9]{12}$/.test(bin))&&need!==false&&!sellerEdit[p];
+    box.classList.toggle('hidden',!ok);$(SELLER_F[p]).classList.toggle('hidden',ok);
     if(!ok)return;
     const s=S();
-    $('s-sum-n').textContent=name;
-    $('s-sum-d').textContent=[bin?s.sBinP+' '+bin:'',iik?'IBAN …'+iik.slice(-4):''].filter(Boolean).join(' · ');
-    $('s-sum-edit').textContent=s.sEdit;
+    $(p+'-sum-n').textContent=name;
+    $(p+'-sum-d').textContent=[bin?s.sBinP+' '+bin:'',iik?'IBAN …'+iik.slice(-4):''].filter(Boolean).join(' · ');
+    $(p+'-sum-edit').textContent=s.sEdit;
   }
-  function editSeller(){sellerEditing=true;sellerSummary();$('s_name').focus();}
+  function sellerSummary(){foldSeller('s',$('s_name').value,$('s_bin').value,$('s_iik').value);}
+  /* Платёжному поручению без счёта поставщика не обойтись: без IBAN поля не сворачиваем. */
+  function xfSellerSummary(){
+    const g=k=>{const i=document.querySelector('#xf-seller [data-sk="'+k+'"]');return i?i.value.trim():'';};
+    foldSeller('xf',g('name'),g('bin'),g('iik'),curXKey!=='payment'||!!g('iik'));
+  }
+  function eiSellerSummary(){foldSeller('ei',$('ei_s_name').value,$('ei_s_bin').value,'');}
+  function editSeller(p){
+    p=p||'s';sellerEdit[p]=true;
+    ({s:sellerSummary,xf:xfSellerSummary,ei:eiSellerSummary})[p]();
+    const f=$(SELLER_F[p]).querySelector('input');if(f)f.focus();
+  }
   function openForm(key){
-    curDoc=key;sellerEditing=false;const c=CATS.find(x=>x.key===key);
+    curDoc=key;sellerEdit.s=false;const c=CATS.find(x=>x.key===key);
     $('f-title').textContent=c[lang][0];$('f-sub').textContent=c[lang][1];
     fillSeller(JSON.parse(localStorage.getItem('qujat_seller')||'{}'));
     $('b_name').value='';$('b_bin').value='';$('d_number').value='1';$('d_date').valueAsDate=new Date();
@@ -1674,7 +1688,8 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
     try{const sv=JSON.parse(localStorage.getItem('qujat_seller')||'{}');
       if(!$('ei_s_name').value&&sv.name)$('ei_s_name').value=sv.name;
       if(!$('ei_s_bin').value&&sv.bin)$('ei_s_bin').value=sv.bin;}catch(e){}
-    if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{const p=d.profile||{};if(!$('ei_s_name').value&&p.name)$('ei_s_name').value=p.name;if(!$('ei_s_bin').value&&p.bin)$('ei_s_bin').value=p.bin;}).catch(()=>{});
+    sellerEdit.ei=false;eiSellerSummary();
+    if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{const p=d.profile||{};if(!$('ei_s_name').value&&p.name)$('ei_s_name').value=p.name;if(!$('ei_s_bin').value&&p.bin)$('ei_s_bin').value=p.bin;eiSellerSummary();}).catch(()=>{});
     if(!$('ei-items').children.length)eiAddItem();
     eiTotal();window.scrollTo(0,0);
   }
@@ -1840,13 +1855,14 @@ body.gated #g-signin > div,body.gated #g-signin iframe{border-radius:14px!import
             ['accountant',lang==='ru'?'ФИО бухгалтера':'Бухгалтердің аты-жөні']];
     if(key==='payment')sf=sf.concat([['bank_name',s.bankname],['iik','ИИК (IBAN)'],['bik','БИК'],['kbe','Кбе']]);
     $('xf-seller').innerHTML=sf.map(([k,l])=>'<div class="field"><label>'+l+'</label><input type="text" data-sk="'+k+'" value="'+(sv[k]||'')+'"></div>').join('');
+    sellerEdit.xf=false;xfSellerSummary();
     const box=$('xf-fields');box.innerHTML='';
     sc.fields.forEach(f=>box.appendChild(xField(f)));
     box.querySelectorAll('input[type=date][data-k=date]').forEach(i=>{if(!i.value)i.valueAsDate=new Date();});
     $('home').classList.add('hidden');$('form').classList.add('hidden');$('result').classList.add('hidden');
     $('xform').classList.remove('hidden');window.scrollTo(0,0);
     if(meUser)afetch(API+'/auth/profile',{credentials:'include'}).then(r=>r.json()).then(d=>{
-      const pr=d.profile||{};document.querySelectorAll('#xf-seller [data-sk]').forEach(i=>{if(!i.value&&pr[i.dataset.sk])i.value=pr[i.dataset.sk];});}).catch(()=>{});
+      const pr=d.profile||{};document.querySelectorAll('#xf-seller [data-sk]').forEach(i=>{if(!i.value&&pr[i.dataset.sk])i.value=pr[i.dataset.sk];});xfSellerSummary();}).catch(()=>{});
   }
   async function genXDoc(){
     const s=S();
